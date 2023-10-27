@@ -1,6 +1,8 @@
 * {
   font-size: 62.5%;
-  button {
-    cursor: pointer;
-  }
+}
+button,
+select {
+  cursor: pointer;
+  border: 0;
 }
