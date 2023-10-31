@@ -3,11 +3,47 @@ import { Inter } from "next/font/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import style from "./writing.module.css";
+import useInputValue from "@/hooks/useInputValue";
+import { useRouter } from "next/router";
 //
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Writing = () => {
+  const initInputValue = {
+    title: "",
+    texts: "",
+    tag: "",
+    author: "",
+  };
+
+  const { inputValue, handleInput } = useInputValue(initInputValue);
+  const router = useRouter();
+
+  //.env 파일 만들기
+  //연락해서 스웨거 여는법 다시 물어보기
+  //태그 혹시 지금부터 넣으시냐고 물어보기
+  //바뀐 유아이 다시 보여주기
+
+  const postWriting = () => {
+    axios
+      .post(`${import.meta.env.VITE_APP_BASE_URL}/apis/signup`, {
+        title: inputValue.title,
+        texts: inputValue.texts,
+        author: inputValue.author,
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          router.push("/");
+        } else if (data.status === 400) {
+          // alert("아이디 또는 비밀번호 다시 확인해주세요.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Head>
@@ -19,17 +55,49 @@ const Writing = () => {
       <div className={style.main}>
         <nav className={style.nav}>
           <button className={style.btn}>Home</button>
+          <div>
+            <button onClick={postWriting} className={style.btn}>
+              완료
+            </button>
+            <button className={style.btn}>마이페이지</button>
+          </div>
+        </nav>
+        <main className={style.mainContainer}>
+          <input
+            name="title"
+            placeholder="제목"
+            className={style.title}
+            onChange={handleInput}
+          ></input>
+          <textarea
+            name="texts"
+            className={style.texts}
+            placeholder="내용을 입력해주세요."
+            onChange={handleInput}
+          ></textarea>
+          <input
+            name="tag"
+            className={style.title}
+            placeholder="태그를 입력해보세요."
+            onChange={handleInput}
+          ></input>
+          <input
+            name="author"
+            className={style.title}
+            placeholder="작성자이름"
+            onChange={handleInput}
+          ></input>
           <div className={style.navCenter}>
-            <label for="file">
+            <label htmlFor="file">
+              <select className={style.select}>
+                <option defaultValue>카테고리</option>
+                <option>여행</option>
+                <option>개발</option>
+                <option>요리</option>
+              </select>
               <FontAwesomeIcon className={style.imgIcon} icon={faImage} />
             </label>
-            <input
-              id="file"
-              type="file"
-              value="file"
-              className={style.file}
-            ></input>
-
+            <input id="file" type="file" className={style.file}></input>
             <select className={style.select}>
               <option defaultValue>글씨 크기</option>
               <option>10</option>
@@ -51,20 +119,7 @@ const Writing = () => {
               <option>가운데</option>
             </select>
           </div>
-
-          <button className={style.btn}>마이페이지</button>
-        </nav>
-        <main className={style.mainContainer}>
-          <select className={style.select}>
-            <option defaultValue>카테고리</option>
-            <option>여행</option>
-            <option>개발</option>
-            <option>요리</option>
-          </select>
-          <input placeholder="제목" className={style.title}></input>
-          <textarea className={style.texts}></textarea>
         </main>
-        <button className={style.submitBtn}>완료</button>
       </div>
     </>
   );
