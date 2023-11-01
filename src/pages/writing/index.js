@@ -30,10 +30,6 @@ const Writing = () => {
   const { inputValue, handleInput } = useInputValue(initInputValue);
   const router = useRouter();
 
-  //연락해서 스웨거 여는법 다시 물어보기
-  //태그 혹시 지금부터 넣으시냐고 물어보기
-  //바뀐 유아이 다시 보여주기
-
   const postWriting = () => {
     axios
       .post(
@@ -67,26 +63,13 @@ const Writing = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={style.main}>
-        <nav className={style.nav}>
-          <button className={style.btn}>
-            <FontAwesomeIcon className={style.imgIcon} icon={faHouse} />
-          </button>
 
-          <div>
-            <button onClick={postWriting} className={style.btn}>
-              완료
-            </button>
-            <button className={style.btn}>
-              <FontAwesomeIcon className={style.imgIcon} icon={faUser} />
-            </button>
-          </div>
-        </nav>
-        <main className={style.mainContainer}>
+      <main className={style.main}>
+        <div className={style.mainContainer}>
           <input
             name="title"
             placeholder="제목"
-            className={style.title}
+            className={style.inputs}
             onChange={handleInput}
           ></input>
           <textarea
@@ -97,55 +80,47 @@ const Writing = () => {
           ></textarea>
           <input
             name="tag"
-            className={style.title}
+            className={style.inputs}
             placeholder="태그를 입력해보세요."
             onChange={handleInput}
           ></input>
           <input
             name="author"
-            className={style.title}
+            className={style.inputs}
             placeholder="작성자이름"
             onChange={handleInput}
           ></input>
-          <div className={style.navCenter}>
-            <select className={style.select}>
-              <option defaultValue>카테고리</option>
-              <option>여행</option>
-              <option>개발</option>
-              <option>요리</option>
-            </select>
-            <label htmlFor="file" className={style.textsIconBox}>
-              <FontAwesomeIcon className={style.textsIcon} icon={faImage} />
-            </label>
-            <input id="file" type="file" className={style.file}></input>
-            <label className={style.textsIconBox}>
-              <FontAwesomeIcon
-                className={style.textsIcon}
-                icon={faTextHeight}
-              />
-            </label>
-            <label className={style.textsIconBox}>
-              <FontAwesomeIcon className={style.textsIcon} icon={faUnderline} />
-            </label>
+        </div>
 
-            <label className={style.textsIconBox}>
-              <FontAwesomeIcon className={style.textsIcon} icon={faItalic} />
-            </label>
-            <label className={style.textsIconBox}>
-              <FontAwesomeIcon className={style.textsIcon} icon={faBold} />
-            </label>
-            <label className={style.textsIconBox}>
-              <FontAwesomeIcon
-                className={style.textsIcon}
-                icon={faAlignJustify}
-              />
-            </label>
-            <label className={style.textsIconBox}>
-              <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
-            </label>
-          </div>
-        </main>
-      </div>
+        <div className={style.IconContainer}>
+          <label htmlFor="file" className={style.textsIconBox}>
+            <FontAwesomeIcon className={style.textsIcon} icon={faImage} />
+          </label>
+          <input id="file" type="file" className={style.file}></input>
+          <label className={style.textsIconBox}>
+            <FontAwesomeIcon className={style.textsIcon} icon={faTextHeight} />
+          </label>
+          <label className={style.textsIconBox}>
+            <FontAwesomeIcon className={style.textsIcon} icon={faUnderline} />
+          </label>
+
+          <label className={style.textsIconBox}>
+            <FontAwesomeIcon className={style.textsIcon} icon={faItalic} />
+          </label>
+          <label className={style.textsIconBox}>
+            <FontAwesomeIcon className={style.textsIcon} icon={faBold} />
+          </label>
+          <label className={style.textsIconBox}>
+            <FontAwesomeIcon
+              className={style.textsIcon}
+              icon={faAlignJustify}
+            />
+          </label>
+          <label className={style.textsIconBox}>
+            <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
+          </label>
+        </div>
+      </main>
     </>
   );
 };
