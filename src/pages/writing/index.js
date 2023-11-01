@@ -33,8 +33,6 @@ const Writing = () => {
   //연락해서 스웨거 여는법 다시 물어보기
   //태그 혹시 지금부터 넣으시냐고 물어보기
   //바뀐 유아이 다시 보여주기
-  //css 수정
-  //그리드 및 아이콘 적용ㅜ
 
   const postWriting = () => {
     axios
@@ -116,16 +114,35 @@ const Writing = () => {
               <option>개발</option>
               <option>요리</option>
             </select>
-            <label htmlFor="file">
-              <FontAwesomeIcon className={style.imgIcon} icon={faImage} />
+            <label htmlFor="file" className={style.textsIconBox}>
+              <FontAwesomeIcon className={style.textsIcon} icon={faImage} />
             </label>
             <input id="file" type="file" className={style.file}></input>
-            <FontAwesomeIcon className={style.imgIcon} icon={faTextHeight} />
-            <FontAwesomeIcon className={style.imgIcon} icon={faUnderline} />
-            <FontAwesomeIcon className={style.imgIcon} icon={faItalic} />
-            <FontAwesomeIcon className={style.imgIcon} icon={faBold} />
-            <FontAwesomeIcon className={style.imgIcon} icon={faAlignJustify} />
-            <FontAwesomeIcon className={style.imgIcon} icon={faPalette} />
+            <label className={style.textsIconBox}>
+              <FontAwesomeIcon
+                className={style.textsIcon}
+                icon={faTextHeight}
+              />
+            </label>
+            <label className={style.textsIconBox}>
+              <FontAwesomeIcon className={style.textsIcon} icon={faUnderline} />
+            </label>
+
+            <label className={style.textsIconBox}>
+              <FontAwesomeIcon className={style.textsIcon} icon={faItalic} />
+            </label>
+            <label className={style.textsIconBox}>
+              <FontAwesomeIcon className={style.textsIcon} icon={faBold} />
+            </label>
+            <label className={style.textsIconBox}>
+              <FontAwesomeIcon
+                className={style.textsIcon}
+                icon={faAlignJustify}
+              />
+            </label>
+            <label className={style.textsIconBox}>
+              <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
+            </label>
           </div>
         </main>
       </div>
