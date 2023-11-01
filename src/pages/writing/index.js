@@ -5,6 +5,16 @@ import { faImage } from "@fortawesome/free-regular-svg-icons";
 import style from "./writing.module.css";
 import useInputValue from "@/hooks/useInputValue";
 import { useRouter } from "next/router";
+import {
+  faAlignJustify,
+  faBold,
+  faHouse,
+  faItalic,
+  faPalette,
+  faTextHeight,
+  faUnderline,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 //
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,18 +30,25 @@ const Writing = () => {
   const { inputValue, handleInput } = useInputValue(initInputValue);
   const router = useRouter();
 
-  //.env 파일 만들기
   //연락해서 스웨거 여는법 다시 물어보기
   //태그 혹시 지금부터 넣으시냐고 물어보기
   //바뀐 유아이 다시 보여주기
+  //css 수정
+  //그리드 및 아이콘 적용ㅜ
 
   const postWriting = () => {
     axios
-      .post(`${import.meta.env.VITE_APP_BASE_URL}/apis/signup`, {
-        title: inputValue.title,
-        texts: inputValue.texts,
-        author: inputValue.author,
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/apis/signup`,
+        {
+          title: inputValue.title,
+          texts: inputValue.texts,
+          author: inputValue.author,
+        }
+        // {
+        //   Authorization: `Bearer ${"토큰"}`,
+        // }
+      )
       .then((data) => {
         if (data.status === 200) {
           router.push("/");
@@ -54,12 +71,17 @@ const Writing = () => {
       </Head>
       <div className={style.main}>
         <nav className={style.nav}>
-          <button className={style.btn}>Home</button>
+          <button className={style.btn}>
+            <FontAwesomeIcon className={style.imgIcon} icon={faHouse} />
+          </button>
+
           <div>
             <button onClick={postWriting} className={style.btn}>
               완료
             </button>
-            <button className={style.btn}>마이페이지</button>
+            <button className={style.btn}>
+              <FontAwesomeIcon className={style.imgIcon} icon={faUser} />
+            </button>
           </div>
         </nav>
         <main className={style.mainContainer}>
@@ -88,36 +110,22 @@ const Writing = () => {
             onChange={handleInput}
           ></input>
           <div className={style.navCenter}>
+            <select className={style.select}>
+              <option defaultValue>카테고리</option>
+              <option>여행</option>
+              <option>개발</option>
+              <option>요리</option>
+            </select>
             <label htmlFor="file">
-              <select className={style.select}>
-                <option defaultValue>카테고리</option>
-                <option>여행</option>
-                <option>개발</option>
-                <option>요리</option>
-              </select>
               <FontAwesomeIcon className={style.imgIcon} icon={faImage} />
             </label>
             <input id="file" type="file" className={style.file}></input>
-            <select className={style.select}>
-              <option defaultValue>글씨 크기</option>
-              <option>10</option>
-              <option>20</option>
-              <option>30</option>
-            </select>
-            <select className={style.select}>
-              <option defaultValue>글씨 모양</option>
-              <option>일반</option>
-              <option>강조</option>
-              <option>옆으로</option>
-              <option>밑줄</option>
-              <option>가운데줄</option>
-            </select>
-            <select className={style.select}>
-              <option defaultValue>글씨 정렬</option>
-              <option>오른쪽</option>
-              <option>왼쪽</option>
-              <option>가운데</option>
-            </select>
+            <FontAwesomeIcon className={style.imgIcon} icon={faTextHeight} />
+            <FontAwesomeIcon className={style.imgIcon} icon={faUnderline} />
+            <FontAwesomeIcon className={style.imgIcon} icon={faItalic} />
+            <FontAwesomeIcon className={style.imgIcon} icon={faBold} />
+            <FontAwesomeIcon className={style.imgIcon} icon={faAlignJustify} />
+            <FontAwesomeIcon className={style.imgIcon} icon={faPalette} />
           </div>
         </main>
       </div>
