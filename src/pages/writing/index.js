@@ -8,12 +8,10 @@ import { useRouter } from "next/router";
 import {
   faAlignJustify,
   faBold,
-  faHouse,
   faItalic,
   faPalette,
   faTextHeight,
   faUnderline,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 //
 
@@ -33,11 +31,12 @@ const Writing = () => {
   const postWriting = () => {
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/apis/signup`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/post`,
         {
           title: inputValue.title,
           texts: inputValue.texts,
           author: inputValue.author,
+          tags: a,
         }
         // {
         //   Authorization: `Bearer ${"토큰"}`,
@@ -45,6 +44,7 @@ const Writing = () => {
       )
       .then((data) => {
         if (data.status === 200) {
+          alert("글 작성 완료");
           router.push("/");
         } else if (data.status === 400) {
           // alert("아이디 또는 비밀번호 다시 확인해주세요.");
