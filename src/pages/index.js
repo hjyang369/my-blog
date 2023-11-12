@@ -1,11 +1,27 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import style from "../styles/main.module.css";
+import Item from "@/components/common/Item/Item";
+import { useEffect, useState } from "react";
+import axios from "axios";
 //
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
-const Main = () => {
+export default function Main() {
+  const [itemListData, setItemListData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("/data/MAIN_LIST_DATA.json")
+      // .get("http://localhost:8080/posts")
+      .then((data) => {
+        console.log(data.data);
+        setItemListData(data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <>
       <Head>
@@ -14,9 +30,20 @@ const Main = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={style.main}>main 입니다</div>
+      <div className={style.main}>
+        {itemListData.map((item) => {
+          return (
+            <Item
+              key={item.id}
+              img={item.img}
+              title={item.title}
+              content={item.content}
+              author={item.author}
+              heartNum={item.heartNum}
+            />
+          );
+        })}
+      </div>
     </>
   );
-};
-
-export default Main;
+}
