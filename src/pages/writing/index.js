@@ -60,6 +60,8 @@ export default function Writing() {
   const titleValid =
     inputValue.title.length > 0 && inputValue.title.length <= 20;
   const textsValid = inputValue.texts.length > 10;
+  const authorValid = inputValue.author.length > 0;
+  const postValid = titleValid && textsValid && authorValid;
 
   return (
     <>
