@@ -8,14 +8,13 @@ import { useRouter } from "next/router";
 import {
   faAlignJustify,
   faBold,
-  faHouse,
   faItalic,
   faPalette,
   faTextHeight,
   faUnderline,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import Nav from "@/components/Nav/Nav";
 //
 
 // const inter = Inter({ subsets: ["latin"] });
@@ -58,6 +57,10 @@ export default function Writing() {
       });
   };
 
+  const titleValid =
+    inputValue.title.length > 0 && inputValue.title.length <= 20;
+  const textsValid = inputValue.texts.length > 10;
+
   return (
     <>
       <Head>
@@ -68,16 +71,22 @@ export default function Writing() {
       </Head>
 
       <main className={style.main}>
+        <Nav onclick={postWriting} />
         <div className={style.mainContainer}>
           <input
             name="title"
             placeholder="제목"
+            maxLength="20"
+            minLength="0"
+            required
             className={style.inputs}
             onChange={handleInput}
           ></input>
           <textarea
             name="texts"
             className={style.texts}
+            minLength="10"
+            required
             placeholder="내용을 입력해주세요."
             onChange={handleInput}
           ></textarea>
@@ -85,12 +94,15 @@ export default function Writing() {
             name="tag"
             className={style.inputs}
             placeholder="태그를 입력해보세요."
+            required
             onChange={handleInput}
           ></input>
           <input
             name="author"
             className={style.inputs}
             placeholder="작성자이름"
+            required
+            minLength="1"
             onChange={handleInput}
           ></input>
         </div>
@@ -123,7 +135,6 @@ export default function Writing() {
             <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
           </label>
         </div>
-        <button onClick={postWriting}></button>
       </main>
     </>
   );

@@ -4,6 +4,7 @@ import style from "../styles/main.module.css";
 import Item from "@/components/common/Item/Item";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Nav from "@/components/Nav/Nav";
 //
 
 // const inter = Inter({ subsets: ["latin"] });
@@ -15,7 +16,6 @@ export default function Main() {
       .get("/data/MAIN_LIST_DATA.json")
       // .get("http://localhost:8080/posts")
       .then((data) => {
-        console.log(data.data);
         setItemListData(data.data);
       })
       .catch((error) => {
@@ -30,7 +30,9 @@ export default function Main() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div className={style.main}>
+        <Nav onclick={null} />
         {itemListData.map((item) => {
           return (
             <Item
