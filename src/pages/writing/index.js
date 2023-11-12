@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import style from "./writing.module.css";
@@ -15,11 +15,12 @@ import {
   faUnderline,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 //
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
-const Writing = () => {
+export default function Writing() {
   const initInputValue = {
     title: "",
     texts: "",
@@ -33,11 +34,13 @@ const Writing = () => {
   const postWriting = () => {
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/apis/signup`,
+        // `${process.env.NEXT_PUBLIC_BASE_URL}/apis/signup`,
+        "http://localhost:8080/post",
         {
           title: inputValue.title,
-          texts: inputValue.texts,
+          content: inputValue.texts,
           author: inputValue.author,
+          tag: "",
         }
         // {
         //   Authorization: `Bearer ${"토큰"}`,
@@ -120,9 +123,8 @@ const Writing = () => {
             <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
           </label>
         </div>
+        <button onClick={postWriting}></button>
       </main>
     </>
   );
-};
-
-export default Writing;
+}
