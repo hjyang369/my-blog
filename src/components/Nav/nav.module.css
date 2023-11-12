@@ -1,22 +1,29 @@
 .nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+  padding: 1rem 0;
+  width: 62.5rem;
+  grid-area: nav;
 }
 
 .btn {
   font-size: 1.5rem;
-  border: 1px solid white;
-  background-color: white;
+  border: 0;
+  background-color: #f7f0d1;
   border-radius: 4px;
   padding: 0.5rem;
-  box-shadow: 0 2px 3px -2px #21253840;
+  color: #f0b31e;
 }
 
-.btn:hover {
-  border: 1px solid #f0b31e;
-  background-color: #f0b31e;
-  color: white;
-  transition: background-color 0.5s;
+.logo {
+  color: #f0b31e;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-align: center;
+  border: 0;
+  background-color: #f7f0d1;
 }
 
 .imgIcon {
