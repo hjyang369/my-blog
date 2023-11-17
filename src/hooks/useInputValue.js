@@ -8,7 +8,7 @@ const useInputValue = (initInput) => {
     setInputValue({ ...inputValue, [name]: value });
   };
 
-  return { inputValue, handleInput };
+  return { inputValue, setInputValue, handleInput };
 };
 
 export default useInputValue;

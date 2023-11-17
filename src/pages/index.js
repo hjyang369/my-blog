@@ -13,8 +13,8 @@ export default function Main() {
   const [itemListData, setItemListData] = useState([]);
   useEffect(() => {
     axios
-      .get("/data/MAIN_LIST_DATA.json")
-      // .get("http://localhost:8080/posts")
+      // .get("/data/MAIN_LIST_DATA.json")
+      .get("http://localhost:8080/posts")
       .then((data) => {
         setItemListData(data.data);
       })

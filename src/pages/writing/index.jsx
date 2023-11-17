@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Nav from "@/components/Nav/Nav";
+import { useState } from "react";
 //
 
 // const inter = Inter({ subsets: ["latin"] });
@@ -27,7 +28,9 @@ export default function Writing() {
     author: "",
   };
 
-  const { inputValue, handleInput } = useInputValue(initInputValue);
+  const { inputValue, setInputValue, handleInput } =
+    useInputValue(initInputValue);
+  const [tags, setTags] = useState([]);
   const router = useRouter();
 
   const postWriting = () => {
@@ -39,7 +42,7 @@ export default function Writing() {
           title: inputValue.title,
           content: inputValue.texts,
           author: inputValue.author,
-          tag: "",
+          tag: tags.join(""),
         }
         // {
         //   Authorization: `Bearer ${"토큰"}`,
@@ -49,7 +52,7 @@ export default function Writing() {
         if (data.status === 200) {
           router.push("/");
         } else if (data.status === 400) {
-          // alert("아이디 또는 비밀번호 다시 확인해주세요.");
+          alert("다시 확인해주세요.");
         }
       })
       .catch((error) => {
@@ -62,6 +65,26 @@ export default function Writing() {
   const textsValid = inputValue.texts.length > 10;
   const authorValid = inputValue.author.length > 0;
   const postValid = titleValid && textsValid && authorValid;
+
+  const makeTag = (e) => {
+    if (e.key === "Enter" && inputValue.tag !== "") {
+      if (tags.length < 3 && !tags.includes(inputValue.tag)) {
+        setTags([...tags, "#" + inputValue.tag]);
+        setInputValue({ ...inputValue, tag: "" });
+      } else if (tags.length >= 3) {
+        alert("태그는 최대 3개만 작성할 수 있어요.");
+      }
+    }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const removeTag = (idx) => {
+    const updatedTags = tags.filter((_, i) => i !== idx);
+    setTags(updatedTags);
+  };
 
   return (
     <>
@@ -92,13 +115,35 @@ export default function Writing() {
             placeholder="내용을 입력해주세요."
             onChange={handleInput}
           ></textarea>
-          <input
-            name="tag"
-            className={style.inputs}
-            placeholder="태그를 입력해보세요."
-            required
-            onChange={handleInput}
-          ></input>
+          <form
+            className={style.formInputs}
+            type="submit"
+            onSubmit={handleFormSubmit}
+          >
+            {tags.map((tag, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className={style.tags}
+                  onClick={() => removeTag(idx)}
+                >
+                  <p className={style.tagContent}>{tag}</p>
+                  <p>x</p>
+                </div>
+              );
+            })}
+
+            <input
+              type="text"
+              className={style.tagInput}
+              name="tag"
+              placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
+              required
+              onChange={(e) => handleInput(e)}
+              onKeyUp={(e) => makeTag(e)}
+              value={inputValue.tag}
+            ></input>
+          </form>
           <input
             name="author"
             className={style.inputs}
