@@ -1,20 +1,18 @@
 import Head from "next/head";
-// import { Inter } from "next/font/google";
 import style from "../styles/main.module.css";
-import Item from "@/components/common/Item/Item";
+import Item from "../components/common/Item/Item";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Nav from "@/components/Nav/Nav";
+import Nav from "../components/Nav/Nav";
+import React from "react";
 //
-
-// const inter = Inter({ subsets: ["latin"] });
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
   useEffect(() => {
     axios
       // .get("/data/MAIN_LIST_DATA.json")
-      .get("http://localhost:8080/posts")
+      .get("http://falsystack.jp:8080/posts")
       .then((data) => {
         setItemListData(data.data);
       })
@@ -22,6 +20,7 @@ export default function Main() {
         console.log(error);
       });
   }, []);
+
   return (
     <>
       <Head>
@@ -37,6 +36,7 @@ export default function Main() {
           return (
             <Item
               key={item.id}
+              id={item.id}
               img={item.img}
               title={item.title}
               content={item.content}

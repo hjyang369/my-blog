@@ -3,7 +3,7 @@ import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import style from "./writing.module.css";
-import useInputValue from "@/hooks/useInputValue";
+import useInputValue from "../../hooks/useInputValue";
 import { useRouter } from "next/router";
 import {
   faAlignJustify,
@@ -14,14 +14,23 @@ import {
   faUnderline,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import Nav from "@/components/Nav/Nav";
+import Nav from "../../components/Nav/Nav";
 import { useState } from "react";
+import React from "react";
+import { type } from "os";
 //
 
 // const inter = Inter({ subsets: ["latin"] });
 
+type inputValueType = {
+  title: string;
+  texts: string;
+  tag: string;
+  author: string;
+};
+
 export default function Writing() {
-  const initInputValue = {
+  const initInputValue: inputValueType = {
     title: "",
     texts: "",
     tag: "",
@@ -30,14 +39,14 @@ export default function Writing() {
 
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
 
   const postWriting = () => {
     axios
       .post(
-        // `${process.env.NEXT_PUBLIC_BASE_URL}/apis/signup`,
-        "http://localhost:8080/post",
+        // `${process.env.NEXT_PUBLIC_BASE_URL}/post`,
+        "http://falsystack.jp:8080/post",
         {
           title: inputValue.title,
           content: inputValue.texts,
@@ -101,8 +110,8 @@ export default function Writing() {
           <input
             name="title"
             placeholder="제목"
-            maxLength="20"
-            minLength="0"
+            maxLength={20}
+            minLength={0}
             required
             className={style.inputs}
             onChange={handleInput}
@@ -110,14 +119,14 @@ export default function Writing() {
           <textarea
             name="texts"
             className={style.texts}
-            minLength="10"
+            minLength={10}
             required
             placeholder="내용을 입력해주세요."
             onChange={handleInput}
           ></textarea>
           <form
             className={style.formInputs}
-            type="submit"
+            typeof="submit"
             onSubmit={handleFormSubmit}
           >
             {tags.map((tag, idx) => {
@@ -149,7 +158,7 @@ export default function Writing() {
             className={style.inputs}
             placeholder="작성자이름"
             required
-            minLength="1"
+            minLength={1}
             onChange={handleInput}
           ></input>
         </div>
