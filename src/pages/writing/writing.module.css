@@ -55,6 +55,45 @@
   background-color: white;
   box-shadow: 0 4px 10px #4b57a90d;
 }
+.formInputs {
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 1rem;
+  height: 2rem;
+  margin: 1rem 0rem;
+  font-size: 1.4rem;
+  border: 1px solid white;
+  background-color: white;
+  box-shadow: 0 4px 10px #4b57a90d;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tagContainer {
+  display: flex;
+}
+.tagInput {
+  border: 0;
+  outline: none;
+}
+.tagInput:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.tags {
+  background-color: #f7f0d1;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem;
+  height: 2rem;
+}
+.tagContent {
+  font-size: 1.2rem;
+}
 
 .texts {
   height: 40rem;
