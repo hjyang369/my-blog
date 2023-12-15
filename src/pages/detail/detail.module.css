@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.all {
+  width: 62.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.titleContainer {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.header {
+  margin: 0;
+  font-size: 3.3rem;
+}
+
+.postData {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+.text {
+  font-size: 1.2rem;
+  color: #65717b;
+}
+
+.main {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tagContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.article {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+}
