@@ -1,5 +1,4 @@
 import Head from "next/head";
-// import { Inter } from "next/font/google";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import style from "./writing.module.css";
@@ -17,10 +16,8 @@ import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useState } from "react";
 import React from "react";
-import { type } from "os";
+import Tag from "../../components/common/Tag";
 //
-
-// const inter = Inter({ subsets: ["latin"] });
 
 type inputValueType = {
   title: string;
@@ -51,7 +48,7 @@ export default function Writing() {
           title: inputValue.title,
           content: inputValue.texts,
           author: inputValue.author,
-          tag: tags.join(""),
+          hashTags: tags.join(""),
         }
         // {
         //   Authorization: `Bearer ${"토큰"}`,
@@ -130,16 +127,7 @@ export default function Writing() {
             onSubmit={handleFormSubmit}
           >
             {tags.map((tag, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className={style.tags}
-                  onClick={() => removeTag(idx)}
-                >
-                  <p className={style.tagContent}>{tag}</p>
-                  <p>x</p>
-                </div>
-              );
+              return <Tag key={idx} isWriting={removeTag} tag={tag} id={idx} />;
             })}
 
             <input

@@ -80,21 +80,6 @@
   color: transparent;
 }
 
-.tags {
-  background-color: #f7f0d1;
-  border: 1px solid #bbb;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.5rem;
-  height: 2rem;
-}
-.tagContent {
-  font-size: 1.2rem;
-}
-
 .texts {
   height: 40rem;
   resize: none;
