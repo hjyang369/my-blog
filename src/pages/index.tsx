@@ -5,21 +5,27 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
 //
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
+  const { page, loaderRef, loading, setLoading } =
+    useInfiniteScroll(itemListData);
+
   useEffect(() => {
     axios
-      // .get("/data/MAIN_LIST_DATA.json")
       .get("http://falsystack.jp:8080/posts")
       .then((data) => {
-        setItemListData(data.data);
+        setItemListData([...itemListData, ...data.data]);
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -45,6 +51,12 @@ export default function Main() {
             />
           );
         })}
+
+        {loading && <div>loading...</div>}
+        <div
+          ref={loaderRef}
+          style={{ height: "100px", background: "transparent" }}
+        />
       </div>
     </>
   );
