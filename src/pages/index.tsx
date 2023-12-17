@@ -9,10 +9,11 @@ import React from "react";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
+
   useEffect(() => {
     axios
       // .get("/data/MAIN_LIST_DATA.json")
-      .get("http://falsystack.jp:8080/posts")
+      .get("https://api.falsystack.jp/posts")
       .then((data) => {
         setItemListData(data.data);
       })
