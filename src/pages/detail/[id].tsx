@@ -28,6 +28,7 @@ const initialPostingData: postingDataType = {
 export default function Detail() {
   const router = useRouter();
   const { id } = router.query;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const [postingData, setPostingData] =
     useState<postingDataType>(initialPostingData);
@@ -37,8 +38,7 @@ export default function Detail() {
     if (id) {
       axios
         .get(
-          // `${process.env.NEXT_PUBLIC_BASE_URL}/post`,
-          `http://falsystack.jp:8080/post/${id}`
+          `${baseUrl}/post/${id}`
 
           // {
           //   Authorization: `Bearer ${"토큰"}`,
