@@ -9,11 +9,11 @@ import React from "react";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   useEffect(() => {
     axios
-      // .get("/data/MAIN_LIST_DATA.json")
-      .get("https://api.falsystack.jp/posts")
+      .get(`${baseUrl}/posts`)
       .then((data) => {
         setItemListData(data.data);
       })
