@@ -13,9 +13,11 @@ export default function Main() {
   const { page, loaderRef, loading, setLoading } =
     useInfiniteScroll(itemListData);
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
   useEffect(() => {
     axios
-      .get("http://falsystack.jp:8080/posts")
+      .get(`${baseUrl}/posts`)
       .then((data) => {
         setItemListData([...itemListData, ...data.data]);
       })

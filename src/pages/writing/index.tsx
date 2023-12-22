@@ -38,12 +38,12 @@ export default function Writing() {
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const postWriting = () => {
     axios
       .post(
-        // `${process.env.NEXT_PUBLIC_BASE_URL}/post`,
-        "http://falsystack.jp:8080/post",
+        `${baseUrl}/post`,
         {
           title: inputValue.title,
           content: inputValue.texts,
