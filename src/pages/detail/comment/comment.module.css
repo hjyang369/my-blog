@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2rem;
+}
+.name {
+  color: #f0b31e;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px lightgray;
+}
+.buttons {
+  display: flex;
+  text-align: center;
+  gap: 1rem;
+  font-size: 2rem;
+}
+
+.text {
+  padding-top: 1rem;
+  font-size: 1.2rem;
+}

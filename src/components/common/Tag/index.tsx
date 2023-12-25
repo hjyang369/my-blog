@@ -10,7 +10,7 @@ type tagProps = {
 export default function Tag({ isWriting, tag, id }: tagProps) {
   return (
     <div className={style.tags} onClick={() => isWriting(id)}>
-      <p className={style.tagContent}>{tag}</p>
+      <p className={style.tagContent}># {tag}</p>
       {isWriting && <p>x</p>}
     </div>
   );
