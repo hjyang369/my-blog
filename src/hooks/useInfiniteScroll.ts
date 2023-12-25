@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 
 const useInfiniteScroll = (data) => {
-  const [page, setPage] = useState(0);
+  // const [page, setPage] = useState(1);
   // const [noMoreData, setNoMoreData] = useState(false);
+  const page = useRef(1);
 
   const loaderRef = useRef<HTMLDivElement>(null);
   const observer = useRef<IntersectionObserver | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+  const handleObserver = async (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
     if (target.isIntersecting && !loading) {
-      setLoading(true);
-      if (data.length > 0 && !loading) {
-        setPage((prev) => prev + 1);
+      await setLoading(true);
+      await setLoading(false);
+
+      if (data.length > 0) {
+        page.current += 1;
       }
     }
   };
@@ -36,7 +39,7 @@ const useInfiniteScroll = (data) => {
         observer.current.disconnect();
       }
     };
-  }, [data]);
+  }, [data, page.current]);
 
   return { page, loaderRef, loading, setLoading };
 };

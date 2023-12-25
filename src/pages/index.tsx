@@ -6,7 +6,6 @@ import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
 import useInfiniteScroll from "../hooks/useInfiniteScroll";
-//
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -19,7 +18,7 @@ export default function Main() {
     axios
       .get(`${baseUrl}/posts`)
       .then((data) => {
-        setItemListData([...itemListData, ...data.data]);
+        setItemListData((prevData) => [...prevData, ...data.data]);
       })
       .catch((error) => {
         console.log(error);
@@ -27,7 +26,10 @@ export default function Main() {
       .finally(() => {
         setLoading(false);
       });
-  }, [page]);
+  }, [page.current]);
+
+  console.log("page", page.current);
+  console.log("loading", loading);
 
   return (
     <>
