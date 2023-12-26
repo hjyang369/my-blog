@@ -9,4 +9,8 @@ button,
 select {
   cursor: pointer;
   border: 0;
+  padding: 0;
+}
+button {
+  background-color: #fff;
 }
