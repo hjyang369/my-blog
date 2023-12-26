@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import Tag from "../../components/common/Tag";
 import CommentsList from "./commentsList";
 import Button from "../../components/common/button";
+import IC_Like from "../../../public/icon/Like";
 //
 
 type postingDataType = {
@@ -28,13 +29,13 @@ const initialPostingData: postingDataType = {
 };
 
 export default function Detail() {
-  const router = useRouter();
-  const { id } = router.query;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  // const router = useRouter();
+  // const { id } = router.query;
+  // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const [postingData, setPostingData] =
-    useState<postingDataType>(initialPostingData);
-  // const { title, content, author, hashTags, createdAt } = postingData;
+  // const [postingData, setPostingData] =
+  //   useState<postingDataType>(initialPostingData);
+  // // const { title, content, author, hashTags, createdAt } = postingData;
   const { title, content, author, hashTags, createdAt } = MOCK_DATA;
 
   // useEffect(() => {
@@ -90,7 +91,9 @@ export default function Detail() {
               <div className={style.tagContainer}>
                 <Button width="5rem" text={"수정"} fontSize={"1.4rem"} />
                 <Button width="5rem" text={"삭제"} fontSize={"1.4rem"} />
-                <Button width="" text={"❤️"} fontSize={"1.4rem"} />
+                <button>
+                  <IC_Like width="2rem" height="2rem" isFill={false} />
+                </button>
               </div>
             </div>
             <article className={style.article}>{content}</article>

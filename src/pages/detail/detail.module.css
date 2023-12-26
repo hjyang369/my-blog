@@ -41,12 +41,14 @@
 
 .tagContainer {
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
 .buttons {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .article {
