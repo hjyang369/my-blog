@@ -2,16 +2,16 @@ import React from "react";
 import style from "./tag.module.css";
 
 type tagProps = {
-  isWriting?: (idx: number) => void;
+  onclick?: (idx: number) => void;
   tag: string;
   id: number;
 };
 
-export default function Tag({ isWriting, tag, id }: tagProps) {
+export default function Tag({ onclick, tag, id }: tagProps) {
   return (
-    <div className={style.tags} onClick={() => isWriting(id)}>
-      <p className={style.tagContent}># {tag}</p>
-      {isWriting && <p>x</p>}
+    <div className={style.tags} onClick={() => onclick(id)}>
+      <p className={style.tagContent}>{tag}</p>
+      {onclick !== undefined && <p className={style.tagContent}>x</p>}
     </div>
   );
 }

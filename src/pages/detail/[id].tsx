@@ -64,8 +64,7 @@ export default function Detail() {
   const deletePost = () => {
     axios
       .delete(
-        `${baseUrl}/post/${id}`,
-        { withCredentials: true }
+        `${baseUrl}/post/${id}`
 
         // {
         //   Authorization: `Bearer ${"토큰"}`,
@@ -122,7 +121,10 @@ export default function Detail() {
               <div className={style.tagContainer}>
                 {hashTags.length > 0 &&
                   hashTags.map((tag) => {
-                    return <Tag key={tag.id} tag={tag.name} id={tag.id} />;
+                    console.log(hashTags);
+                    return (
+                      <Tag key={tag.id} tag={"#" + tag.name} id={tag.id} />
+                    );
                   })}
               </div>
               <div className={style.tagContainer}>
