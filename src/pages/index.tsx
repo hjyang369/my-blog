@@ -5,31 +5,33 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
-import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
-  const { page, loaderRef, loading, setLoading } =
-    useInfiniteScroll(itemListData);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/posts`)
+  const getPostList = async () => {
+    setLoading(true);
+    await axios
+      .get(`${baseUrl}/posts?page=${page}&size=10`)
       .then((data) => {
         setItemListData((prevData) => [...prevData, ...data.data]);
+        // setPage((prev) => prev + 1);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
       });
-  }, [page.current]);
+  };
 
-  console.log("page", page.current);
-  console.log("loading", loading);
+  const isLastItem = itemListData.length === 100;
+
+  useEffect(() => {
+    !isLastItem && getPostList();
+  }, [page]);
 
   return (
     <>
@@ -42,25 +44,30 @@ export default function Main() {
 
       <div className={style.main}>
         <Nav onclick={null} />
-        {itemListData.map((item) => {
-          return (
-            <Item
-              key={item.id}
-              id={item.id}
-              img={item.img}
-              title={item.title}
-              content={item.content}
-              author={item.author}
-              heartNum={item.heartNum}
-            />
-          );
-        })}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {itemListData.map((item, idx) => {
+            return (
+              <Item
+                onFetchMore={() => setPage((prev) => prev + 1)}
+                isLastItem={itemListData.length - 1 === idx}
+                key={item.id}
+                // id={item.id}
+                // img={item.img}
+                // title={item.title}
+                // content={item.content}
+                // author={item.author}
+                // heartNum={item.heartNum}
+                {...item}
+              />
+            );
+          })}
+        </div>
 
-        {loading && <div>loading...</div>}
-        <div
-          ref={loaderRef}
-          style={{ height: "100px", background: "transparent" }}
-        />
+        {/* {itemListData.length > 0 && loading ? (
+          <div ref={ref}>스크롤 loading ...</div>
+        ) : (
+          <div>loading</div>
+        )} */}
       </div>
     </>
   );
