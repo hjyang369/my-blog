@@ -51,23 +51,13 @@ export default function Main() {
                 onFetchMore={() => setPage((prev) => prev + 1)}
                 isLastItem={itemListData.length - 1 === idx}
                 key={item.id}
-                // id={item.id}
-                // img={item.img}
-                // title={item.title}
-                // content={item.content}
-                // author={item.author}
-                // heartNum={item.heartNum}
                 {...item}
               />
             );
           })}
         </div>
 
-        {/* {itemListData.length > 0 && loading ? (
-          <div ref={ref}>스크롤 loading ...</div>
-        ) : (
-          <div>loading</div>
-        )} */}
+        {!isLastItem && <div>loading</div>}
       </div>
     </>
   );
