@@ -1,15 +1,23 @@
 .nav {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
   align-items: center;
   height: 4rem;
   padding: 1rem 0;
-  width: 62.5rem;
+  width: 62.5rem; */
   grid-area: nav;
 }
 
 .btn {
   font-size: 1.5rem;
+  border: 0;
+  background-color: #f7f0d1;
+  border-radius: 4px;
+  padding: 0.5rem;
+  color: #f0b31e;
+}
+
+.iconBtn {
   border: 0;
   background-color: #f7f0d1;
   border-radius: 4px;
