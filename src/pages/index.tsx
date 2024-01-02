@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
+import SearchBar from "../components/common/searchBar";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isSearch, setIsSearch] = useState(true); //전역으로 뺄것
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -19,7 +21,6 @@ export default function Main() {
       .get(`${baseUrl}/posts?page=${page}&size=10`)
       .then((data) => {
         setItemListData((prevData) => [...prevData, ...data.data]);
-        // setPage((prev) => prev + 1);
         setLoading(false);
       })
       .catch((error) => {
@@ -44,6 +45,8 @@ export default function Main() {
 
       <div className={style.main}>
         <Nav onclick={null} />
+        {isSearch && <SearchBar />}
+
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {itemListData.map((item, idx) => {
             return (
