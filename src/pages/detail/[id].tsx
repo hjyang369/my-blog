@@ -61,6 +61,7 @@ export default function Detail() {
   //   }
   // }, [id]);
 
+  //지우기
   return (
     <>
       <Head>

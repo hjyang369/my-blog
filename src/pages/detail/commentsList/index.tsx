@@ -7,6 +7,7 @@ export default function CommentsList() {
     <div className={style.container}>
       <p className={style.commentNum}>댓글 {MOCK_DATA.length}</p>
       <hr className={style.line}></hr>
+      <p className="text-3xl font-bold underline">ddddd</p>
 
       {MOCK_DATA.map((comment) => {
         return <Comment key={comment.id} comment={comment} />;
