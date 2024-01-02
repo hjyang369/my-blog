@@ -17,6 +17,14 @@
   color: #f0b31e;
 }
 
+.iconBtn {
+  border: 0;
+  background-color: #f7f0d1;
+  border-radius: 4px;
+  padding: 0.5rem;
+  color: #f0b31e;
+}
+
 .logo {
   color: #f0b31e;
   font-size: 2.5rem;
