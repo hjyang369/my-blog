@@ -24,7 +24,6 @@ export default function Button({
         fontSize: fontSize,
         color: color,
       }}
-      onClick={onclick}
     >
       {text}
     </button>
