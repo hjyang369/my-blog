@@ -2,7 +2,7 @@ import React from "react";
 import style from "./tag.module.css";
 
 type tagProps = {
-  onclick?: (idx: number) => void;
+  isWriting?: (idx: number) => void;
   tag: string;
   id?: number;
   totalNumber?: number;
