@@ -5,28 +5,40 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
+import { PostDataType } from "../types/post";
+import { idState } from "../store/savePost";
+import { useRecoilState } from "recoil";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
   const [page, setPage] = useState(1);
+  const [isLastItem, setIsLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
+  const idList = useRecoilState(idState);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const getPostList = async () => {
     setLoading(true);
+
     await axios
       .get(`${baseUrl}/posts?page=${page}&size=10`)
       .then((data) => {
-        setItemListData((prevData) => [...prevData, ...data.data]);
+        const newData: PostDataType[] = data.data.postResponses || [];
+        const UpdateData = newData.map((item) => {
+          const isScraped = idList[0].includes(item?.id);
+          return { ...item, like: isScraped };
+        });
+
+        setItemListData((prevData) => [...prevData, ...UpdateData]);
         setLoading(false);
+        data.data.isLast === true && setIsLastItem(true);
       })
+
       .catch((error) => {
         console.log(error);
       });
   };
-
-  const isLastItem = itemListData.length === 100;
 
   useEffect(() => {
     !isLastItem && getPostList();

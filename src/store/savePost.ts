@@ -21,6 +21,7 @@ const { persistAtom } = recoilPersist({
 export const idState = atom({
   key: "savedId",
   default: [],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const savedPostState = atom<PostDataType[]>({

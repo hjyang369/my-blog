@@ -1,19 +1,18 @@
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import style from "./item.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
-import { savedPostState } from "../../../store/savePost";
+import { idState, savedPostState } from "../../../store/savePost";
 import IC_Like from "../../../../public/icon/Like";
 import { useRecoilState } from "recoil";
 
 export default function Item({ isLastItem, onFetchMore, ...props }) {
   const [isSaved, setIsSaved] = useState(false);
   const [posts, setPosts] = useRecoilState(savedPostState);
+  const [idList, setIdList] = useRecoilState(idState);
 
   const router = useRouter();
-  const { id, img, title, content, author, hashTags, createdAt } = props;
+  const { id, img, title, content, author, hashTags, createdAt, like } = props;
 
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
@@ -22,6 +21,12 @@ export default function Item({ isLastItem, onFetchMore, ...props }) {
   useEffect(() => {
     isLastItem && isIntersecting && onFetchMore();
   }, [isLastItem, isIntersecting]);
+
+  useEffect(() => {
+    if (like) {
+      setIsSaved(like);
+    }
+  }, []);
 
   const handleSavePost = (id: number) => {
     isSaved === true ? removePost(id) : savePost();
@@ -41,11 +46,15 @@ export default function Item({ isLastItem, onFetchMore, ...props }) {
 
     setIsSaved(true);
     setPosts([...posts, newSavedPost]);
+    setIdList([...idList, id]);
   };
 
   const removePost = (id: number) => {
-    const updatedPosts = posts.filter((e: any) => e.id !== id);
-    setPosts(updatedPosts);
+    const updatedPost = posts.filter((e: any) => e.id !== id);
+    const updatedId = idList.filter((ele: number) => ele !== id);
+
+    setPosts(updatedPost);
+    setIdList(updatedId);
     setIsSaved(false);
   };
 
