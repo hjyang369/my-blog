@@ -18,6 +18,7 @@ export default function Button({
   return (
     <button
       className={style.button}
+      onClick={onclick}
       style={{
         width: width,
         fontSize: fontSize,

@@ -4,14 +4,16 @@ import style from "./tag.module.css";
 type tagProps = {
   onclick?: (idx: number) => void;
   tag: string;
-  id: number;
+  id?: number;
+  totalNumber?: number;
 };
 
-export default function Tag({ onclick, tag, id }: tagProps) {
+export default function Tag({ isWriting, tag, id, totalNumber }: tagProps) {
   return (
-    <div className={style.tags} onClick={() => onclick(id)}>
-      <p className={style.tagContent}>{tag}</p>
-      {onclick !== undefined && <p className={style.tagContent}>x</p>}
+    <div className={style.tags} onClick={() => isWriting(id)}>
+      <p className={style.tagContent}># {tag}</p>
+      {isWriting && <p>x</p>}
+      {totalNumber && <p>( {totalNumber} )</p>}
     </div>
   );
 }
