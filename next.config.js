@@ -9,6 +9,14 @@ const nextConfig = {
     });
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: "/post/:path*",
+        destination: `https://falsystack.jp/:path*`,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

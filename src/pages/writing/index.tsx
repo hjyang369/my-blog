@@ -73,12 +73,20 @@ export default function Writing() {
   const postValid = titleValid && textsValid && authorValid;
 
   const makeTag = (e) => {
+    const completedTag = "#" + inputValue.tag;
+
     if (e.key === "Enter" && inputValue.tag !== "") {
-      if (tags.length < 3 && !tags.includes(inputValue.tag)) {
-        setTags([...tags, "#" + inputValue.tag]);
-        setInputValue({ ...inputValue, tag: "" });
+      if (tags.length < 3) {
+        if (!tags.includes(completedTag)) {
+          setTags([...tags, completedTag]);
+          setInputValue({ ...inputValue, tag: "" });
+        } else {
+          alert("중복된 태그입니다.");
+          setInputValue({ ...inputValue, tag: "" });
+        }
       } else if (tags.length >= 3) {
         alert("태그는 최대 3개만 작성할 수 있어요.");
+        setInputValue({ ...inputValue, tag: "" });
       }
     }
   };
@@ -88,8 +96,12 @@ export default function Writing() {
   };
 
   const removeTag = (idx) => {
-    const updatedTags = tags.filter((_, i) => i !== idx);
-    setTags(updatedTags);
+    const confirmation = window.confirm("태그를 삭제하시겠습니까?");
+
+    if (confirmation) {
+      const updatedTags = tags.filter((_, i) => i !== idx);
+      setTags(updatedTags);
+    }
   };
 
   return (
