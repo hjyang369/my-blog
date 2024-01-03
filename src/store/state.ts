@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 
+//예시!!
 export interface IContentTypes {
   name: string;
   status: boolean;
