@@ -19,7 +19,6 @@ export default function Main() {
       .get(`${baseUrl}/posts?page=${page}&size=10`)
       .then((data) => {
         setItemListData((prevData) => [...prevData, ...data.data]);
-        // setPage((prev) => prev + 1);
         setLoading(false);
       })
       .catch((error) => {
