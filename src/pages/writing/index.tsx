@@ -139,7 +139,7 @@ export default function Writing() {
             onSubmit={handleFormSubmit}
           >
             {tags.map((tag, idx) => {
-              return <Tag key={idx} onclick={removeTag} tag={tag} id={idx} />;
+              return <Tag key={idx} isWriting={removeTag} tag={tag} id={idx} />;
             })}
 
             <input
