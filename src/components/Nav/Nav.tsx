@@ -7,6 +7,7 @@ import IC_Search from "../../../public/icon/Search";
 import { useState } from "react";
 import Button from "../common/button";
 import HoverButton from "../common/hoverButton";
+import IC_Language from "../../../public/icon/Language";
 
 export default function Nav({ onclick }) {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function Nav({ onclick }) {
           <FontAwesomeIcon className={style.imgIcon} icon={faUser} />
         </button> */}
         <button className={style.iconBtn}>
-          <IC_Search width="3rem" height="3rem" color="#f0b31e" />
+          <IC_Language width="2.5rem" height="2.5rem" />
         </button>
         <button className={style.btn}>
           <FontAwesomeIcon

@@ -5,15 +5,13 @@ type tagProps = {
   isWriting?: (idx: number) => void;
   tag: string;
   id?: number;
-  totalNumber?: number;
 };
 
-export default function Tag({ isWriting, tag, id, totalNumber }: tagProps) {
+export default function Tag({ isWriting, tag, id }: tagProps) {
   return (
     <div className={style.tags} onClick={() => isWriting(id)}>
-      <p className={style.tagContent}># {tag}</p>
+      <p className={style.tagContent}>{tag}</p>
       {isWriting && <p>x</p>}
-      {totalNumber && <p>( {totalNumber} )</p>}
     </div>
   );
 }

@@ -121,9 +121,7 @@ export default function Detail() {
               <div className={style.tagContainer}>
                 {hashTags.length > 0 &&
                   hashTags.map((tag) => {
-                    return (
-                      <Tag key={tag.id} tag={"#" + tag.name} id={tag.id} />
-                    );
+                    return <Tag key={tag.id} tag={tag.name} id={tag.id} />;
                   })}
               </div>
               <div className={style.tagContainer}>

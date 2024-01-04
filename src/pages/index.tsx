@@ -8,7 +8,8 @@ import React from "react";
 import { PostDataType } from "../types/post";
 import { idState } from "../store/savePost";
 import { useRecoilState } from "recoil";
-import SearchBar from "../components/common/searchBar";
+import FilterModal from "../components/Filter";
+import FilterBar from "../components/Filter/filterBar";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -57,7 +58,8 @@ export default function Main() {
 
       <div className={style.main}>
         <Nav onclick={null} />
-        {isSearch && <SearchBar />}
+        <FilterBar />
+        {isSearch && <FilterModal />}
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {itemListData.map((item, idx) => {
