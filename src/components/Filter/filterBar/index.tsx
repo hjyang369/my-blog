@@ -3,7 +3,7 @@ import IC_Search from "../../../../public/icon/Search";
 import Tag from "../../common/Tag";
 import Button from "../../common/button";
 import Input from "../../common/input";
-import { filterTitleState } from "../../../store/filter";
+import { filterTitleState } from "../../../store/filterStore";
 
 export default function FilterBar() {
   const [filterText, setFilterText] = useRecoilState(filterTitleState);

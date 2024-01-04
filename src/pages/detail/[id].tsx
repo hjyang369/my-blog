@@ -9,7 +9,7 @@ import CommentsList from "./commentsList";
 import Button from "../../components/common/button";
 import IC_Like from "../../../public/icon/Like";
 import { useRecoilState } from "recoil";
-import { idState } from "../../store/savePost";
+import { idState } from "../../store/savePostStore";
 import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
 

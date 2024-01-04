@@ -4,7 +4,7 @@ import style from "../../styles/main.module.css";
 import React from "react";
 
 import { useRecoilState } from "recoil";
-import { idState, savedPostState } from "../../store/savePost";
+import { idState, savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
 

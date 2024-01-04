@@ -4,8 +4,6 @@ import Button from "../common/button";
 import HoverButton from "../common/hoverButton";
 import SearchBar from "./searchBar";
 
-// class="w-width60 h-16 rounded-xl8 bg-yellow100 shadow-shadow100 pl-16 text-2xl"
-
 export default function FilterModal() {
   return (
     <div className="relative flex flex-col gap-4">

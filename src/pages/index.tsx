@@ -6,7 +6,7 @@ import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
 import { PostDataType } from "../types/post";
-import { idState } from "../store/savePost";
+import { idState } from "../store/savePostStore";
 import { useRecoilState } from "recoil";
 import FilterModal from "../components/Filter";
 import FilterBar from "../components/Filter/filterBar";

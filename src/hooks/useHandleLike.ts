@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { idState, savedPostState } from "../store/savePost";
+import { idState, savedPostState } from "../store/savePostStore";
 import { PostDataType } from "../types/post";
 
 const useHandleLike = (newSavedPost: PostDataType) => {
