@@ -5,12 +5,20 @@ type buttonProps = {
   text: string;
   fontSize: string;
   color?: string;
+  onclick?: () => void;
 };
 
-export default function Button({ width, text, fontSize, color }: buttonProps) {
+export default function Button({
+  width,
+  text,
+  fontSize,
+  color,
+  onclick,
+}: buttonProps) {
   return (
     <button
       className={style.button}
+      onClick={onclick}
       style={{
         width: width,
         fontSize: fontSize,

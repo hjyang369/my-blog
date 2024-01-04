@@ -9,6 +9,12 @@
   padding: 0.5rem;
   height: 2rem;
 }
+
+.tags:hover {
+  border: 1px solid #fc8e8e;
+  color: #fc8e8e;
+}
+
 .tagContent {
   font-size: 1.2rem;
 }
