@@ -1,19 +1,19 @@
 import Head from "next/head";
 import style from "../../styles/main.module.css";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { useRecoilState } from "recoil";
 import { idState, savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
+import FilterBar from "../../components/Filter/filterBar";
+import FilterModal from "../../components/Filter";
 
 export default function Like() {
-  const idList = useRecoilState(idState);
   const savedPosts = useRecoilState(savedPostState);
   const postList = savedPosts[0];
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const [isSearch, setIsSearch] = useState(false);
 
   return (
     <>
@@ -26,6 +26,9 @@ export default function Like() {
 
       <div className={style.main}>
         <Nav onclick={null} />
+        <FilterBar onclick={() => setIsSearch(!isSearch)} />
+        {isSearch && <FilterModal />}
+
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {postList.map((item, idx) => {
             return (

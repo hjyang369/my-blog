@@ -17,7 +17,7 @@ export default function Main() {
   const [isLastItem, setIsLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
   const idList = useRecoilState(idState);
-  const [isSearch, setIsSearch] = useState(true); //전역으로 뺄것
+  const [isSearch, setIsSearch] = useState(false);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -58,7 +58,7 @@ export default function Main() {
 
       <div className={style.main}>
         <Nav onclick={null} />
-        <FilterBar />
+        <FilterBar onclick={() => setIsSearch(!isSearch)} />
         {isSearch && <FilterModal />}
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

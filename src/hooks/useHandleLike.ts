@@ -10,7 +10,7 @@ const useHandleLike = (newSavedPost: PostDataType) => {
 
   const savePost = (newSavedPost: PostDataType) => {
     setIsSaved(true);
-    setPosts([...posts, newSavedPost]);
+    setPosts([...posts, { ...newSavedPost, like: true }]);
     setIdList([...idList, newSavedPost.id]);
   };
 

@@ -139,7 +139,15 @@ export default function Writing() {
             onSubmit={handleFormSubmit}
           >
             {tags.map((tag, idx) => {
-              return <Tag key={idx} isWriting={removeTag} tag={tag} id={idx} />;
+              return (
+                <Tag
+                  key={idx}
+                  isWriting
+                  removeTag={removeTag}
+                  tag={tag}
+                  tagId={idx}
+                />
+              );
             })}
 
             <input
@@ -163,7 +171,7 @@ export default function Writing() {
           ></input>
         </div>
 
-        <div className={style.IconContainer}>
+        {/* <div className={style.IconContainer}>
           <label htmlFor="file" className={style.textsIconBox}>
             <FontAwesomeIcon className={style.textsIcon} icon={faImage} />
           </label>
@@ -190,7 +198,7 @@ export default function Writing() {
           <label className={style.textsIconBox}>
             <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
           </label>
-        </div>
+        </div> */}
       </main>
     </>
   );

@@ -4,15 +4,23 @@ import Tag from "../../common/Tag";
 import Button from "../../common/button";
 import Input from "../../common/input";
 import { filterTitleState } from "../../../store/filterStore";
+import { MouseEventHandler } from "react";
 
-export default function FilterBar() {
+type FilterBarProps = {
+  onclick: () => void;
+};
+
+export default function FilterBar({ onclick }: FilterBarProps) {
   const [filterText, setFilterText] = useRecoilState(filterTitleState);
   const changeFilterTitle = (e) => {
     setFilterText;
   };
 
   return (
-    <div className="relative w-width60 flex justify-between gap-4">
+    <div
+      onClick={onclick}
+      className="relative w-width60 flex justify-between gap-4"
+    >
       <select className="w-1/4 rounded-lg p-4 text-xl">
         <option>최신순</option>
         <option>옛날순</option>
