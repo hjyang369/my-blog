@@ -1,13 +1,17 @@
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import style from "./item.module.css";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
+import IC_Like from "../../../../public/icon/Like";
+import useHandleLike from "../../../hooks/useHandleLike";
 
 export default function Item({ isLastItem, onFetchMore, ...props }) {
+  const { id, img, title, content, author, hashTags, createdAt, like } = props;
+  const data = { id, title, content, author, hashTags, createdAt, like };
+
+  const { isSaved, handleSavePost } = useHandleLike(data);
+
   const router = useRouter();
-  const { id, img, title, content, author, heartNum } = props;
 
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
@@ -18,11 +22,7 @@ export default function Item({ isLastItem, onFetchMore, ...props }) {
   }, [isLastItem, isIntersecting]);
 
   return (
-    <div
-      ref={ref}
-      className={style.item}
-      onClick={() => router.push(`/detail/${id}`)}
-    >
+    <div ref={ref} className={style.item}>
       <img
         alt="임시대표이미지"
         src="./images/IMG_7631.jpg"
@@ -30,16 +30,20 @@ export default function Item({ isLastItem, onFetchMore, ...props }) {
       />
       {/* <img alt="대표이미지" src={img} className={style.mainImg} /> */}
       <div className={style.mainBox}>
-        <div className={style.textBox}>
+        <div
+          className={style.textBox}
+          onClick={() => router.push(`/detail/${id}`)}
+        >
           <h1 className={style.title}>{title}</h1>
           <p className={style.texts}>{content}</p>
         </div>
 
         <div className={style.authorData}>
           <p className={style.author}>{author}</p>
-          <div className={style.heartBox}>
-            <FontAwesomeIcon icon={faHeart} className={style.icon} />
-            <p className={style.heartNum}>{heartNum}</p>
+          <div className={style.heartBox} onClick={() => handleSavePost(id)}>
+            <IC_Like width="2rem" height="2rem" isFill={isSaved} />
+
+            {/* <p className={style.heartNum}>{heartNum}</p> */}
           </div>
         </div>
       </div>

@@ -8,34 +8,31 @@ import Tag from "../../components/common/Tag";
 import CommentsList from "./commentsList";
 import Button from "../../components/common/button";
 import IC_Like from "../../../public/icon/Like";
-//
+import { useRecoilState } from "recoil";
+import { idState } from "../../store/savePost";
+import { PostDataType } from "../../types/post";
+import useHandleLike from "../../hooks/useHandleLike";
 
-type postingDataType = {
-  id: number;
-  title: string;
-  content: string;
-  author: string;
-  hashTags: [{ id: number; name: string }];
-  createdAt: string;
-};
-
-const initialPostingData: postingDataType = {
+const initialPostingData: PostDataType = {
   id: 0,
   title: "",
   content: "",
   author: "",
   hashTags: [{ id: 0, name: "" }],
   createdAt: "",
+  like: false,
 };
 
 export default function Detail() {
   const router = useRouter();
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const idList = useRecoilState(idState);
 
   const [postingData, setPostingData] =
-    useState<postingDataType>(initialPostingData);
-  const { title, content, author, hashTags, createdAt } = postingData;
+    useState<PostDataType>(initialPostingData);
+  const { title, content, author, hashTags, createdAt, like } = postingData;
+  const { isSaved, setIsSaved, handleSavePost } = useHandleLike(postingData);
 
   useEffect(() => {
     if (id) {
@@ -49,7 +46,11 @@ export default function Detail() {
         )
         .then((data) => {
           if (data.status === 200) {
-            setPostingData(data.data);
+            const newData = data.data;
+            const isScraped = idList[0].includes(newData.id);
+            const addLike = { ...newData, like: isScraped };
+            setPostingData(addLike);
+            setIsSaved(isScraped);
           } else if (data.status === 400) {
             alert("다시 확인해주세요.");
           }
@@ -133,8 +134,8 @@ export default function Detail() {
                   fontSize={"1.4rem"}
                   onclick={deletePost}
                 />
-                <button>
-                  <IC_Like width="2rem" height="2rem" isFill={false} />
+                <button onClick={() => handleSavePost(Number(id))}>
+                  <IC_Like width="2rem" height="2rem" isFill={isSaved} />
                 </button>
               </div>
             </div>
