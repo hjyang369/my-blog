@@ -4,31 +4,40 @@ import Tag from "../../common/Tag";
 import Button from "../../common/button";
 import Input from "../../common/input";
 import { filterTitleState } from "../../../store/filterStore";
-import { MouseEventHandler } from "react";
 
 type FilterBarProps = {
   onclick: () => void;
 };
 
 export default function FilterBar({ onclick }: FilterBarProps) {
-  const filterText = useRecoilValue(filterTitleState);
-  console.log(filterText);
+  const filterTexts = useRecoilValue(filterTitleState);
+  const { dateTitle, tagTitle, contentTitle } = filterTexts;
+  const { startDate, lastDate } = dateTitle;
+
+  const newDateTitle = `${startDate ? `${startDate} ~` : ""}${
+    lastDate ? lastDate : ""
+  }`;
+
+  const multipleTags = tagTitle.length >= 2;
+  const newTagTitle = `${tagTitle[0] ? tagTitle[0] : "전체 태그"}${
+    multipleTags ? `외 ${tagTitle.length - 1}개` : ""
+  }`;
 
   const FILTER_BUTTON_DATA = [
     {
       id: 1,
-      text: filterText.dateTitle ? filterText.dateTitle : "전체 기간",
-      hasValue: filterText.dateTitle,
+      text: startDate ? newDateTitle : "전체 기간",
+      hasValue: Boolean(startDate),
     },
     {
       id: 2,
-      text: filterText.tagTitle ? filterText.tagTitle : "전체 태그",
-      hasValue: filterText.tagTitle,
+      text: tagTitle.length > 0 ? newTagTitle : "전체 태그",
+      hasValue: tagTitle.length > 0,
     },
     {
       id: 3,
-      text: filterText.contentTitle ? filterText.contentTitle : "전체 내용",
-      hasValue: filterText.contentTitle,
+      text: contentTitle ? contentTitle : "전체 내용",
+      hasValue: Boolean(contentTitle),
     },
   ];
 

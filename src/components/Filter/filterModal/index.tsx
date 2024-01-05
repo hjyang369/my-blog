@@ -1,12 +1,13 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { TAG_DATA } from "../../../modules/constants";
 import Tag from "../../common/Tag";
 import Button from "../../common/button";
 import SearchBar from "../searchBar";
 import { filterTitleState } from "../../../store/filterStore";
 import useInputValue from "../../../hooks/useInputValue";
-import { Dispatch, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { SetStateAction } from "jotai";
+import { savedPostState } from "../../../store/savePostStore";
 
 type selectedDateData = {
   startDate: string;
@@ -27,18 +28,19 @@ const initInputValue = {
 };
 
 export default function FilterModal({ handelModal }: FilterModalProps) {
-  const setFilterTitle = useSetRecoilState(filterTitleState);
+  const [filterTitle, setFilterTitle] = useRecoilState(filterTitleState);
+  const savedPosts = useRecoilValue(savedPostState);
+  const [filteredList, setFilteredList] = useState(savedPosts);
   const [selectedDate, setSelectedDate] = useState<selectedDateData>(initDate);
   const [selectedTag, setSelectedTag] = useState([]);
-  const { inputValue, setInputValue, handleInput } =
-    useInputValue(initInputValue);
+  const { inputValue, handleInput } = useInputValue(initInputValue);
 
   const selectDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const newValue = value.replace(/-/g, "");
+
     setSelectedDate({
       ...selectedDate,
-      [name]: newValue,
+      [name]: value,
     });
   };
 
@@ -52,24 +54,14 @@ export default function FilterModal({ handelModal }: FilterModalProps) {
   };
 
   const getFilteredData = () => {
-    const hasDate = selectedDate.startDate && selectedDate.lastDate;
-    const newDateTitle =
-      hasDate && `${selectedDate.startDate} ~ ${selectedDate.lastDate}`;
-
-    const hasTag = selectedTag.length > 0;
-    const multipleTags = selectedTag.length >= 2;
-    const newTagTitle =
-      hasTag &&
-      selectedTag[0] + `${multipleTags && `외 ${selectedTag.length - 1}개`}`;
-
-    const hasContent = inputValue.searchWord;
-    const newContentTitle = hasContent && inputValue.searchWord;
-
     handelModal(false);
     setFilterTitle({
-      dateTitle: newDateTitle,
-      tagTitle: newTagTitle,
-      contentTitle: newContentTitle,
+      dateTitle: {
+        startDate: selectedDate.startDate,
+        lastDate: selectedDate.lastDate,
+      },
+      tagTitle: selectedTag,
+      contentTitle: inputValue.searchWord,
     });
   };
 

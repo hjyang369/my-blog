@@ -1,5 +1,8 @@
 export interface filterText {
-  dateTitle: string;
-  tagTitle: string;
+  dateTitle: {
+    startDate: string;
+    lastDate: string;
+  };
+  tagTitle: string[];
   contentTitle: string;
 }

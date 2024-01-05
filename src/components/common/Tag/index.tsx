@@ -19,7 +19,7 @@ export default function Tag({
   isSelect,
 }: tagProps) {
   const handleTag = (e, id) => {
-    removeTag && removeTag(id);
+    // removeTag && removeTag(id);
     selectTags && selectTags(e);
     return;
   };
