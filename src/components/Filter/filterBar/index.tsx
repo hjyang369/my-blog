@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import IC_Search from "../../../../public/icon/Search";
 import Tag from "../../common/Tag";
 import Button from "../../common/button";
@@ -11,10 +11,26 @@ type FilterBarProps = {
 };
 
 export default function FilterBar({ onclick }: FilterBarProps) {
-  const [filterText, setFilterText] = useRecoilState(filterTitleState);
-  const changeFilterTitle = (e) => {
-    setFilterText;
-  };
+  const filterText = useRecoilValue(filterTitleState);
+  console.log(filterText);
+
+  const FILTER_BUTTON_DATA = [
+    {
+      id: 1,
+      text: filterText.dateTitle ? filterText.dateTitle : "전체 기간",
+      hasValue: filterText.dateTitle,
+    },
+    {
+      id: 2,
+      text: filterText.tagTitle ? filterText.tagTitle : "전체 태그",
+      hasValue: filterText.tagTitle,
+    },
+    {
+      id: 3,
+      text: filterText.contentTitle ? filterText.contentTitle : "전체 내용",
+      hasValue: filterText.contentTitle,
+    },
+  ];
 
   return (
     <div
@@ -33,6 +49,7 @@ export default function FilterBar({ onclick }: FilterBarProps) {
             fontSize={"1.25rem"}
             width={"25%"}
             height={"4rem"}
+            color={data.hasValue ? "" : "#65717b"}
             // onclick={(e) => changeFilterTitle(e)}
           />
         );
@@ -40,9 +57,3 @@ export default function FilterBar({ onclick }: FilterBarProps) {
     </div>
   );
 }
-
-const FILTER_BUTTON_DATA = [
-  { id: 1, text: "전체 기간" },
-  { id: 2, text: "전체 태그" },
-  { id: 3, text: "전체 내용" },
-];

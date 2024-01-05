@@ -8,8 +8,7 @@ import React from "react";
 import { PostDataType } from "../types/post";
 import { idState } from "../store/savePostStore";
 import { useRecoilState } from "recoil";
-import FilterModal from "../components/Filter";
-import FilterBar from "../components/Filter/filterBar";
+import Filter from "../components/Filter";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -17,7 +16,6 @@ export default function Main() {
   const [isLastItem, setIsLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
   const idList = useRecoilState(idState);
-  const [isSearch, setIsSearch] = useState(false);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -58,8 +56,7 @@ export default function Main() {
 
       <div className={style.main}>
         <Nav onclick={null} />
-        <FilterBar onclick={() => setIsSearch(!isSearch)} />
-        {isSearch && <FilterModal />}
+        <Filter />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {itemListData.map((item, idx) => {

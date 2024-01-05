@@ -7,6 +7,7 @@ type tagProps = {
   selectTags?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   tag: string;
   tagId: number;
+  isSelect?: boolean;
 };
 
 export default function Tag({
@@ -15,6 +16,7 @@ export default function Tag({
   selectTags,
   tag,
   tagId,
+  isSelect,
 }: tagProps) {
   const handleTag = (e, id) => {
     removeTag && removeTag(id);
@@ -27,6 +29,11 @@ export default function Tag({
       name={tag}
       className={style.tags}
       onClick={(e) => handleTag(e, tagId)}
+      style={{
+        backgroundColor: isSelect ? "#f0b31e" : "",
+        color: isSelect ? "#fff" : "",
+        borderColor: isSelect ? "#f0b31e" : "",
+      }}
     >
       {tag}
       {isWriting && <p>x</p>}
