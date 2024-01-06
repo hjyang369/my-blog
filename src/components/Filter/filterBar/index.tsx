@@ -14,8 +14,8 @@ export default function FilterBar({ onclick }: FilterBarProps) {
   const { dateTitle, tagTitle, contentTitle } = filterTexts;
   const { startDate, lastDate } = dateTitle;
 
-  const newDateTitle = `${startDate ? `${startDate} ~` : ""}${
-    lastDate ? lastDate : ""
+  const newDateTitle = `${startDate ? `${startDate.replace(/-/g, "")} ~` : ""}${
+    lastDate ? lastDate.replace(/-/g, "") : ""
   }`;
 
   const multipleTags = tagTitle.length >= 2;
