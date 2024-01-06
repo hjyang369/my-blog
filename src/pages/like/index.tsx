@@ -4,7 +4,7 @@ import style from "../../styles/main.module.css";
 import React, { useEffect, useState } from "react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { idState, savedPostState } from "../../store/savePostStore";
+import { savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
 import Filter from "../../components/Filter";
@@ -16,21 +16,12 @@ export default function Like() {
   const savedPosts = useRecoilValue(savedPostState);
   const [filteredList, setFilteredList] = useState(savedPosts);
 
-  // const convertUTCtoKST = (utcDate: string | Date) => {
-  //   return new Date(
-  //     new Date(utcDate).toLocaleString("en-US", { timeZone: "Asia/Seoul" })
-  //   );
-  // };
-
-  function convertUTCtoKST(utcDate: string | Date) {
-    const kor = new Date(utcDate);
-
-    kor.setHours(kor.getHours() + 9);
-
-    return kor.toLocaleString();
+  function convertUTCtoKST(dateString) {
+    const date = new Date(dateString);
+    date.setHours(date.getHours() + 9);
+    return date;
   }
 
-  //like
   useEffect(() => {
     let filteredContent = [...savedPosts];
 
@@ -47,26 +38,26 @@ export default function Like() {
         )
       );
     }
-    if (dateTitle.startDate) {
+    if (dateTitle.startDate && !dateTitle.lastDate) {
+      const startDate = new Date(dateTitle.startDate + "T00:00:00+09:00");
+
       filteredContent = filteredContent.filter((post) => {
-        const postDate = new Date(post.createdAt).getTime();
-        const startDate = new Date(dateTitle.startDate).getTime();
-        const lastDate = new Date(dateTitle.lastDate).getTime();
-        // const lastDate = convertUTCtoKST(dateTitle.lastDate);
-        console.log(
-          postDate >= startDate,
-          postDate,
-          ">>",
-          startDate,
-          typeof postDate
-        );
-        console.log(post.createdAt);
-        return postDate >= startDate || postDate <= lastDate;
+        const postDate = convertUTCtoKST(post.createdAt);
+        return postDate >= startDate;
+      });
+    } else if (dateTitle.startDate && dateTitle.lastDate) {
+      const startDate = new Date(dateTitle.startDate + "T00:00:00+09:00");
+      const lastDate = new Date(dateTitle.lastDate + "T23:59:59+09:00");
+
+      filteredContent = filteredContent.filter((post) => {
+        const postDate = convertUTCtoKST(post.createdAt);
+        return postDate >= startDate && postDate <= lastDate;
       });
     }
-    console.log(filteredContent);
+
     setFilteredList(filteredContent);
   }, [savedPosts, filterTitle]);
+
   return (
     <>
       <Head>
