@@ -107,7 +107,7 @@ export default function Detail() {
       </Head>
 
       <div className={style.container}>
-        <Nav onclick={null} />
+        <Nav />
         <div className={style.all}>
           <header className={style.titleContainer}>
             <h1 className={style.header}>{title}</h1>

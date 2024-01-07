@@ -12,7 +12,7 @@ import IC_User from "../../../public/icon/User";
 import UserModal from "./userModal";
 
 type NaveProps = {
-  postWriting: () => void;
+  postWriting?: () => void;
   isWriting?: boolean;
 };
 

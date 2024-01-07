@@ -55,7 +55,7 @@ export default function Main() {
       </Head>
 
       <div className={style.main}>
-        <Nav onclick={null} />
+        <Nav />
         <Filter />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
