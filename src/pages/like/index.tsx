@@ -1,19 +1,62 @@
 import Head from "next/head";
 import style from "../../styles/main.module.css";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { useRecoilState } from "recoil";
-import { idState, savedPostState } from "../../store/savePost";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
+import Filter from "../../components/Filter";
+import { filterTitleState } from "../../store/filterStore";
 
 export default function Like() {
-  const idList = useRecoilState(idState);
-  const savedPosts = useRecoilState(savedPostState);
-  const postList = savedPosts[0];
+  const [filterTitle, setFilterTitle] = useRecoilState(filterTitleState);
+  const { dateTitle, tagTitle, contentTitle } = filterTitle;
+  const savedPosts = useRecoilValue(savedPostState);
+  const [filteredList, setFilteredList] = useState(savedPosts);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  function convertUTCtoKST(dateString) {
+    const date = new Date(dateString);
+    date.setHours(date.getHours() + 9);
+    return date;
+  }
+
+  useEffect(() => {
+    let filteredContent = [...savedPosts];
+
+    if (contentTitle) {
+      const lowerCaseTitle = contentTitle.toLowerCase();
+      filteredContent = filteredContent.filter((post) =>
+        post.title.toLowerCase().includes(lowerCaseTitle)
+      );
+    }
+    if (tagTitle.length > 0) {
+      filteredContent = filteredContent.filter((post) =>
+        post.hashTags.some((tagObj) =>
+          tagTitle.includes(tagObj.name.replace("#", ""))
+        )
+      );
+    }
+    if (dateTitle.startDate && !dateTitle.lastDate) {
+      const startDate = new Date(dateTitle.startDate + "T00:00:00+09:00");
+
+      filteredContent = filteredContent.filter((post) => {
+        const postDate = convertUTCtoKST(post.createdAt);
+        return postDate >= startDate;
+      });
+    } else if (dateTitle.startDate && dateTitle.lastDate) {
+      const startDate = new Date(dateTitle.startDate + "T00:00:00+09:00");
+      const lastDate = new Date(dateTitle.lastDate + "T23:59:59+09:00");
+
+      filteredContent = filteredContent.filter((post) => {
+        const postDate = convertUTCtoKST(post.createdAt);
+        return postDate >= startDate && postDate <= lastDate;
+      });
+    }
+
+    setFilteredList(filteredContent);
+  }, [savedPosts, filterTitle]);
 
   return (
     <>
@@ -25,13 +68,15 @@ export default function Like() {
       </Head>
 
       <div className={style.main}>
-        <Nav onclick={null} />
+        <Nav />
+        <Filter />
+
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {postList.map((item, idx) => {
+          {filteredList.map((item, idx) => {
             return (
               <Item
                 onFetchMore={() => console.log(1)}
-                isLastItem={postList.length - 1 === idx}
+                isLastItem={filteredList.length - 1 === idx}
                 key={item.id}
                 {...item}
               />

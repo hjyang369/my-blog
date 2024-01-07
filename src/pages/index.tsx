@@ -6,9 +6,9 @@ import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
 import { PostDataType } from "../types/post";
-import { idState } from "../store/savePost";
+import { idState } from "../store/savePostStore";
 import { useRecoilState } from "recoil";
-import SearchBar from "../components/common/searchBar";
+import Filter from "../components/Filter";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -16,7 +16,6 @@ export default function Main() {
   const [isLastItem, setIsLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
   const idList = useRecoilState(idState);
-  const [isSearch, setIsSearch] = useState(true); //전역으로 뺄것
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -56,8 +55,8 @@ export default function Main() {
       </Head>
 
       <div className={style.main}>
-        <Nav onclick={null} />
-        {isSearch && <SearchBar />}
+        <Nav />
+        <Filter />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {itemListData.map((item, idx) => {

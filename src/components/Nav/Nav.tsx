@@ -7,10 +7,19 @@ import IC_Search from "../../../public/icon/Search";
 import { useState } from "react";
 import Button from "../common/button";
 import HoverButton from "../common/hoverButton";
+import IC_Language from "../../../public/icon/Language";
+import IC_User from "../../../public/icon/User";
+import UserModal from "./userModal";
 
-export default function Nav({ onclick }) {
+type NaveProps = {
+  postWriting?: () => void;
+  isWriting?: boolean;
+};
+
+export default function Nav({ postWriting, isWriting }: NaveProps) {
   const router = useRouter();
   const [currentTab, setCurrentTab] = useState("이력서");
+  const [isOpen, setIsOpen] = useState(false);
 
   const moveToPage = (paths) => {
     router.push(paths);
@@ -26,6 +35,10 @@ export default function Nav({ onclick }) {
     }
   };
 
+  const handleModal = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <nav className="flex justify-between align-middle h-16 w-width60">
       <button
@@ -38,30 +51,30 @@ export default function Nav({ onclick }) {
       </button>
 
       <div className="flex align-middle">
-        <HoverButton
-          text={currentTab}
-          fontSize={"1.2rem"}
-          onclick={handleCurrentTab}
-          backgroundColor={"#f7f0d1"}
-        />
-        {/* <button className={style.btn}>
-          <FontAwesomeIcon className={style.imgIcon} icon={faUser} />
-        </button> */}
-        <button className={style.iconBtn}>
-          <IC_Search width="3rem" height="3rem" color="#f0b31e" />
-        </button>
-        <button className={style.btn}>
-          <FontAwesomeIcon
-            onClick={
-              onclick !== null
-                ? onclick
-                : () => {
-                    moveToPage("/writing");
-                  }
-            }
-            className={style.imgIcon}
-            icon={faPenToSquare}
+        {isWriting ? (
+          <Button
+            text={"작성"}
+            fontSize={"1.2rem"}
+            onclick={postWriting}
+            backgroundColor={"#f7f0d1"}
           />
+        ) : (
+          <Button
+            text={currentTab}
+            fontSize={"1.2rem"}
+            onclick={handleCurrentTab}
+            backgroundColor={"#f7f0d1"}
+          />
+        )}
+
+        <div className="relative flex flex-col align-middle w-14">
+          <button onClick={handleModal} className={style.iconBtn}>
+            <IC_User />
+          </button>
+          {isOpen && <UserModal handleModal={setIsOpen} />}
+        </div>
+        <button className={style.iconBtn}>
+          <IC_Language />
         </button>
       </div>
     </nav>

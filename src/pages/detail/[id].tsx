@@ -9,7 +9,7 @@ import CommentsList from "./commentsList";
 import Button from "../../components/common/button";
 import IC_Like from "../../../public/icon/Like";
 import { useRecoilState } from "recoil";
-import { idState } from "../../store/savePost";
+import { idState } from "../../store/savePostStore";
 import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
 
@@ -107,7 +107,7 @@ export default function Detail() {
       </Head>
 
       <div className={style.container}>
-        <Nav onclick={null} />
+        <Nav />
         <div className={style.all}>
           <header className={style.titleContainer}>
             <h1 className={style.header}>{title}</h1>
@@ -121,9 +121,7 @@ export default function Detail() {
               <div className={style.tagContainer}>
                 {hashTags.length > 0 &&
                   hashTags.map((tag) => {
-                    return (
-                      <Tag key={tag.id} tag={"#" + tag.name} id={tag.id} />
-                    );
+                    return <Tag key={tag.id} tag={tag.name} tagId={tag.id} />;
                   })}
               </div>
               <div className={style.tagContainer}>
