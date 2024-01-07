@@ -114,7 +114,7 @@ export default function Writing() {
       </Head>
 
       <main className={style.main}>
-        <Nav onclick={postWriting} />
+        <Nav postWriting={postWriting} isWriting />
         <div className={style.mainContainer}>
           <input
             name="title"

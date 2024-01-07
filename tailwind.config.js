@@ -3,9 +3,16 @@ module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      backgroundColor: {
+        main: "#f0b31e",
+        yellow200: "#f7f0d1",
+        yellow100: "#F7F5EA",
+      },
+      borderColor: {
+        main: "#f0b31e",
+      },
       colors: {
         white: "#fff",
-        bodyBackGround: "#f7f0d1",
         main: "#f0b31e",
         yellow200: "#f7f0d1",
         yellow100: "#F7F5EA",

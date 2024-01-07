@@ -1,8 +1,5 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import IC_Search from "../../../../public/icon/Search";
-import Tag from "../../common/Tag";
+import { useRecoilValue } from "recoil";
 import Button from "../../common/button";
-import Input from "../../common/input";
 import { filterTitleState } from "../../../store/filterStore";
 
 type FilterBarProps = {
