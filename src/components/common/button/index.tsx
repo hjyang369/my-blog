@@ -1,5 +1,3 @@
-import style from "./button.module.css";
-
 type buttonProps = {
   width?: string | number;
   height?: string | number;
@@ -23,7 +21,7 @@ export default function Button({
 }: buttonProps) {
   return (
     <button
-      className={style.button}
+      className="text-3xl  p-2 bg-white rounded-lg text-main font-bold"
       onClick={onclick}
       style={{
         width: width,

@@ -1,15 +1,12 @@
 import style from "./nav.module.css";
 //
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import IC_Search from "../../../public/icon/Search";
 import { useState } from "react";
 import Button from "../common/button";
-import HoverButton from "../common/hoverButton";
 import IC_Language from "../../../public/icon/Language";
 import IC_User from "../../../public/icon/User";
 import UserModal from "./userModal";
+import useMoveToPage from "../../hooks/useMovetoPage";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -18,20 +15,17 @@ type NaveProps = {
 
 export default function Nav({ postWriting, isWriting }: NaveProps) {
   const router = useRouter();
-  const [currentTab, setCurrentTab] = useState("이력서");
   const [isOpen, setIsOpen] = useState(false);
-
-  const moveToPage = (paths) => {
-    router.push(paths);
-  };
+  const isMain = router.pathname === "/";
+  const currentTab = isMain ? "이력서" : "블로그";
+  const isResume = router.pathname === "/resume";
+  const { moveToPage } = useMoveToPage();
 
   const handleCurrentTab = () => {
-    if (currentTab === "블로그") {
-      setCurrentTab("이력서");
-      moveToPage("/");
-    } else {
-      setCurrentTab("블로그");
+    if (isMain) {
       moveToPage("/resume");
+    } else if (isResume) {
+      moveToPage("/");
     }
   };
 
@@ -40,7 +34,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
   };
 
   return (
-    <nav className="flex justify-between align-middle h-16 w-width60">
+    <nav className="flex justify-between items-center h-16 w-width60">
       <button
         onClick={() => {
           moveToPage("/");
@@ -50,7 +44,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
         MY BLOG
       </button>
 
-      <div className="flex align-middle">
+      <div className="flex items-center">
         {isWriting ? (
           <Button
             text={"작성"}
@@ -67,7 +61,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
           />
         )}
 
-        <div className="relative flex flex-col align-middle w-14">
+        <div className="relative flex flex-col items-center w-14">
           <button onClick={handleModal} className={style.iconBtn}>
             <IC_User />
           </button>
