@@ -3,15 +3,16 @@ import style from "../../styles/main.module.css";
 
 import React, { useEffect, useState } from "react";
 
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
 import Filter from "../../components/Filter";
-import { filterTitleState } from "../../store/filterStore";
+import { likeFilterTitleState } from "../../store/likeFilterStore";
 
 export default function Like() {
-  const filterTitle = useRecoilValue(filterTitleState);
+  // const filterTitle = useRecoilValue(likeFilterTitleState);
+  const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const savedPosts = useRecoilValue(savedPostState);
   const [filteredList, setFilteredList] = useState(savedPosts);
@@ -75,7 +76,7 @@ export default function Like() {
 
       <div className={style.main}>
         <Nav />
-        <Filter />
+        <Filter filterTitle={filterTitle} changeText={setFilterTitle} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {posts.map((item, idx) => {

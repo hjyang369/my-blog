@@ -1,13 +1,14 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { SetterOrUpdater, useRecoilValue } from "recoil";
 import { TAG_DATA } from "../../../modules/constants";
 import Tag from "../../common/Tag";
 import Button from "../../common/button";
 import SearchBar from "../searchBar";
-import { filterTitleState } from "../../../store/filterStore";
+// import { likeFilterTitleState } from "../../../store/likeFilterStore";
 import useInputValue from "../../../hooks/useInputValue";
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useState } from "react";
 import { SetStateAction } from "jotai";
 import { savedPostState } from "../../../store/savePostStore";
+import { filterText } from "../../../types/filter";
 
 type selectedDateData = {
   startDate: string;
@@ -16,6 +17,7 @@ type selectedDateData = {
 
 type FilterModalProps = {
   handelModal?: Dispatch<SetStateAction<boolean>>;
+  changeText: SetterOrUpdater<filterText>;
 };
 
 const initDate = {
@@ -27,10 +29,13 @@ const initInputValue = {
   searchWord: "",
 };
 
-export default function FilterModal({ handelModal }: FilterModalProps) {
-  const [filterTitle, setFilterTitle] = useRecoilState(filterTitleState);
+export default function FilterModal({
+  handelModal,
+  changeText,
+}: FilterModalProps) {
+  // const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
   const savedPosts = useRecoilValue(savedPostState);
-  const [filteredList, setFilteredList] = useState(savedPosts);
+  // const [filteredList, setFilteredList] = useState(savedPosts);
   const [selectedDate, setSelectedDate] = useState<selectedDateData>(initDate);
   const [selectedTag, setSelectedTag] = useState([]);
   const { inputValue, handleInput } = useInputValue(initInputValue);
@@ -55,7 +60,7 @@ export default function FilterModal({ handelModal }: FilterModalProps) {
 
   const getFilteredData = () => {
     handelModal(false);
-    setFilterTitle({
+    changeText({
       dateTitle: {
         startDate: selectedDate.startDate,
         lastDate: selectedDate.lastDate,

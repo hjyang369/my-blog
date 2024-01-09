@@ -1,14 +1,17 @@
-import { useRecoilValue } from "recoil";
+// import { useRecoilValue } from "recoil";
 import Button from "../../common/button";
-import { filterTitleState } from "../../../store/filterStore";
+// import { likeFilterTitleState } from "../../../store/likeFilterStore";
+import { filterText } from "../../../types/filter";
 
 type FilterBarProps = {
   onclick: () => void;
+  filterTitle: filterText;
 };
 
-export default function FilterBar({ onclick }: FilterBarProps) {
-  const filterTexts = useRecoilValue(filterTitleState);
-  const { dateTitle, tagTitle, contentTitle } = filterTexts;
+export default function FilterBar({ onclick, filterTitle }: FilterBarProps) {
+  // const filterTexts = useRecoilValue(likeFilterTitleState);
+
+  const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const { startDate, lastDate } = dateTitle;
 
   const newDateTitle = `${startDate ? `${startDate.replace(/-/g, "")} ~` : ""}${

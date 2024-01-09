@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 import { filterText } from "../types/filter";
 
-export const filterTitleState = atom<filterText>({
-  key: "filterTitles",
+export const likeFilterTitleState = atom<filterText>({
+  key: "likeFilterTitles",
   default: {
     dateTitle: {
       startDate: "",

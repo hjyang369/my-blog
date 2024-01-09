@@ -16,16 +16,15 @@ type NaveProps = {
 export default function Nav({ postWriting, isWriting }: NaveProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const isMain = router.pathname === "/";
-  const currentTab = isMain ? "이력서" : "블로그";
   const isResume = router.pathname === "/resume";
+  const currentTab = isResume ? "블로그" : "이력서";
   const { moveToPage } = useMoveToPage();
 
   const handleCurrentTab = () => {
-    if (isMain) {
-      moveToPage("/resume");
-    } else if (isResume) {
+    if (isResume) {
       moveToPage("/");
+    } else {
+      moveToPage("/resume");
     }
   };
 
