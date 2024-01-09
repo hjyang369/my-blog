@@ -7,3 +7,10 @@ export interface PostDataType {
   createdAt: string;
   like: boolean;
 }
+
+export interface WritingInputValueType {
+  title: string;
+  texts: string;
+  tag: string;
+  author: string;
+}

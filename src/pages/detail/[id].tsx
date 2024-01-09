@@ -12,6 +12,7 @@ import { useRecoilState } from "recoil";
 import { idState } from "../../store/savePostStore";
 import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
+import useMoveToPage from "../../hooks/useMovetoPage";
 
 const initialPostingData: PostDataType = {
   id: 0,
@@ -28,6 +29,7 @@ export default function Detail() {
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const idList = useRecoilState(idState);
+  const { moveToPage } = useMoveToPage();
 
   const [postingData, setPostingData] =
     useState<PostDataType>(initialPostingData);
@@ -125,7 +127,12 @@ export default function Detail() {
                   })}
               </div>
               <div className={style.tagContainer}>
-                <Button width="5rem" text={"수정"} fontSize={"1.4rem"} />
+                <Button
+                  width="5rem"
+                  text={"수정"}
+                  fontSize={"1.4rem"}
+                  onclick={() => moveToPage(`/edit/${id}`)}
+                />
                 <Button
                   width="5rem"
                   text={"삭제"}

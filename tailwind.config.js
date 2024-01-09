@@ -23,8 +23,12 @@ module.exports = {
       width: {
         width60: "60rem",
       },
+      height: {
+        height40: "40rem",
+      },
       boxShadow: {
         shadow100: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+        shadow200: "0 4px 10px #4b57a90d",
       },
       borderRadius: {
         xl8: "0.8rem",
