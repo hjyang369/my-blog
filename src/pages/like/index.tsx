@@ -3,7 +3,7 @@ import style from "../../styles/main.module.css";
 
 import React, { useEffect, useState } from "react";
 
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
@@ -11,16 +11,22 @@ import Filter from "../../components/Filter";
 import { filterTitleState } from "../../store/filterStore";
 
 export default function Like() {
-  const [filterTitle, setFilterTitle] = useRecoilState(filterTitleState);
+  const filterTitle = useRecoilValue(filterTitleState);
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const savedPosts = useRecoilValue(savedPostState);
   const [filteredList, setFilteredList] = useState(savedPosts);
+  const [posts, setPosts] = useState(filteredList);
+  const [page, setPage] = useState(10);
 
   function convertUTCtoKST(dateString) {
     const date = new Date(dateString);
     date.setHours(date.getHours() + 9);
     return date;
   }
+
+  useEffect(() => {
+    setPosts(filteredList.slice(0, page));
+  }, [filteredList, page]);
 
   useEffect(() => {
     let filteredContent = [...savedPosts];
@@ -72,19 +78,17 @@ export default function Like() {
         <Filter />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {filteredList.map((item, idx) => {
+          {posts.map((item, idx) => {
             return (
               <Item
-                onFetchMore={() => console.log(1)}
-                isLastItem={filteredList.length - 1 === idx}
+                onFetchMore={() => setPage((prev) => prev + 10)}
+                isLastItem={posts.length - 1 === idx}
                 key={item.id}
                 {...item}
               />
             );
           })}
         </div>
-
-        {/* {!isLastItem && <div>loading</div>} */}
       </div>
     </>
   );
