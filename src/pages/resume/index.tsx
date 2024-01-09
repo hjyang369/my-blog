@@ -1,22 +1,23 @@
 // 'use client"
 import { useState } from "react";
 import Button from "../../components/common/button";
-import { Document, Page, pdfjs } from "react-pdf";
+// import { Document, Page, pdfjs } from "react-pdf";
 import Head from "next/head";
 import Nav from "../../components/Nav/Nav";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import PDFPreview from "./PDFpreview";
 
 export default function Resume() {
   const [resumeFile, setResumeFile] = useState(null);
-  const [page, setPageNumber] = useState<number>(1);
-  const pageNumber = Array.from({ length: page }, (v, i) => i);
+  // const [page, setPageNumber] = useState<number>(1);
+  // const pageNumber = Array.from({ length: page }, (v, i) => i);
 
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+  // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-    setPageNumber(numPages);
-  }
+  // function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+  //   setPageNumber(numPages);
+  // }
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -51,13 +52,18 @@ export default function Resume() {
           </label>
           <Button text={"이력서 삭제"} fontSize={"1.875rem"} width={"50%"} />
         </div>
+
         {resumeFile ? (
-          <div>
-            <Document file={resumeFile} onLoadSuccess={onDocumentLoadSuccess}>
-              {pageNumber.map((pages, idx) => {
-                return <Page key={idx} pageNumber={pages + 1} />;
-              })}
-            </Document>
+          // 라이브러리 사용해 pdf render 구현
+          // <div>
+          //   <Document file={resumeFile} onLoadSuccess={onDocumentLoadSuccess}>
+          //     {pageNumber.map((pages, idx) => {
+          //       return <Page key={idx} pageNumber={pages + 1} />;
+          //     })}
+          //   </Document>
+          // </div>
+          <div className="w-width60">
+            <PDFPreview pdf={resumeFile} />
           </div>
         ) : (
           <div className="m-60 text-4xl text-gray200">
