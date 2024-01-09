@@ -1,40 +1,64 @@
 import Head from "next/head";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage } from "@fortawesome/free-regular-svg-icons";
-import style from "./writing.module.css";
 import useInputValue from "../../hooks/useInputValue";
 import { useRouter } from "next/router";
-import {
-  faAlignJustify,
-  faBold,
-  faItalic,
-  faPalette,
-  faTextHeight,
-  faUnderline,
-} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Nav from "../../components/Nav/Nav";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import Tag from "../../components/common/Tag";
-import { WritingInputValueType } from "../../types/post";
+import { PostDataType, WritingInputValueType } from "../../types/post";
 //
 
-export default function Writing() {
-  const initInputValue: WritingInputValueType = {
-    title: "",
-    texts: "",
-    tag: "",
-    author: "",
-  };
+const initInputValue: WritingInputValueType = {
+  title: "",
+  texts: "",
+  tag: "",
+  author: "",
+};
+const initialPostingData: PostDataType = {
+  id: 0,
+  title: "",
+  content: "",
+  author: "",
+  hashTags: [{ id: 0, name: "" }],
+  createdAt: "",
+  like: false,
+};
 
+export default function Writing() {
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
+  const [postingData, setPostingData] =
+    useState<PostDataType>(initialPostingData);
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
+  const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const postWriting = () => {
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(
+          `${baseUrl}/post/${id}`
+
+          // {
+          //   Authorization: `Bearer ${"토큰"}`,
+          // }
+        )
+        .then((data) => {
+          if (data.status === 200) {
+            setPostingData(data.data);
+          } else if (data.status === 400) {
+            alert("다시 확인해주세요.");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [id]);
+
+  const editPost = () => {
     axios
       .post(
         `${baseUrl}/post`,
@@ -107,30 +131,30 @@ export default function Writing() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={style.main}>
-        <Nav postWriting={postWriting} isWriting />
-        <div className={style.mainContainer}>
+      <main className="grid place-items-center gap-4 p-4">
+        <Nav postWriting={editPost} isWriting />
+        <div className="grid w-width60">
           <input
             name="title"
             placeholder="제목"
             maxLength={20}
             minLength={0}
             required
-            className={style.inputs}
             onChange={handleInput}
+            className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200"
           ></input>
           <textarea
             name="texts"
-            className={style.texts}
             minLength={10}
             required
             placeholder="내용을 입력해주세요."
             onChange={handleInput}
+            className="h-height40 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 p-8 text-2xl shadow-shadow200"
           ></textarea>
           <form
-            className={style.formInputs}
             typeof="submit"
             onSubmit={handleFormSubmit}
+            className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200 flex items-center gap-2 bg-white"
           >
             {tags.map((tag, idx) => {
               return (
@@ -146,7 +170,7 @@ export default function Writing() {
 
             <input
               type="text"
-              className={style.tagInput}
+              className="border-0 focus:outline-none"
               name="tag"
               placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
               required
@@ -155,44 +179,15 @@ export default function Writing() {
               value={inputValue.tag}
             ></input>
           </form>
-          <input
+          {/* <input
             name="author"
-            className={style.inputs}
             placeholder="작성자이름"
             required
             minLength={1}
             onChange={handleInput}
-          ></input>
+            className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200"
+          ></input> */}
         </div>
-
-        {/* <div className={style.IconContainer}>
-          <label htmlFor="file" className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faImage} />
-          </label>
-          <input id="file" type="file" className={style.file}></input>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faTextHeight} />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faUnderline} />
-          </label>
-
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faItalic} />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faBold} />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon
-              className={style.textsIcon}
-              icon={faAlignJustify}
-            />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
-          </label>
-        </div> */}
       </main>
     </>
   );
