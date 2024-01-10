@@ -9,15 +9,17 @@ import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
 import Filter from "../../components/Filter";
 import { likeFilterTitleState } from "../../store/likeFilterStore";
+import Button from "../../components/common/button";
+import useMoveToPage from "../../hooks/useMovetoPage";
 
 export default function Like() {
-  // const filterTitle = useRecoilValue(likeFilterTitleState);
   const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const savedPosts = useRecoilValue(savedPostState);
   const [filteredList, setFilteredList] = useState(savedPosts);
   const [posts, setPosts] = useState(filteredList);
   const [page, setPage] = useState(10);
+  const { moveToPage } = useMoveToPage();
 
   function convertUTCtoKST(dateString) {
     const date = new Date(dateString);
@@ -79,16 +81,27 @@ export default function Like() {
         <Filter filterTitle={filterTitle} changeText={setFilterTitle} />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {posts.map((item, idx) => {
-            return (
-              <Item
-                onFetchMore={() => setPage((prev) => prev + 10)}
-                isLastItem={posts.length - 1 === idx}
-                key={item.id}
-                {...item}
+          {savedPosts.length > 0 ? (
+            posts.map((item, idx) => {
+              return (
+                <Item
+                  onFetchMore={() => setPage((prev) => prev + 10)}
+                  isLastItem={posts.length - 1 === idx}
+                  key={item.id}
+                  {...item}
+                />
+              );
+            })
+          ) : (
+            <div className="m-40 flex flex-col gap-10">
+              <p className="text-4xl text-gray200">좋아요한 글이 없습니다.</p>
+              <Button
+                text={"좋아요하러 가기"}
+                fontSize={"1.5rem"}
+                onclick={() => moveToPage("/")}
               />
-            );
-          })}
+            </div>
+          )}
         </div>
       </div>
     </>
