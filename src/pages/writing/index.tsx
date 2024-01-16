@@ -1,24 +1,14 @@
 import Head from "next/head";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage } from "@fortawesome/free-regular-svg-icons";
 import style from "./writing.module.css";
 import useInputValue from "../../hooks/useInputValue";
 import { useRouter } from "next/router";
-import {
-  faAlignJustify,
-  faBold,
-  faItalic,
-  faPalette,
-  faTextHeight,
-  faUnderline,
-} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useState } from "react";
 import React from "react";
 import Tag from "../../components/common/Tag";
 import { WritingInputValueType } from "../../types/post";
-//
+import { postingData } from "../api/main";
 
 export default function Writing() {
   const initInputValue: WritingInputValueType = {
@@ -34,16 +24,19 @@ export default function Writing() {
   const router = useRouter();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
+  const postingFuncData = {
+    title: inputValue.title,
+    content: inputValue.texts,
+    // author: inputValue.author,
+    author: "ddu22",
+    hashTags: tags.join(""),
+  };
+
   const postWriting = () => {
     axios
       .post(
         `${baseUrl}/post`,
-        {
-          title: inputValue.title,
-          content: inputValue.texts,
-          author: inputValue.author,
-          hashTags: tags.join(""),
-        }
+        postingFuncData
         // {
         //   Authorization: `Bearer ${"토큰"}`,
         // }
@@ -108,7 +101,7 @@ export default function Writing() {
       </Head>
 
       <main className={style.main}>
-        <Nav postWriting={postWriting} isWriting />
+        <Nav postWriting={() => postingData(postingFuncData)} isWriting />
         <div className={style.mainContainer}>
           <input
             name="title"
