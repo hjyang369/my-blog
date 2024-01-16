@@ -3,7 +3,7 @@
 
 ## 1-1. 프로젝트 정보
 - 개발기간: 2023.10.21 ~ 진행 중
-- [My Blog의 배포 링크](https://www.youtube.com/watch?v=rx7zdgdbR0s)
+- [My Blog의 배포 링크](https://my-blog-alpha-three.vercel.app/)
 - [FrontEnd](https://github.com/hjyang369/my-blog) : 양회진
 - [BackEnd](https://github.com/falsystack/myblog_backend) : 백엔드님
 - FrontEnd의 기술 스택 : TypeScript, Next.js, html, tailwind CSS, Recoil
