@@ -12,3 +12,8 @@ export const likeFilterTitleState = atom<filterText>({
     contentTitle: "",
   },
 });
+
+export const likeSortState = atom({
+  key: "likeSort",
+  default: "desc",
+});

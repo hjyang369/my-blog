@@ -7,8 +7,8 @@ type languageProps = {
 
 const IC_User = () => (
   <svg
-    width="2.5rem"
-    height="2.5rem"
+    width="2.3rem"
+    height="2.3rem"
     viewBox="0 0 16 16"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

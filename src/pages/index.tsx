@@ -9,7 +9,7 @@ import { PostDataType } from "../types/post";
 import { idState } from "../store/savePostStore";
 import { useRecoilState } from "recoil";
 import Filter from "../components/Filter";
-import { mainFilterTitleState } from "../store/mainFilterStore";
+import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -18,14 +18,30 @@ export default function Main() {
   const [loading, setLoading] = useState(false);
   const idList = useRecoilState(idState);
   const [filterTitle, setFilterTitle] = useRecoilState(mainFilterTitleState);
+  const { dateTitle, tagTitle, contentTitle } = filterTitle;
+  const { startDate, lastDate } = dateTitle;
+  const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const getPostList = async () => {
     setLoading(true);
+    const apiUrl = `${baseUrl}/posts?size=10`;
+    const haveTagTitle = tagTitle.length > 0;
+    const onlyStartDate = startDate && !lastDate;
+    const allDateFUll = startDate && lastDate;
 
     await axios
-      .get(`${baseUrl}/posts?page=${page}&size=10`)
+      .get(
+        `${apiUrl}&page=${page}&sort=${currentSort}${
+          contentTitle ? `&title=${contentTitle}` : ""
+        }${
+          onlyStartDate ? `&startDate=${startDate}&endDate=${startDate}` : ""
+        }${allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""}${
+          haveTagTitle ? `&hashTags=${tagTitle}` : ""
+        }
+      `
+      )
       .then((data) => {
         const newData: PostDataType[] = data.data.postResponses || [];
         const UpdateData = newData.map((item) => {
@@ -45,7 +61,7 @@ export default function Main() {
 
   useEffect(() => {
     !isLastItem && getPostList();
-  }, [page]);
+  }, [page, filterTitle, currentSort]);
 
   return (
     <>
@@ -58,7 +74,11 @@ export default function Main() {
 
       <div className={style.main}>
         <Nav />
-        <Filter filterTitle={filterTitle} changeText={setFilterTitle} />
+        <Filter
+          filterTitle={filterTitle}
+          changeText={setFilterTitle}
+          changeSort={setCurrentSort}
+        />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {itemListData.map((item, idx) => {
