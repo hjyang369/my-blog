@@ -28,7 +28,7 @@ export default function Writing() {
     title: inputValue.title,
     content: inputValue.texts,
     // author: inputValue.author,
-    author: "ddu22",
+    author: "ddu222",
     hashTags: tags.join(""),
   };
 
