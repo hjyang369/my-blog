@@ -8,16 +8,19 @@ import { savedPostState } from "../../store/savePostStore";
 import Nav from "../../components/Nav/Nav";
 import Item from "../../components/common/Item/Item";
 import Filter from "../../components/Filter";
-import { likeFilterTitleState } from "../../store/likeFilterStore";
+import {
+  likeFilterTitleState,
+  likeSortState,
+} from "../../store/likeFilterStore";
 
 export default function Like() {
-  // const filterTitle = useRecoilValue(likeFilterTitleState);
   const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const savedPosts = useRecoilValue(savedPostState);
   const [filteredList, setFilteredList] = useState(savedPosts);
   const [posts, setPosts] = useState(filteredList);
   const [page, setPage] = useState(10);
+  const [currentSort, setCurrentSort] = useRecoilState(likeSortState);
 
   function convertUTCtoKST(dateString) {
     const date = new Date(dateString);
@@ -31,7 +34,9 @@ export default function Like() {
 
   useEffect(() => {
     let filteredContent = [...savedPosts];
-
+    if (currentSort === "asc") {
+      filteredContent.reverse();
+    }
     if (contentTitle) {
       const lowerCaseTitle = contentTitle.toLowerCase();
       filteredContent = filteredContent.filter((post) =>
@@ -63,7 +68,7 @@ export default function Like() {
     }
 
     setFilteredList(filteredContent);
-  }, [savedPosts, filterTitle]);
+  }, [savedPosts, filterTitle, currentSort]);
 
   return (
     <>
@@ -76,7 +81,11 @@ export default function Like() {
 
       <div className={style.main}>
         <Nav />
-        <Filter filterTitle={filterTitle} changeText={setFilterTitle} />
+        <Filter
+          filterTitle={filterTitle}
+          changeText={setFilterTitle}
+          changeSort={setCurrentSort}
+        />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {posts.map((item, idx) => {
