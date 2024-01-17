@@ -7,9 +7,36 @@ import Nav from "../../components/Nav/Nav";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import PDFPreview from "./PDFpreview";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 export default function Resume() {
   const [resumeFile, setResumeFile] = useState(null);
+  const storage = getStorage();
+  const fileName = `userName-${Date.now()}`;
+
+  const resumeRef = ref(storage, "pdf/" + fileName);
+
+  const uploadImg = () => {
+    uploadBytes(resumeRef, resumeFile)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+      })
+      .catch(() => {
+        console.error();
+      });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setResumeFile(file);
+    uploadImg();
+  };
+
+  const deleteFile = () => {
+    setResumeFile(null);
+  };
+
+  // 라이브버리 사용해 pdf render 구현
   // const [page, setPageNumber] = useState<number>(1);
   // const pageNumber = Array.from({ length: page }, (v, i) => i);
 
@@ -18,11 +45,6 @@ export default function Resume() {
   // function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
   //   setPageNumber(numPages);
   // }
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setResumeFile(file);
-  };
 
   return (
     <div>
@@ -50,7 +72,12 @@ export default function Resume() {
               className="hidden"
             />
           </label>
-          <Button text={"이력서 삭제"} fontSize={"1.875rem"} width={"50%"} />
+          <Button
+            onclick={deleteFile}
+            text={"이력서 삭제"}
+            fontSize={"1.875rem"}
+            width={"50%"}
+          />
         </div>
 
         {resumeFile ? (
