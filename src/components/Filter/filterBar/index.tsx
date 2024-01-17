@@ -47,7 +47,7 @@ export default function FilterBar({
     <div className="relative w-width60 flex justify-between gap-4">
       <select
         onChange={(e) => changeSort(e.target.value)}
-        className="w-64 rounded-lg p-4 text-xl"
+        className="w-64 rounded-lg p-4 text-xl h-16"
       >
         <option value="desc">최신순</option>
         <option value="asc">옛날순</option>
