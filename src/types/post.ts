@@ -14,3 +14,10 @@ export interface WritingInputValueType {
   tag: string;
   author: string;
 }
+
+export interface PostingDataType {
+  title: string;
+  content: string;
+  author: string;
+  hashTags: string;
+}
