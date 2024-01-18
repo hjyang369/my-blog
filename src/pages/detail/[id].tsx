@@ -24,7 +24,7 @@ const initialPostingData: PostDataType = {
   like: false,
 };
 
-export default function Detail() {
+export default function Detail({ item }) {
   const router = useRouter();
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -35,6 +35,8 @@ export default function Detail() {
     useState<PostDataType>(initialPostingData);
   const { title, content, author, hashTags, createdAt, like } = postingData;
   const { isSaved, setIsSaved, handleSavePost } = useHandleLike(postingData);
+  // const { title, content, author, hashTags, createdAt, like } = item;
+  // const { isSaved, setIsSaved, handleSavePost } = useHandleLike(item);
 
   useEffect(() => {
     if (id) {
@@ -152,3 +154,17 @@ export default function Detail() {
     </>
   );
 }
+
+// export async function getServerSideProps(context) {
+//   const id = context.params.id;
+//   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+//   const res = await axios.get(`${baseUrl}/post/${id}`);
+//   const data = res.data;
+
+//   console.log(data);
+//   return {
+//     props: {
+//       item: data,
+//     },
+//   };
+// }
