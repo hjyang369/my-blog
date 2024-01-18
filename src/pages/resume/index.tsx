@@ -14,7 +14,7 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
-import { getResume } from "../api/main";
+import { getResume, updateResume } from "../api/main";
 
 export default function Resume() {
   const [resumeFile, setResumeFile] = useState(null);
@@ -28,7 +28,6 @@ export default function Resume() {
   const uploadImg = (file) => {
     uploadBytes(resumeRef, file)
       .then((snapshot) => {
-        console.log(snapshot);
         console.log("Uploaded a blob or file!");
         getDownloadURL(snapshot.ref).then((url) => {
           setResumeFile(url);
@@ -39,11 +38,10 @@ export default function Resume() {
       });
   };
 
-  useEffect(() => {
-    setResumeFile(getResume("Pa2BIvea0YyQftuOdIRw"));
-  }, []);
+  useEffect(() => {}, []);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
+    await setResumeFile(null);
     const file = e.target.files[0];
     setResumeFile(file);
     uploadImg(file);
@@ -82,10 +80,10 @@ export default function Resume() {
         <div className="w-width60 flex items-center justify-between gap-4 ">
           <label
             htmlFor="file"
-            className="text-3xl p-2 bg-white rounded-lg text-main text-center
-            font-bold w-3/6"
+            className="text-3xl p-2 bg-white rounded-lg text-main text-center leading-relaxed
+            font-bold w-3/6 h-16"
           >
-            이력서 등록
+            이력서 선택
             <input
               type="file"
               onChange={handleFileChange}
@@ -94,10 +92,18 @@ export default function Resume() {
             />
           </label>
           <Button
+            onclick={() => updateResume(resumeFile, "Pa2BIvea0YyQftuOdIRw")}
+            text={"이력서 등록"}
+            fontSize={"1.875rem"}
+            width={"50%"}
+            height={"4rem"}
+          />
+          <Button
             onclick={deleteFile}
             text={"이력서 삭제"}
             fontSize={"1.875rem"}
             width={"50%"}
+            height={"4rem"}
           />
         </div>
 

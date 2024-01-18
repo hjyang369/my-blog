@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { firestore } from "../../firebase/index";
 import { PostingDataType } from "../../types/post";
@@ -32,15 +33,27 @@ class FirebaseError extends Error {
 //   }
 // };
 
-const getResume = async (id: string) => {
+const getResume = async (userId: string) => {
   try {
-    const user = doc(firestore, "user", id);
+    const user = doc(firestore, "user", userId);
     const userSnapShot = await getDoc(user);
 
     if (userSnapShot.exists()) {
       return userSnapShot.data().user_resume;
     }
     throw new Error("fail");
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const updateResume = async (url: string, userId: string) => {
+  try {
+    const docRef = doc(firestore, "user", userId);
+    await updateDoc(docRef, {
+      resume: url,
+    });
+    alert("이력서가 등록되었습니다!");
   } catch (error: any) {
     throw new FirebaseError(error);
   }
@@ -69,4 +82,4 @@ const postingData = async ({
   }
 };
 
-export { getResume, postingData };
+export { getResume, updateResume, postingData };
