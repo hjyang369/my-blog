@@ -12,3 +12,8 @@ export const mainFilterTitleState = atom<filterText>({
     contentTitle: "",
   },
 });
+
+export const mainSortState = atom({
+  key: "mainSort",
+  default: "desc",
+});

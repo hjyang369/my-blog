@@ -1,12 +1,11 @@
 import style from "./nav.module.css";
 //
 import { useRouter } from "next/router";
-import { useState } from "react";
 import Button from "../common/button";
-import IC_Language from "../../../public/icon/Language";
 import IC_User from "../../../public/icon/User";
-import UserModal from "./userModal";
 import useMoveToPage from "../../hooks/useMovetoPage";
+import IC_AddPost from "../../../public/icon/AddPost";
+import IC_Like from "../../../public/icon/Like";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -15,7 +14,7 @@ type NaveProps = {
 
 export default function Nav({ postWriting, isWriting }: NaveProps) {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+
   const isResume = router.pathname === "/resume";
   const currentTab = isResume ? "블로그" : "이력서";
   const { moveToPage } = useMoveToPage();
@@ -26,10 +25,6 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
     } else {
       moveToPage("/resume");
     }
-  };
-
-  const handleModal = () => {
-    setIsOpen(!isOpen);
   };
 
   return (
@@ -43,7 +38,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
         MY BLOG
       </button>
 
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         {isWriting ? (
           <Button
             text={"작성"}
@@ -60,14 +55,23 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
           />
         )}
 
-        <div className="relative flex flex-col items-center w-14">
-          <button onClick={handleModal} className={style.iconBtn}>
-            <IC_User />
-          </button>
-          {isOpen && <UserModal handleModal={setIsOpen} />}
-        </div>
-        <button className={style.iconBtn}>
-          <IC_Language />
+        <button
+          onClick={() => moveToPage("/like")}
+          className="bg-yellow200 p-2"
+        >
+          <IC_Like width="2.5rem" height="2.5rem" isFill={true} />
+        </button>
+        <button
+          onClick={() => moveToPage("/writing")}
+          className="bg-yellow200 p-2"
+        >
+          <IC_AddPost />
+        </button>
+        <button
+          onClick={() => alert("서비스를 준비 중 입니다.")}
+          className="bg-yellow200 p-2"
+        >
+          <IC_User />
         </button>
       </div>
     </nav>
