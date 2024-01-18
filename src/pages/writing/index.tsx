@@ -32,11 +32,11 @@ export default function Writing() {
     hashTags: tags.join(""),
   };
 
-  const postWriting = () => {
+  const postWriting = (data) => {
     axios
       .post(
         `${baseUrl}/post`,
-        postingFuncData
+        data
         // {
         //   Authorization: `Bearer ${"토큰"}`,
         // }
@@ -101,7 +101,7 @@ export default function Writing() {
       </Head>
 
       <main className={style.main}>
-        <Nav postWriting={() => postingData(postingFuncData)} isWriting />
+        <Nav postWriting={() => postWriting(postingFuncData)} isWriting />
         <div className={style.mainContainer}>
           <input
             name="title"

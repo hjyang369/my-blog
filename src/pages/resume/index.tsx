@@ -1,5 +1,5 @@
 // 'use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/common/button";
 // import { Document, Page, pdfjs } from "react-pdf";
 import Head from "next/head";
@@ -7,7 +7,14 @@ import Nav from "../../components/Nav/Nav";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import PDFPreview from "./PDFpreview";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
+import { getResume } from "../api/main";
 
 export default function Resume() {
   const [resumeFile, setResumeFile] = useState(null);
@@ -16,24 +23,38 @@ export default function Resume() {
 
   const resumeRef = ref(storage, "pdf/" + fileName);
 
-  const uploadImg = () => {
-    uploadBytes(resumeRef, resumeFile)
+  console.log(resumeFile);
+
+  const uploadImg = (file) => {
+    uploadBytes(resumeRef, file)
       .then((snapshot) => {
+        console.log(snapshot);
         console.log("Uploaded a blob or file!");
+        getDownloadURL(snapshot.ref).then((url) => {
+          setResumeFile(url);
+        });
       })
       .catch(() => {
         console.error();
       });
   };
 
+  useEffect(() => {
+    setResumeFile(getResume("Pa2BIvea0YyQftuOdIRw"));
+  }, []);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setResumeFile(file);
-    uploadImg();
+    uploadImg(file);
   };
 
-  const deleteFile = () => {
-    setResumeFile(null);
+  const deleteFile = async () => {
+    const checkDelete = window.confirm("삭제하시겠습니까?");
+    if (checkDelete) {
+      setResumeFile(null);
+      await deleteObject(resumeRef);
+    }
   };
 
   // 라이브버리 사용해 pdf render 구현

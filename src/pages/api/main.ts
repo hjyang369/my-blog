@@ -32,6 +32,20 @@ class FirebaseError extends Error {
 //   }
 // };
 
+const getResume = async (id: string) => {
+  try {
+    const user = doc(firestore, "user", id);
+    const userSnapShot = await getDoc(user);
+
+    if (userSnapShot.exists()) {
+      return userSnapShot.data().user_resume;
+    }
+    throw new Error("fail");
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
 const postingData = async ({
   title,
   content,
@@ -55,4 +69,4 @@ const postingData = async ({
   }
 };
 
-export { postingData };
+export { getResume, postingData };
