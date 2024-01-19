@@ -1,28 +1,62 @@
-// 'use client"
-import { useState } from "react";
-import Button from "../../components/common/button";
 // import { Document, Page, pdfjs } from "react-pdf";
+// import PDFPreview from "./PDFpreview";
+import { useEffect, useState } from "react";
+import Button from "../../components/common/button";
 import Head from "next/head";
 import Nav from "../../components/Nav/Nav";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import PDFPreview from "./PDFpreview";
+import {
+  getResume,
+  updateResume,
+  uploadResumeFile,
+  deleteResumeFile,
+  deleteResume,
+} from "../api/main";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Resume() {
-  const [resumeFile, setResumeFile] = useState(null);
+  const [resume, setResume] = useState(null);
+
+  const query = useQuery({
+    queryKey: ["resume"],
+    queryFn: () => getResume("Pa2BIvea0YyQftuOdIRw"),
+  });
+
+  useEffect(() => {
+    if (query.data) {
+      setResume(query.data);
+    }
+  }, [query.data]);
+
+  const handleFileChange = async (e) => {
+    await setResume(null);
+    const file = e.target.files[0];
+    uploadResumeFile(file, setResume);
+  };
+
+  const deleteFile = async () => {
+    const checkDelete = window.confirm("삭제하시겠습니까?");
+    if (checkDelete) {
+      setResume(null);
+      deleteResumeFile(resume);
+      deleteResume("Pa2BIvea0YyQftuOdIRw");
+    }
+  };
+
+  // 라이브버리 사용해 pdf render 구현
   // const [page, setPageNumber] = useState<number>(1);
   // const pageNumber = Array.from({ length: page }, (v, i) => i);
 
   // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-  // function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-  //   setPageNumber(numPages);
-  // }
+  // pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setResumeFile(file);
-  };
+  // 이거 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+  // const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
+  //   setPageNumber(numPages);
+  // };
 
   return (
     <div>
@@ -39,10 +73,10 @@ export default function Resume() {
         <div className="w-width60 flex items-center justify-between gap-4 ">
           <label
             htmlFor="file"
-            className="text-3xl p-2 bg-white rounded-lg text-main text-center
-            font-bold w-3/6"
+            className="text-3xl p-2 bg-white rounded-lg text-main text-center leading-relaxed
+            font-bold w-3/6 h-16"
           >
-            이력서 등록
+            이력서 선택
             <input
               type="file"
               onChange={handleFileChange}
@@ -50,22 +84,45 @@ export default function Resume() {
               className="hidden"
             />
           </label>
-          <Button text={"이력서 삭제"} fontSize={"1.875rem"} width={"50%"} />
+          <Button
+            onclick={() => updateResume(resume, "Pa2BIvea0YyQftuOdIRw")}
+            text={"이력서 등록"}
+            fontSize={"1.875rem"}
+            width={"50%"}
+            height={"4rem"}
+          />
+          <Button
+            onclick={deleteFile}
+            text={"이력서 삭제"}
+            fontSize={"1.875rem"}
+            width={"50%"}
+            height={"4rem"}
+          />
         </div>
 
-        {resumeFile ? (
+        {resume ? (
           // 라이브러리 사용해 pdf render 구현
           // <div>
-          //   <Document file={resumeFile} onLoadSuccess={onDocumentLoadSuccess}>
+          //   <Document
+          //     file={{ url: resumeFile }}
+          //     onLoadSuccess={onDocumentLoadSuccess}
+          //   >
           //     {pageNumber.map((pages, idx) => {
           //       return <Page key={idx} pageNumber={pages + 1} />;
           //     })}
           //   </Document>
           // </div>
-          <div className="w-width60">
-            <PDFPreview pdf={resumeFile} />
-          </div>
+
+          <iframe
+            src={resume}
+            seamless
+            className="w-width60 h-height60"
+          ></iframe>
         ) : (
+          // <div className="w-width60">
+          //   <PDFPreview pdf={resumeFile} />
+          // </div>
+
           <div className="m-60 text-4xl text-gray200">
             등록된 이력서가 없습니다.
           </div>

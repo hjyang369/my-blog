@@ -8,7 +8,7 @@ import { useState } from "react";
 import React from "react";
 import Tag from "../../components/common/Tag";
 import { WritingInputValueType } from "../../types/post";
-import { postingData } from "../api/main";
+// import { postWriting } from "../api/main"; //FIREBASE
 
 export default function Writing() {
   const initInputValue: WritingInputValueType = {
@@ -32,11 +32,11 @@ export default function Writing() {
     hashTags: tags.join(""),
   };
 
-  const postWriting = () => {
+  const postWriting = (data) => {
     axios
       .post(
         `${baseUrl}/post`,
-        postingFuncData
+        data
         // {
         //   Authorization: `Bearer ${"토큰"}`,
         // }
@@ -100,9 +100,9 @@ export default function Writing() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={style.main}>
-        <Nav postWriting={() => postingData(postingFuncData)} isWriting />
-        <div className={style.mainContainer}>
+      <main className="flex flex-col items-center justify-center p-4 gap-4">
+        <Nav postWriting={() => postWriting(postingFuncData)} isWriting />
+        <div className="flex flex-col w-width60">
           <input
             name="title"
             placeholder="제목"
@@ -139,7 +139,7 @@ export default function Writing() {
 
             <input
               type="text"
-              className={style.tagInput}
+              className="border-0 outline-none h-8 w-full"
               name="tag"
               placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
               required
@@ -157,35 +157,6 @@ export default function Writing() {
             onChange={handleInput}
           ></input>
         </div>
-
-        {/* <div className={style.IconContainer}>
-          <label htmlFor="file" className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faImage} />
-          </label>
-          <input id="file" type="file" className={style.file}></input>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faTextHeight} />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faUnderline} />
-          </label>
-
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faItalic} />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faBold} />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon
-              className={style.textsIcon}
-              icon={faAlignJustify}
-            />
-          </label>
-          <label className={style.textsIconBox}>
-            <FontAwesomeIcon className={style.textsIcon} icon={faPalette} />
-          </label>
-        </div> */}
       </main>
     </>
   );

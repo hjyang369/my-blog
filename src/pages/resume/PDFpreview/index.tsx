@@ -26,10 +26,9 @@ const PDFPreview = ({ pdf }) => {
             await renderPdfFromLoadingTask(loadingTask);
           };
           fileReader.readAsArrayBuffer(pdf);
-        } else if (typeof pdf === "string" && pdf.startsWith("http")) {
+        } else if (typeof pdf === "string") {
           // URL이 전달된 경우
           loadingTask = pdfjs.getDocument({ url: pdf });
-
           await renderPdfFromLoadingTask(loadingTask);
         } else {
           throw new Error("유효하지 않은 PDF 데이터입니다.");
