@@ -8,7 +8,7 @@ import { useState } from "react";
 import React from "react";
 import Tag from "../../components/common/Tag";
 import { WritingInputValueType } from "../../types/post";
-import { postingData } from "../api/main";
+// import { postWriting } from "../api/main"; //FIREBASE
 
 export default function Writing() {
   const initInputValue: WritingInputValueType = {

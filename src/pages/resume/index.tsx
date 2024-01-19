@@ -1,57 +1,46 @@
-// 'use client"
+// import { Document, Page, pdfjs } from "react-pdf";
+// import PDFPreview from "./PDFpreview";
 import { useEffect, useState } from "react";
 import Button from "../../components/common/button";
-// import { Document, Page, pdfjs } from "react-pdf";
 import Head from "next/head";
 import Nav from "../../components/Nav/Nav";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import PDFPreview from "./PDFpreview";
 import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  deleteObject,
-} from "firebase/storage";
-import { getResume, updateResume } from "../api/main";
+  getResume,
+  updateResume,
+  uploadResume,
+  deleteResumeFile,
+  deleteResume,
+} from "../api/main";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Resume() {
   const [resumeFile, setResumeFile] = useState(null);
-  const storage = getStorage();
-  const fileName = `userName-${Date.now()}`;
 
-  const resumeRef = ref(storage, "pdf/" + fileName);
+  const query = useQuery({
+    queryKey: ["resume"],
+    queryFn: () => getResume("Pa2BIvea0YyQftuOdIRw"),
+  });
 
-  console.log(resumeFile);
-
-  const uploadImg = (file) => {
-    uploadBytes(resumeRef, file)
-      .then((snapshot) => {
-        console.log("Uploaded a blob or file!");
-        getDownloadURL(snapshot.ref).then((url) => {
-          setResumeFile(url);
-        });
-      })
-      .catch(() => {
-        console.error();
-      });
-  };
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (query.data) {
+      setResumeFile(query.data);
+    }
+  }, [query.data]);
 
   const handleFileChange = async (e) => {
     await setResumeFile(null);
     const file = e.target.files[0];
-    setResumeFile(file);
-    uploadImg(file);
+    uploadResume(file, setResumeFile);
   };
 
   const deleteFile = async () => {
     const checkDelete = window.confirm("삭제하시겠습니까?");
     if (checkDelete) {
       setResumeFile(null);
-      await deleteObject(resumeRef);
+      deleteResumeFile(resumeFile);
+      deleteResume("Pa2BIvea0YyQftuOdIRw");
     }
   };
 
@@ -61,9 +50,13 @@ export default function Resume() {
 
   // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-  // function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+  // pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+  // 이거 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+  // const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
   //   setPageNumber(numPages);
-  // }
+  // };
 
   return (
     <div>
@@ -110,16 +103,26 @@ export default function Resume() {
         {resumeFile ? (
           // 라이브러리 사용해 pdf render 구현
           // <div>
-          //   <Document file={resumeFile} onLoadSuccess={onDocumentLoadSuccess}>
+          //   <Document
+          //     file={{ url: resumeFile }}
+          //     onLoadSuccess={onDocumentLoadSuccess}
+          //   >
           //     {pageNumber.map((pages, idx) => {
           //       return <Page key={idx} pageNumber={pages + 1} />;
           //     })}
           //   </Document>
           // </div>
-          <div className="w-width60">
-            <PDFPreview pdf={resumeFile} />
-          </div>
+
+          <iframe
+            src={resumeFile}
+            seamless
+            className="w-width60 h-height60"
+          ></iframe>
         ) : (
+          // <div className="w-width60">
+          //   <PDFPreview pdf={resumeFile} />
+          // </div>
+
           <div className="m-60 text-4xl text-gray200">
             등록된 이력서가 없습니다.
           </div>

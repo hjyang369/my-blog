@@ -6,7 +6,14 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { firestore } from "../../firebase/index";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { firestore, storage } from "../../firebase/index";
 import { PostingDataType } from "../../types/post";
 
 class FirebaseError extends Error {
@@ -34,9 +41,9 @@ class FirebaseError extends Error {
 // };
 
 const getResume = async (userId: string) => {
+  const userRef = doc(firestore, "user", userId);
   try {
-    const user = doc(firestore, "user", userId);
-    const userSnapShot = await getDoc(user);
+    const userSnapShot = await getDoc(userRef);
 
     if (userSnapShot.exists()) {
       return userSnapShot.data().user_resume;
@@ -49,9 +56,9 @@ const getResume = async (userId: string) => {
 
 const updateResume = async (url: string, userId: string) => {
   try {
-    const docRef = doc(firestore, "user", userId);
-    await updateDoc(docRef, {
-      resume: url,
+    const userRef = doc(firestore, "user", userId);
+    await updateDoc(userRef, {
+      user_resume: url,
     });
     alert("이력서가 등록되었습니다!");
   } catch (error: any) {
@@ -59,27 +66,77 @@ const updateResume = async (url: string, userId: string) => {
   }
 };
 
-const postingData = async ({
+const uploadResume = (file, setState) => {
+  const fileName = `userName-${Date.now()}`;
+  const resumeRef = ref(storage, "pdf/" + fileName);
+  uploadBytes(resumeRef, file)
+    .then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+      getDownloadURL(snapshot.ref).then((url) => {
+        setState(url);
+      });
+    })
+    .catch(() => {
+      console.error();
+    });
+};
+
+const deleteResumeFile = async (url: string) => {
+  try {
+    const startIndex = url.indexOf("pdf%2F") + 6;
+    const endIndex = url.indexOf("?alt=media&token=");
+    const path = url.substring(startIndex, endIndex);
+
+    const resumeRef = ref(storage, `pdf/${path}`);
+
+    deleteObject(resumeRef).then(() => {
+      console.log("File deleted successfully");
+    });
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const deleteResume = async (userId: string) => {
+  try {
+    const userRef = doc(firestore, "user", userId);
+    await updateDoc(userRef, {
+      user_resume: null,
+    });
+    alert("이력서가 삭제되었습니다!");
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const postWriting = async ({
   title,
   content,
   author,
   hashTags,
 }: PostingDataType) => {
   try {
-    const docRef = await addDoc(collection(firestore, "post"), {
+    const writingRef = await addDoc(collection(firestore, "post"), {
       title: title,
       content: content,
       author: author,
       hashTags: hashTags,
       createdAt: serverTimestamp(),
     });
-    console.log("Document written with ID: ", docRef.id);
-    if (docRef) {
-      return docRef;
+    console.log("Document written with ID: ", writingRef.id);
+    if (writingRef) {
+      return writingRef;
     }
   } catch (error: any) {
     throw new FirebaseError(error);
   }
 };
 
-export { getResume, updateResume, postingData };
+export {
+  getResume,
+  updateResume,
+  uploadResume,
+  deleteResumeFile,
+  deleteResume,
+  postWriting,
+};
