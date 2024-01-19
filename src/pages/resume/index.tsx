@@ -9,14 +9,14 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import {
   getResume,
   updateResume,
-  uploadResume,
+  uploadResumeFile,
   deleteResumeFile,
   deleteResume,
 } from "../api/main";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Resume() {
-  const [resumeFile, setResumeFile] = useState(null);
+  const [resume, setResume] = useState(null);
 
   const query = useQuery({
     queryKey: ["resume"],
@@ -25,21 +25,21 @@ export default function Resume() {
 
   useEffect(() => {
     if (query.data) {
-      setResumeFile(query.data);
+      setResume(query.data);
     }
   }, [query.data]);
 
   const handleFileChange = async (e) => {
-    await setResumeFile(null);
+    await setResume(null);
     const file = e.target.files[0];
-    uploadResume(file, setResumeFile);
+    uploadResumeFile(file, setResume);
   };
 
   const deleteFile = async () => {
     const checkDelete = window.confirm("삭제하시겠습니까?");
     if (checkDelete) {
-      setResumeFile(null);
-      deleteResumeFile(resumeFile);
+      setResume(null);
+      deleteResumeFile(resume);
       deleteResume("Pa2BIvea0YyQftuOdIRw");
     }
   };
@@ -85,7 +85,7 @@ export default function Resume() {
             />
           </label>
           <Button
-            onclick={() => updateResume(resumeFile, "Pa2BIvea0YyQftuOdIRw")}
+            onclick={() => updateResume(resume, "Pa2BIvea0YyQftuOdIRw")}
             text={"이력서 등록"}
             fontSize={"1.875rem"}
             width={"50%"}
@@ -100,7 +100,7 @@ export default function Resume() {
           />
         </div>
 
-        {resumeFile ? (
+        {resume ? (
           // 라이브러리 사용해 pdf render 구현
           // <div>
           //   <Document
@@ -114,7 +114,7 @@ export default function Resume() {
           // </div>
 
           <iframe
-            src={resumeFile}
+            src={resume}
             seamless
             className="w-width60 h-height60"
           ></iframe>

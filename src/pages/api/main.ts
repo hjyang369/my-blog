@@ -66,7 +66,7 @@ const updateResume = async (url: string, userId: string) => {
   }
 };
 
-const uploadResume = (file, setState) => {
+const uploadResumeFile = (file, setState) => {
   const fileName = `userName-${Date.now()}`;
   const resumeRef = ref(storage, "pdf/" + fileName);
   uploadBytes(resumeRef, file)
@@ -135,7 +135,7 @@ const postWriting = async ({
 export {
   getResume,
   updateResume,
-  uploadResume,
+  uploadResumeFile,
   deleteResumeFile,
   deleteResume,
   postWriting,
