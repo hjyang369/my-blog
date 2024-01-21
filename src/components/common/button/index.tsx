@@ -21,7 +21,7 @@ export default function Button({
 }: buttonProps) {
   return (
     <button
-      className="text-3xl  p-2 bg-white rounded-lg text-main font-bold"
+      className="text-3xl p-2 bg-white rounded-lg text-main font-bold"
       onClick={onclick}
       style={{
         width: width,
