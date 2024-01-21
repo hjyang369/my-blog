@@ -6,31 +6,20 @@ import Nav from "../../components/Nav/Nav";
 import { useEffect, useState } from "react";
 import React from "react";
 import Tag from "../../components/common/Tag";
-import { PostDataType, WritingInputValueType } from "../../types/post";
+import { EditInputValueType } from "../../types/post";
 //
 
-const initInputValue: WritingInputValueType = {
-  title: "",
-  texts: "",
-  tag: "",
-  author: "",
-};
-const initialPostingData: PostDataType = {
-  id: 0,
-  title: "",
-  content: "",
-  author: "",
-  hashTags: [{ id: 0, name: "" }],
-  createdAt: "",
-  like: false,
-};
+export default function Edit() {
+  const [initInputValue, setInitInputValue] = useState<EditInputValueType>({
+    title: "",
+    texts: "",
+    tag: "",
+  });
 
-export default function Writing() {
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
-  const [postingData, setPostingData] =
-    useState<PostDataType>(initialPostingData);
   const [tags, setTags] = useState<string[]>([]);
+
   const router = useRouter();
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -47,7 +36,14 @@ export default function Writing() {
         )
         .then((data) => {
           if (data.status === 200) {
-            setPostingData(data.data);
+            const postData = data.data;
+            const namesArray = postData.hashTags.map((item) => item.name);
+            setTags(namesArray);
+            setInitInputValue({
+              title: postData.title,
+              texts: postData.content,
+              tag: "",
+            });
           } else if (data.status === 400) {
             alert("다시 확인해주세요.");
           }
@@ -60,12 +56,11 @@ export default function Writing() {
 
   const editPost = () => {
     axios
-      .post(
-        `${baseUrl}/post`,
+      .put(
+        `${baseUrl}/post/${id}`,
         {
           title: inputValue.title,
           content: inputValue.texts,
-          author: inputValue.author,
           hashTags: tags.join(""),
         }
         // {
@@ -87,8 +82,7 @@ export default function Writing() {
   const titleValid =
     inputValue.title.length > 0 && inputValue.title.length <= 20;
   const textsValid = inputValue.texts.length > 10;
-  const authorValid = inputValue.author.length > 0;
-  const postValid = titleValid && textsValid && authorValid;
+  const postValid = titleValid && textsValid;
 
   const makeTag = (e) => {
     const completedTag = "#" + inputValue.tag;
@@ -141,6 +135,7 @@ export default function Writing() {
             minLength={0}
             required
             onChange={handleInput}
+            defaultValue={initInputValue.title}
             className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200"
           ></input>
           <textarea
@@ -149,6 +144,7 @@ export default function Writing() {
             required
             placeholder="내용을 입력해주세요."
             onChange={handleInput}
+            defaultValue={initInputValue.texts}
             className="h-height40 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 p-8 text-2xl shadow-shadow200"
           ></textarea>
           <form
@@ -179,14 +175,6 @@ export default function Writing() {
               value={inputValue.tag}
             ></input>
           </form>
-          {/* <input
-            name="author"
-            placeholder="작성자이름"
-            required
-            minLength={1}
-            onChange={handleInput}
-            className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200"
-          ></input> */}
         </div>
       </main>
     </>
