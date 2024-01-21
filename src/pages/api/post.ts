@@ -19,10 +19,11 @@ const addPost = async ({
 }: PostingDataType) => {
   try {
     const writingRef = await addDoc(collection(firestore, "post"), {
-      title: title,
-      content: content,
-      author: author,
+      post_title: title,
+      post_content: content,
+      post_author: author,
       hashTags: hashTags,
+      user_id: "Pa2BIvea0YyQftuOdIRw",
       createdAt: serverTimestamp(),
     });
     console.log("Document written with ID: ", writingRef.id);
