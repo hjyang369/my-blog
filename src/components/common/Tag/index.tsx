@@ -1,34 +1,15 @@
 import React from "react";
-import style from "./tag.module.css";
 
 type tagProps = {
-  isWriting?: boolean;
-  removeTag?: (idx: number) => void;
-  selectTags?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   tag: string;
-  tagId: number;
   isSelect?: boolean;
 };
 
-export default function Tag({
-  isWriting,
-  removeTag,
-  selectTags,
-  tag,
-  tagId,
-  isSelect,
-}: tagProps) {
-  const handleTag = (e, id) => {
-    // removeTag && removeTag(id);
-    selectTags && selectTags(e);
-    return;
-  };
-
+export default function Tag({ tag, isSelect }: tagProps) {
   return (
     <button
       name={tag}
-      className={style.tags}
-      onClick={(e) => handleTag(e, tagId)}
+      className={`bg-yellow200 border border-solid border-bbb rounded-lg p-2 text-lg cursor-default`}
       style={{
         backgroundColor: isSelect ? "#f0b31e" : "",
         color: isSelect ? "#fff" : "",
@@ -36,7 +17,6 @@ export default function Tag({
       }}
     >
       {tag}
-      {isWriting && <p>x</p>}
     </button>
   );
 }

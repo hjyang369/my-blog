@@ -1,6 +1,5 @@
 import { SetterOrUpdater, useRecoilValue } from "recoil";
 import { TAG_DATA } from "../../../modules/constants";
-import Tag from "../../common/Tag";
 import SearchBar from "../searchBar";
 // import { likeFilterTitleState } from "../../../store/likeFilterStore";
 import useInputValue from "../../../hooks/useInputValue";
@@ -9,6 +8,7 @@ import { SetStateAction } from "jotai";
 import { savedPostState } from "../../../store/savePostStore";
 import { filterText } from "../../../types/filter";
 import HoverButton from "../../common/hoverButton";
+import ClickTag from "../../common/clickTag";
 
 type selectedDateData = {
   startDate: string;
@@ -91,10 +91,9 @@ export default function FilterModal({
       <div className="flex flex-wrap gap-4 w-width60 ">
         {TAG_DATA.map((tag) => {
           return (
-            <Tag
+            <ClickTag
               key={tag.id}
               tag={tag.tag}
-              tagId={tag.id}
               selectTags={selectTags}
               isSelect={selectedTag.includes(tag.tag)}
             />

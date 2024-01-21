@@ -5,8 +5,8 @@ import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useEffect, useState } from "react";
 import React from "react";
-import Tag from "../../components/common/Tag";
 import { EditInputValueType } from "../../types/post";
+import ClickTag from "../../components/common/clickTag";
 //
 
 export default function Edit() {
@@ -154,7 +154,7 @@ export default function Edit() {
           >
             {tags.map((tag, idx) => {
               return (
-                <Tag
+                <ClickTag
                   key={idx}
                   isWriting
                   removeTag={removeTag}

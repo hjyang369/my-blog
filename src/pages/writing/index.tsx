@@ -5,9 +5,9 @@ import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useState } from "react";
 import React from "react";
-import Tag from "../../components/common/Tag";
 import { WritingInputValueType } from "../../types/post";
 import useMoveToPage from "../../hooks/useMovetoPage";
+import ClickTag from "../../components/common/clickTag";
 // import { addPost } from "../api/post"; //FIREBASE
 
 export default function Writing() {
@@ -134,35 +134,28 @@ export default function Writing() {
           >
             {tags.map((tag, idx) => {
               return (
-                <Tag
+                <ClickTag
                   key={idx}
-                  isWriting
                   removeTag={removeTag}
                   tag={tag}
                   tagId={idx}
+                  isWriting
                 />
               );
             })}
-
-            <input
-              type="text"
-              className="border-0 outline-none h-8 w-full"
-              name="tag"
-              placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
-              required
-              onChange={(e) => handleInput(e)}
-              onKeyUp={(e) => makeTag(e)}
-              value={inputValue.tag}
-            ></input>
+            {tags.length < 3 && (
+              <input
+                type="text"
+                className="border-0 outline-none"
+                name="tag"
+                placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
+                required
+                onChange={(e) => handleInput(e)}
+                onKeyUp={(e) => makeTag(e)}
+                value={inputValue.tag}
+              ></input>
+            )}
           </form>
-          <input
-            name="author"
-            className={style.inputs}
-            placeholder="작성자이름"
-            required
-            minLength={1}
-            onChange={handleInput}
-          ></input>
         </div>
       </main>
     </>

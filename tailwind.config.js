@@ -10,6 +10,7 @@ module.exports = {
       },
       borderColor: {
         main: "#f0b31e",
+        bbb: "#bbb",
       },
       colors: {
         white: "#fff",
@@ -19,6 +20,7 @@ module.exports = {
         gray300: "#65717b",
         gray200: "#9d9d9d",
         gray100: "#dadada",
+        pink100: "#fc8e8e",
       },
       width: {
         width60: "60rem",
