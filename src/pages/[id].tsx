@@ -25,6 +25,11 @@ export default function UserMain() {
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
   const { moveToPage } = useMoveToPage();
 
+  const changeSort = (value: string) => {
+    setItemListData([]);
+    setCurrentSort(value);
+  };
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const getPostList = async () => {
@@ -81,7 +86,8 @@ export default function UserMain() {
         <Filter
           filterTitle={filterTitle}
           changeText={setFilterTitle}
-          changeSort={setCurrentSort}
+          changeSort={changeSort}
+          resetData={setItemListData}
         />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

@@ -8,12 +8,14 @@ type FilterProps = {
   filterTitle: filterText;
   changeText: SetterOrUpdater<filterText>;
   changeSort: SetterOrUpdater<string>;
+  resetData?: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 export default function Filter({
   filterTitle,
   changeText,
   changeSort,
+  resetData,
 }: FilterProps) {
   const [isSearch, setIsSearch] = useState(false);
 
@@ -25,7 +27,11 @@ export default function Filter({
         changeSort={changeSort}
       />
       {isSearch && (
-        <FilterModal handelModal={setIsSearch} changeText={changeText} />
+        <FilterModal
+          handelModal={setIsSearch}
+          changeText={changeText}
+          resetData={resetData}
+        />
       )}
     </div>
   );

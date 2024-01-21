@@ -18,6 +18,7 @@ type selectedDateData = {
 type FilterModalProps = {
   handelModal?: Dispatch<SetStateAction<boolean>>;
   changeText: SetterOrUpdater<filterText>;
+  resetData: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const initDate = {
@@ -32,6 +33,7 @@ const initInputValue = {
 export default function FilterModal({
   handelModal,
   changeText,
+  resetData,
 }: FilterModalProps) {
   // const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
   const savedPosts = useRecoilValue(savedPostState);
@@ -60,6 +62,7 @@ export default function FilterModal({
 
   const getFilteredData = () => {
     handelModal(false);
+    resetData && resetData([]);
     changeText({
       dateTitle: {
         startDate: selectedDate.startDate,
