@@ -14,6 +14,7 @@ import {
 } from "../../store/likeFilterStore";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickButton from "../../components/common/clickButton";
+import { getReady } from "../../modules/function";
 
 export default function Like() {
   const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
@@ -95,10 +96,12 @@ export default function Like() {
             posts.map((item, idx) => {
               return (
                 <Item
+                  key={item.id}
                   onFetchMore={() => setPage((prev) => prev + 10)}
                   isLastItem={posts.length - 1 === idx}
-                  key={item.id}
-                  {...item}
+                  // moveToUserMain={() => moveToPage(`/${"username"}`)}
+                  moveToUserMain={getReady}
+                  item={item}
                 />
               );
             })

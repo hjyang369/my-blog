@@ -29,6 +29,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
 
   return (
     <nav className="flex justify-between items-center h-16 w-width60">
+      {/* TODO user 생기면 user name 으로 로고 변경 */}
       <button
         onClick={() => {
           moveToPage("/");

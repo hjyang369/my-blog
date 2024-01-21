@@ -48,10 +48,6 @@
   font-size: 1.2rem;
   justify-content: space-between;
 }
-.author {
-  font-size: 1.2rem;
-  color: #9d9d9d;
-}
 
 .heartBox {
   display: flex;
