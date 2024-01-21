@@ -12,7 +12,7 @@ import {
   uploadResumeFile,
   deleteResumeFile,
   deleteResume,
-} from "../api/main";
+} from "../api/resume";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Resume() {
