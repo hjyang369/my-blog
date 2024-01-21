@@ -1,11 +1,11 @@
 import style from "./nav.module.css";
 //
 import { useRouter } from "next/router";
-import Button from "../common/button";
 import IC_User from "../../../public/icon/User";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import IC_AddPost from "../../../public/icon/AddPost";
 import IC_Like from "../../../public/icon/Like";
+import ClickButton from "../common/clickButton";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -40,14 +40,14 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
 
       <div className="flex items-center gap-2">
         {isWriting ? (
-          <Button
+          <ClickButton
             text={"작성"}
             fontSize={"1.2rem"}
             onclick={postWriting}
             backgroundColor={"#f7f0d1"}
           />
         ) : (
-          <Button
+          <ClickButton
             text={currentTab}
             fontSize={"1.2rem"}
             onclick={handleCurrentTab}

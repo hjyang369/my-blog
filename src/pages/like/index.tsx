@@ -12,8 +12,8 @@ import {
   likeFilterTitleState,
   likeSortState,
 } from "../../store/likeFilterStore";
-import Button from "../../components/common/button";
 import useMoveToPage from "../../hooks/useMovetoPage";
+import ClickButton from "../../components/common/clickButton";
 
 export default function Like() {
   const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
@@ -105,7 +105,7 @@ export default function Like() {
           ) : (
             <div className="m-40 flex flex-col gap-10">
               <p className="text-4xl text-gray200">좋아요한 글이 없습니다.</p>
-              <Button
+              <ClickButton
                 text={"좋아요하러 가기"}
                 fontSize={"1.5rem"}
                 onclick={() => moveToPage("/")}
