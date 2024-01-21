@@ -6,13 +6,13 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Tag from "../../components/common/Tag";
 import CommentsList from "./commentsList";
-import Button from "../../components/common/button";
 import IC_Like from "../../../public/icon/Like";
 import { useRecoilState } from "recoil";
 import { idState } from "../../store/savePostStore";
 import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
 import useMoveToPage from "../../hooks/useMovetoPage";
+import ClickButton from "../../components/common/clickButton";
 
 const initialPostingData: PostDataType = {
   id: 0,
@@ -125,17 +125,17 @@ export default function Detail({ item }) {
               <div className={style.tagContainer}>
                 {hashTags.length > 0 &&
                   hashTags.map((tag) => {
-                    return <Tag key={tag.id} tag={tag.name} tagId={tag.id} />;
+                    return <Tag key={tag.id} tag={tag.name} />;
                   })}
               </div>
               <div className={style.tagContainer}>
-                <Button
+                <ClickButton
                   width="5rem"
                   text={"수정"}
                   fontSize={"1.4rem"}
                   onclick={() => moveToPage(`/edit/${id}`)}
                 />
-                <Button
+                <ClickButton
                   width="5rem"
                   text={"삭제"}
                   fontSize={"1.4rem"}

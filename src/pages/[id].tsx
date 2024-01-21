@@ -13,7 +13,7 @@ import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import useMoveToPage from "../hooks/useMovetoPage";
 import { getReady } from "../modules/function";
 
-export default function Main() {
+export default function UserMain() {
   const [itemListData, setItemListData] = useState([]);
   const [page, setPage] = useState(1);
   const [isLastItem, setIsLastItem] = useState(false);
@@ -34,7 +34,7 @@ export default function Main() {
 
   const getPostList = async () => {
     setLoading(true);
-    const apiUrl = `${baseUrl}/posts?size=10`;
+    const apiUrl = `${baseUrl}/posts/${"userName"}?size=10`;
     const haveTagTitle = tagTitle.length > 0;
     const onlyStartDate = startDate && !lastDate;
     const allDateFUll = startDate && lastDate;
@@ -43,9 +43,11 @@ export default function Main() {
       .get(
         `${apiUrl}&page=${page}&sort=${currentSort}${
           contentTitle ? `&title=${contentTitle}` : ""
-        }${onlyStartDate ? `&startDate=${startDate}` : ""}${
-          allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""
-        }${haveTagTitle ? `&hashTags=${tagTitle}` : ""}
+        }${
+          onlyStartDate ? `&startDate=${startDate}&endDate=${startDate}` : ""
+        }${allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""}${
+          haveTagTitle ? `&hashTags=${tagTitle}` : ""
+        }
       `
       )
       .then((data) => {
@@ -79,6 +81,7 @@ export default function Main() {
       </Head>
 
       <div className={style.main}>
+        {/* TODO user 생기면 user name 으로 로고 변경 */}
         <Nav />
         <Filter
           filterTitle={filterTitle}

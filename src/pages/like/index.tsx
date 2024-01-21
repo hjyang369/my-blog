@@ -12,8 +12,9 @@ import {
   likeFilterTitleState,
   likeSortState,
 } from "../../store/likeFilterStore";
-import Button from "../../components/common/button";
 import useMoveToPage from "../../hooks/useMovetoPage";
+import ClickButton from "../../components/common/clickButton";
+import { getReady } from "../../modules/function";
 
 export default function Like() {
   const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
@@ -95,17 +96,19 @@ export default function Like() {
             posts.map((item, idx) => {
               return (
                 <Item
+                  key={item.id}
                   onFetchMore={() => setPage((prev) => prev + 10)}
                   isLastItem={posts.length - 1 === idx}
-                  key={item.id}
-                  {...item}
+                  // moveToUserMain={() => moveToPage(`/${"username"}`)}
+                  moveToUserMain={getReady}
+                  item={item}
                 />
               );
             })
           ) : (
             <div className="m-40 flex flex-col gap-10">
               <p className="text-4xl text-gray200">좋아요한 글이 없습니다.</p>
-              <Button
+              <ClickButton
                 text={"좋아요하러 가기"}
                 fontSize={"1.5rem"}
                 onclick={() => moveToPage("/")}

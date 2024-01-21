@@ -3,29 +3,32 @@ type buttonProps = {
   height?: string | number;
   text: string;
   fontSize: string;
-  onclick?: () => void;
+  color?: string;
+  onclick: () => void;
   backgroundColor?: string;
   shadow?: string;
 };
 
-export default function HoverButton({
+export default function ClickButton({
   width,
   height,
   text,
   fontSize,
+  color,
   onclick,
   backgroundColor,
   shadow,
 }: buttonProps) {
-  const changeBackgroundColor = backgroundColor ? backgroundColor : "bg-white";
   return (
     <button
-      className={`text-3xl p-2 ${changeBackgroundColor} rounded-lg text-main font-bold transition-colors duration-300 ease-in hover:bg-main hover:text-white`}
+      className="text-3xl p-2 bg-white rounded-lg text-main font-bold"
       onClick={onclick}
       style={{
         width: width,
         height: height,
         fontSize: fontSize,
+        color: color,
+        backgroundColor: `${backgroundColor && backgroundColor}`,
         boxShadow: `${shadow && shadow}`,
       }}
     >

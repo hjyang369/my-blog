@@ -4,9 +4,22 @@ import { useRouter } from "next/router";
 import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
 import IC_Like from "../../../../public/icon/Like";
 import useHandleLike from "../../../hooks/useHandleLike";
+import { PostDataType } from "../../../types/post";
 
-export default function Item({ isLastItem, onFetchMore, ...props }) {
-  const { id, img, title, content, author, hashTags, createdAt, like } = props;
+type itemProps = {
+  isLastItem: boolean;
+  onFetchMore: () => void;
+  moveToUserMain?: () => void;
+  item: PostDataType;
+};
+
+export default function Item({
+  isLastItem,
+  onFetchMore,
+  moveToUserMain,
+  item,
+}: itemProps) {
+  const { id, title, content, author, hashTags, createdAt, like } = item;
   const data = { id, title, content, author, hashTags, createdAt, like };
 
   const { isSaved, handleSavePost } = useHandleLike(data);
@@ -39,7 +52,12 @@ export default function Item({ isLastItem, onFetchMore, ...props }) {
         </div>
 
         <div className={style.authorData}>
-          <p className={style.author}>{author}</p>
+          <button
+            onClick={moveToUserMain}
+            className="font-xl text-gray200 bg-yellow100"
+          >
+            {author}
+          </button>
           <div className={style.heartBox} onClick={() => handleSavePost(id)}>
             <IC_Like width="2rem" height="2rem" isFill={isSaved} />
 

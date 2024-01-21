@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  padding: 1rem;
 }
 .all {
   width: 62.5rem;

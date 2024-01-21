@@ -1,7 +1,5 @@
 import { SetterOrUpdater, useRecoilValue } from "recoil";
 import { TAG_DATA } from "../../../modules/constants";
-import Tag from "../../common/Tag";
-import Button from "../../common/button";
 import SearchBar from "../searchBar";
 // import { likeFilterTitleState } from "../../../store/likeFilterStore";
 import useInputValue from "../../../hooks/useInputValue";
@@ -9,6 +7,8 @@ import { Dispatch, useState } from "react";
 import { SetStateAction } from "jotai";
 import { savedPostState } from "../../../store/savePostStore";
 import { filterText } from "../../../types/filter";
+import HoverButton from "../../common/hoverButton";
+import ClickTag from "../../common/clickTag";
 
 type selectedDateData = {
   startDate: string;
@@ -18,6 +18,7 @@ type selectedDateData = {
 type FilterModalProps = {
   handelModal?: Dispatch<SetStateAction<boolean>>;
   changeText: SetterOrUpdater<filterText>;
+  resetData: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const initDate = {
@@ -32,6 +33,7 @@ const initInputValue = {
 export default function FilterModal({
   handelModal,
   changeText,
+  resetData,
 }: FilterModalProps) {
   // const [filterTitle, setFilterTitle] = useRecoilState(likeFilterTitleState);
   const savedPosts = useRecoilValue(savedPostState);
@@ -60,6 +62,7 @@ export default function FilterModal({
 
   const getFilteredData = () => {
     handelModal(false);
+    resetData && resetData([]);
     changeText({
       dateTitle: {
         startDate: selectedDate.startDate,
@@ -91,21 +94,20 @@ export default function FilterModal({
       <div className="flex flex-wrap gap-4 w-width60 ">
         {TAG_DATA.map((tag) => {
           return (
-            <Tag
+            <ClickTag
               key={tag.id}
               tag={tag.tag}
-              tagId={tag.id}
               selectTags={selectTags}
               isSelect={selectedTag.includes(tag.tag)}
             />
           );
         })}
       </div>
-      <Button
+      <HoverButton
         text={"필터 적용하기"}
         height={"4rem"}
         fontSize={"1.5rem"}
-        backgroundColor={"#F7F5EA"}
+        backgroundColor={"bg-yellow100"}
         shadow={"rgba(0, 0, 0, 0.1) 0px 4px 12px"}
         onclick={getFilteredData}
       />

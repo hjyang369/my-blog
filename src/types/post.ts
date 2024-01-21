@@ -3,9 +3,14 @@ export interface PostDataType {
   title: string;
   content: string;
   author: string;
-  hashTags: [{ id: number; name: string }];
+  hashTags: hashTagType[];
   createdAt: string;
   like: boolean;
+}
+
+export interface hashTagType {
+  id: number;
+  name: string;
 }
 
 export interface WritingInputValueType {
@@ -13,6 +18,12 @@ export interface WritingInputValueType {
   texts: string;
   tag: string;
   author: string;
+}
+
+export interface EditInputValueType {
+  title: string;
+  texts: string;
+  tag: string;
 }
 
 export interface PostingDataType {

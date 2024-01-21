@@ -1,14 +1,14 @@
 import Head from "next/head";
 import style from "./writing.module.css";
 import useInputValue from "../../hooks/useInputValue";
-import { useRouter } from "next/router";
 import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useState } from "react";
 import React from "react";
-import Tag from "../../components/common/Tag";
 import { WritingInputValueType } from "../../types/post";
-// import { postWriting } from "../api/main"; //FIREBASE
+import useMoveToPage from "../../hooks/useMovetoPage";
+import ClickTag from "../../components/common/clickTag";
+// import { addPost } from "../api/post"; //FIREBASE
 
 export default function Writing() {
   const initInputValue: WritingInputValueType = {
@@ -21,8 +21,8 @@ export default function Writing() {
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
-  const router = useRouter();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const { moveToPage } = useMoveToPage();
 
   const postingFuncData = {
     title: inputValue.title,
@@ -43,7 +43,7 @@ export default function Writing() {
       )
       .then((data) => {
         if (data.status === 200) {
-          router.push("/");
+          moveToPage("/");
         } else if (data.status === 400) {
           alert("다시 확인해주세요.");
         }
@@ -52,6 +52,13 @@ export default function Writing() {
         console.log(error);
       });
   };
+
+  // firebase 글 생성 api //FIREBASE
+  // const postWriting = (data) => {
+  //   addPost(data)
+  //     .then(() => moveToPage("/"))
+  //     .catch(() => alert("작성에 실패했습니다. 다시 시도해주세요."));
+  // };
 
   const titleValid =
     inputValue.title.length > 0 && inputValue.title.length <= 20;
@@ -127,35 +134,28 @@ export default function Writing() {
           >
             {tags.map((tag, idx) => {
               return (
-                <Tag
+                <ClickTag
                   key={idx}
-                  isWriting
                   removeTag={removeTag}
                   tag={tag}
                   tagId={idx}
+                  isWriting
                 />
               );
             })}
-
-            <input
-              type="text"
-              className="border-0 outline-none h-8 w-full"
-              name="tag"
-              placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
-              required
-              onChange={(e) => handleInput(e)}
-              onKeyUp={(e) => makeTag(e)}
-              value={inputValue.tag}
-            ></input>
+            {tags.length < 3 && (
+              <input
+                type="text"
+                className="border-0 outline-none"
+                name="tag"
+                placeholder={tags.length < 3 ? "태그를 입력해보세요." : ""}
+                required
+                onChange={(e) => handleInput(e)}
+                onKeyUp={(e) => makeTag(e)}
+                value={inputValue.tag}
+              ></input>
+            )}
           </form>
-          <input
-            name="author"
-            className={style.inputs}
-            placeholder="작성자이름"
-            required
-            minLength={1}
-            onChange={handleInput}
-          ></input>
         </div>
       </main>
     </>

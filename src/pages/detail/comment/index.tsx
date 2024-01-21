@@ -1,4 +1,5 @@
-import Button from "../../../components/common/button";
+import ClickButton from "../../../components/common/clickButton";
+import { getReady } from "../../../modules/function";
 import style from "./comment.module.css";
 
 type commentProps = {
@@ -18,8 +19,8 @@ export default function Comment({ comment }: commentProps) {
           <p>{comment?.time}</p>
         </div>
         <div className={style.buttons}>
-          <Button text={"수정"} fontSize={"1.2rem"} />
-          <Button text={"삭제"} fontSize={"1.2rem"} />
+          <ClickButton text={"수정"} fontSize={"1.2rem"} onclick={getReady} />
+          <ClickButton text={"삭제"} fontSize={"1.2rem"} onclick={getReady} />
         </div>
       </div>
       <p className={style.text}>{comment?.text}</p>

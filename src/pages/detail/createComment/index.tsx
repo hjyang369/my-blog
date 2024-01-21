@@ -1,4 +1,5 @@
 import HoverButton from "../../../components/common/hoverButton";
+import { getReady } from "../../../modules/function";
 import style from "./style.module.css";
 
 export default function CreateComment() {
@@ -13,7 +14,12 @@ export default function CreateComment() {
         placeholder="소중한 의견 감사합니다~!!"
       ></textarea>
       <div className={style.buttonContainer}>
-        <HoverButton width="10rem" text={"등록"} fontSize={"1.5rem"} />
+        <HoverButton
+          width="10rem"
+          text={"등록"}
+          fontSize={"1.5rem"}
+          onclick={getReady}
+        />
       </div>
     </div>
   );

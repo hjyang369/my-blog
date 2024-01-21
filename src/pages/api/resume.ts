@@ -1,20 +1,11 @@
-import {
-  getDoc,
-  doc,
-  collection,
-  addDoc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
-  getStorage,
   ref,
   uploadBytes,
 } from "firebase/storage";
 import { firestore, storage } from "../../firebase/index";
-import { PostingDataType } from "../../types/post";
 
 class FirebaseError extends Error {
   code: string;
@@ -109,34 +100,10 @@ const deleteResume = async (userId: string) => {
   }
 };
 
-const postWriting = async ({
-  title,
-  content,
-  author,
-  hashTags,
-}: PostingDataType) => {
-  try {
-    const writingRef = await addDoc(collection(firestore, "post"), {
-      title: title,
-      content: content,
-      author: author,
-      hashTags: hashTags,
-      createdAt: serverTimestamp(),
-    });
-    console.log("Document written with ID: ", writingRef.id);
-    if (writingRef) {
-      return writingRef;
-    }
-  } catch (error: any) {
-    throw new FirebaseError(error);
-  }
-};
-
 export {
   getResume,
   updateResume,
   uploadResumeFile,
   deleteResumeFile,
   deleteResume,
-  postWriting,
 };

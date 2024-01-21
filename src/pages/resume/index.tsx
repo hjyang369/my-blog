@@ -1,7 +1,6 @@
 // import { Document, Page, pdfjs } from "react-pdf";
 // import PDFPreview from "./PDFpreview";
 import { useEffect, useState } from "react";
-import Button from "../../components/common/button";
 import Head from "next/head";
 import Nav from "../../components/Nav/Nav";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -12,8 +11,9 @@ import {
   uploadResumeFile,
   deleteResumeFile,
   deleteResume,
-} from "../api/main";
+} from "../api/resume";
 import { useQuery } from "@tanstack/react-query";
+import ClickButton from "../../components/common/clickButton";
 
 export default function Resume() {
   const [resume, setResume] = useState(null);
@@ -84,14 +84,14 @@ export default function Resume() {
               className="hidden"
             />
           </label>
-          <Button
+          <ClickButton
             onclick={() => updateResume(resume, "Pa2BIvea0YyQftuOdIRw")}
             text={"이력서 등록"}
             fontSize={"1.875rem"}
             width={"50%"}
             height={"4rem"}
           />
-          <Button
+          <ClickButton
             onclick={deleteFile}
             text={"이력서 삭제"}
             fontSize={"1.875rem"}
