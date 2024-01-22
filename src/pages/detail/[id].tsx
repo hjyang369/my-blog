@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import Tag from "../../components/common/Tag";
 import CommentsList from "./commentsList";
 import IC_Like from "../../../public/icon/Like";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { idState } from "../../store/savePostStore";
 import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
@@ -28,42 +28,51 @@ export default function Detail({ item }) {
   const router = useRouter();
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const idList = useRecoilState(idState);
+  const idList = useRecoilValue(idState);
   const { moveToPage } = useMoveToPage();
 
   const [postingData, setPostingData] =
     useState<PostDataType>(initialPostingData);
   const { title, content, author, hashTags, createdAt, like } = postingData;
   const { isSaved, setIsSaved, handleSavePost } = useHandleLike(postingData);
-  // const { title, content, author, hashTags, createdAt, like } = item;
+  // const { title, content, author, hashTags, createdAt, like }: PostDataType =
+  //   item;
   // const { isSaved, setIsSaved, handleSavePost } = useHandleLike(item);
 
   useEffect(() => {
-    if (id) {
-      axios
-        .get(
-          `${baseUrl}/post/${id}`
+    const isScraped = idList.includes(item.id);
+    const addLike = { ...item, like: isScraped };
+    setPostingData(addLike);
+    setIsSaved(isScraped);
+  }, [postingData, idList]);
 
-          // {
-          //   Authorization: `Bearer ${"토큰"}`,
-          // }
-        )
-        .then((data) => {
-          if (data.status === 200) {
-            const newData = data.data;
-            const isScraped = idList[0].includes(newData.id);
-            const addLike = { ...newData, like: isScraped };
-            setPostingData(addLike);
-            setIsSaved(isScraped);
-          } else if (data.status === 400) {
-            alert("다시 확인해주세요.");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [id]);
+  // csr
+  // useEffect(() => {
+  //   if (id) {
+  //     axios
+  //       .get(
+  //         `${baseUrl}/post/${id}`
+
+  //         // {
+  //         //   Authorization: `Bearer ${"토큰"}`,
+  //         // }
+  //       )
+  //       .then((data) => {
+  //         if (data.status === 200) {
+  //           const newData = data.data;
+  //           const isScraped = idList.includes(newData.id);
+  //           const addLike = { ...newData, like: isScraped };
+  //           setPostingData(addLike);
+  //           setIsSaved(isScraped);
+  //         } else if (data.status === 400) {
+  //           alert("다시 확인해주세요.");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // }, [id]);
 
   const deletePost = () => {
     axios
@@ -155,16 +164,15 @@ export default function Detail({ item }) {
   );
 }
 
-// export async function getServerSideProps(context) {
-//   const id = context.params.id;
-//   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-//   const res = await axios.get(`${baseUrl}/post/${id}`);
-//   const data = res.data;
+export async function getServerSideProps(context) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const id = context.params.id;
+  const res = await axios.get(`${baseUrl}/post/${id}`);
+  const data = res.data;
 
-//   console.log(data);
-//   return {
-//     props: {
-//       item: data,
-//     },
-//   };
-// }
+  return {
+    props: {
+      item: data,
+    },
+  };
+}
