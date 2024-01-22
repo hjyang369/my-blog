@@ -35,44 +35,13 @@ export default function Detail({ item }) {
     useState<PostDataType>(initialPostingData);
   const { title, content, author, hashTags, createdAt, like } = postingData;
   const { isSaved, setIsSaved, handleSavePost } = useHandleLike(postingData);
-  // const { title, content, author, hashTags, createdAt, like }: PostDataType =
-  //   item;
-  // const { isSaved, setIsSaved, handleSavePost } = useHandleLike(item);
 
   useEffect(() => {
     const isScraped = idList.includes(item.id);
     const addLike = { ...item, like: isScraped };
     setPostingData(addLike);
     setIsSaved(isScraped);
-  }, [postingData, idList]);
-
-  // csr
-  // useEffect(() => {
-  //   if (id) {
-  //     axios
-  //       .get(
-  //         `${baseUrl}/post/${id}`
-
-  //         // {
-  //         //   Authorization: `Bearer ${"토큰"}`,
-  //         // }
-  //       )
-  //       .then((data) => {
-  //         if (data.status === 200) {
-  //           const newData = data.data;
-  //           const isScraped = idList.includes(newData.id);
-  //           const addLike = { ...newData, like: isScraped };
-  //           setPostingData(addLike);
-  //           setIsSaved(isScraped);
-  //         } else if (data.status === 400) {
-  //           alert("다시 확인해주세요.");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // }, [id]);
+  }, []);
 
   const deletePost = () => {
     axios
@@ -163,7 +132,6 @@ export default function Detail({ item }) {
     </>
   );
 }
-
 export async function getServerSideProps(context) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const id = context.params.id;

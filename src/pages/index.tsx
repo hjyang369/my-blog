@@ -50,14 +50,18 @@ export default function Main() {
       )
       .then((data) => {
         const newData: PostDataType[] = data.data.postResponses || [];
-        const UpdateData = newData.map((item) => {
-          const isScraped = idList[0].includes(item?.id);
-          return { ...item, like: isScraped };
-        });
+        if (newData.length === 0) {
+          setLoading(false);
+        } else {
+          const UpdateData = newData.map((item) => {
+            const isScraped = idList[0].includes(item?.id);
+            return { ...item, like: isScraped };
+          });
 
-        setItemListData((prevData) => [...prevData, ...UpdateData]);
-        setLoading(false);
-        data.data.isLast === true && setIsLastItem(true);
+          setItemListData((prevData) => [...prevData, ...UpdateData]);
+          setLoading(false);
+          data.data.isLast === true && setIsLastItem(true);
+        }
       })
 
       .catch((error) => {
@@ -67,7 +71,7 @@ export default function Main() {
 
   useEffect(() => {
     !isLastItem && getPostList();
-  }, [page, filterTitle, currentSort]);
+  }, [page, startDate, lastDate, tagTitle, contentTitle, currentSort]);
 
   return (
     <>
@@ -86,23 +90,29 @@ export default function Main() {
           changeSort={changeSort}
           resetData={setItemListData}
         />
+        {!loading && itemListData.length === 0 ? (
+          <div className="my-60 flex flex-col items-center gap-4 text-gray300">
+            <div className="text-3xl">검색된 데이터가 없습니다.</div>
+            <div className="text-3xl">다시 검색해주세요.</div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {itemListData.map((item, idx) => {
+              return (
+                <Item
+                  key={item.id}
+                  onFetchMore={() => setPage((prev) => prev + 1)}
+                  isLastItem={itemListData.length - 1 === idx}
+                  // moveToUserMain={() => moveToPage(`/${"username"}`)}
+                  moveToUserMain={getReady}
+                  item={item}
+                />
+              );
+            })}
+          </div>
+        )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {itemListData.map((item, idx) => {
-            return (
-              <Item
-                key={item.id}
-                onFetchMore={() => setPage((prev) => prev + 1)}
-                isLastItem={itemListData.length - 1 === idx}
-                // moveToUserMain={() => moveToPage(`/${"username"}`)}
-                moveToUserMain={getReady}
-                item={item}
-              />
-            );
-          })}
-        </div>
-
-        {!isLastItem && <div>loading</div>}
+        {!isLastItem && itemListData.length !== 0 && <div>loading</div>}
       </div>
     </>
   );
