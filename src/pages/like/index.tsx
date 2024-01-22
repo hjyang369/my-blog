@@ -37,7 +37,8 @@ export default function Like() {
   }, [filteredList, page]);
 
   useEffect(() => {
-    let filteredContent = [...savedPosts];
+    const arr = [...savedPosts];
+    let filteredContent = arr.reverse();
     if (currentSort === "asc") {
       filteredContent.reverse();
     }
