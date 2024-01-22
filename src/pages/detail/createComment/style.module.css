@@ -1,5 +1,4 @@
 .container {
-  width: 62.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

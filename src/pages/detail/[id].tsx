@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import Tag from "../../components/common/Tag";
 import CommentsList from "./commentsList";
 import IC_Like from "../../../public/icon/Like";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { idState } from "../../store/savePostStore";
 import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
@@ -28,42 +28,20 @@ export default function Detail({ item }) {
   const router = useRouter();
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const idList = useRecoilState(idState);
+  const idList = useRecoilValue(idState);
   const { moveToPage } = useMoveToPage();
 
   const [postingData, setPostingData] =
     useState<PostDataType>(initialPostingData);
   const { title, content, author, hashTags, createdAt, like } = postingData;
   const { isSaved, setIsSaved, handleSavePost } = useHandleLike(postingData);
-  // const { title, content, author, hashTags, createdAt, like } = item;
-  // const { isSaved, setIsSaved, handleSavePost } = useHandleLike(item);
 
   useEffect(() => {
-    if (id) {
-      axios
-        .get(
-          `${baseUrl}/post/${id}`
-
-          // {
-          //   Authorization: `Bearer ${"토큰"}`,
-          // }
-        )
-        .then((data) => {
-          if (data.status === 200) {
-            const newData = data.data;
-            const isScraped = idList[0].includes(newData.id);
-            const addLike = { ...newData, like: isScraped };
-            setPostingData(addLike);
-            setIsSaved(isScraped);
-          } else if (data.status === 400) {
-            alert("다시 확인해주세요.");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [id]);
+    const isScraped = idList.includes(item.id);
+    const addLike = { ...item, like: isScraped };
+    setPostingData(addLike);
+    setIsSaved(isScraped);
+  }, []);
 
   const deletePost = () => {
     axios
@@ -155,16 +133,29 @@ export default function Detail({ item }) {
   );
 }
 
-// export async function getServerSideProps(context) {
-//   const id = context.params.id;
-//   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-//   const res = await axios.get(`${baseUrl}/post/${id}`);
-//   const data = res.data;
+export const getStaticPaths = async () => {
+  const res = await axios.get(`https://apiblog.shop/posts`);
+  const posts = res.data.postResponses;
 
-//   console.log(data);
-//   return {
-//     props: {
-//       item: data,
-//     },
-//   };
-// }
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() },
+  }));
+
+  return { paths, fallback: true };
+};
+
+export const getStaticProps = async (context) => {
+  try {
+    const id = context.params.id;
+    const res = await axios.get(`https://apiblog.shop/post/${id}`);
+    const data = res.data;
+    return {
+      props: { item: data },
+      revalidate: 60,
+    };
+  } catch (err) {
+    return {
+      notFound: true,
+    };
+  }
+};
