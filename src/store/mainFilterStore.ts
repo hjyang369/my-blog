@@ -1,5 +1,6 @@
-import { atom } from "recoil";
+import { RecoilEnv, atom } from "recoil";
 import { filterText } from "../types/filter";
+RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 
 export const mainFilterTitleState = atom<filterText>({
   key: "mainFilterTitles",

@@ -1,14 +1,8 @@
-import { atom, useRecoilState } from "recoil";
+import { RecoilEnv, atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 import { PostDataType } from "../types/post";
-// import { useEffect, useState } from "react";
+RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 
-interface SavePostStore {
-  articleList: PostDataType[];
-  idList: number[];
-  // addArticle: (val: PostDataType) => void;
-  // removeArticle: (id: number) => void;
-}
 const localStorage =
   typeof window !== "undefined" ? window.localStorage : undefined;
 

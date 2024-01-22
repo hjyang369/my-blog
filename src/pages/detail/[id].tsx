@@ -132,15 +132,30 @@ export default function Detail({ item }) {
     </>
   );
 }
-export async function getServerSideProps(context) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const id = context.params.id;
-  const res = await axios.get(`${baseUrl}/post/${id}`);
-  const data = res.data;
 
-  return {
-    props: {
-      item: data,
-    },
-  };
-}
+export const getStaticPaths = async () => {
+  const res = await axios.get(`https://apiblog.shop/posts`);
+  const posts = res.data.postResponses;
+
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() },
+  }));
+
+  return { paths, fallback: true };
+};
+
+export const getStaticProps = async (context) => {
+  try {
+    const id = context.params.id;
+    const res = await axios.get(`https://apiblog.shop/post/${id}`);
+    const data = res.data;
+    return {
+      props: { item: data },
+      revalidate: 60,
+    };
+  } catch (err) {
+    return {
+      notFound: true,
+    };
+  }
+};
