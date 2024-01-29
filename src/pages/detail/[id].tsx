@@ -13,6 +13,7 @@ import { PostDataType } from "../../types/post";
 import useHandleLike from "../../hooks/useHandleLike";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickButton from "../../components/common/clickButton";
+import dynamic from "next/dynamic";
 
 const initialPostingData: PostDataType = {
   id: 0,
@@ -23,6 +24,11 @@ const initialPostingData: PostDataType = {
   createdAt: "",
   like: false,
 };
+
+const Markdown = dynamic(
+  () => import("@uiw/react-markdown-preview").then((mod) => mod.default),
+  { ssr: false }
+);
 
 export default function Detail({ item }) {
   const router = useRouter();
@@ -124,7 +130,10 @@ export default function Detail({ item }) {
                 </button>
               </div>
             </div>
-            <article className={style.article}>{content}</article>
+            <div data-color-mode="dark">
+              <Markdown source={content} />
+            </div>
+            {/* <article className={style.article}>{content}</article> */}
           </main>
         </div>
         <CommentsList />

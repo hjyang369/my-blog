@@ -1,15 +1,46 @@
 .w-md-editor-text {
-  font-size: 1.8rem;
-  line-height: 2.2rem;
-  letter-spacing: 5;
+  font-size: 1.4rem;
+  line-height: 2rem;
 }
 
 .wmde-markdown {
-  font-size: 3rem;
-  line-height: 1;
+  font-size: 2.3rem;
+  line-height: 2.5rem;
 }
 
 .token {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   line-height: 1.7rem;
+}
+
+.wmde-markdown h1 {
+  font-size: 1.4em;
+}
+.wmde-markdown h2 {
+  font-size: 1.3em;
+}
+.wmde-markdown h3 {
+  font-size: 1.2em;
+}
+.wmde-markdown h4 {
+  font-size: 1.1em;
+}
+.wmde-markdown h5 {
+  font-size: 1em;
+}
+.wmde-markdown h6 {
+  font-size: 0.9em;
+}
+
+.wmde-markdown ol,
+.wmde-markdown ul,
+.wmde-markdown li,
+.wmde-markdown p,
+.wmde-markdown strong,
+.wmde-markdown em,
+.wmde-markdown del,
+.wmde-markdown span {
+  font-size: 1.4rem;
+  line-height: 2rem;
+  margin: 0;
 }
