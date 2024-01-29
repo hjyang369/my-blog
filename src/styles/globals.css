@@ -1,3 +1,4 @@
+@import url("./markdown.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,4 +18,12 @@ select {
 }
 button {
   background-color: #fff;
+}
+
+ul {
+  list-style: outside;
+}
+
+ol {
+  list-style: decimal;
 }

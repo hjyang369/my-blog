@@ -8,7 +8,13 @@ import React from "react";
 import { WritingInputValueType } from "../../types/post";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickTag from "../../components/common/clickTag";
+import dynamic from "next/dynamic";
+
 // import { addPost } from "../api/post"; //FIREBASE
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
 export default function Writing() {
   const initInputValue: WritingInputValueType = {
@@ -21,6 +27,7 @@ export default function Writing() {
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
+  const [markdown, setMarkDown] = useState("");
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const { moveToPage } = useMoveToPage();
 
@@ -119,14 +126,16 @@ export default function Writing() {
             className={style.inputs}
             onChange={handleInput}
           ></input>
-          <textarea
-            name="texts"
-            className={style.texts}
-            minLength={10}
-            required
-            placeholder="내용을 입력해주세요."
-            onChange={handleInput}
-          ></textarea>
+
+          <div data-color-mode="light">
+            <MDEditor
+              height={553}
+              value={markdown}
+              onChange={setMarkDown}
+              highlightEnable={false}
+            />
+          </div>
+
           <form
             className={style.formInputs}
             typeof="submit"
