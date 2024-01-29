@@ -18,7 +18,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 export default function Writing() {
   const initInputValue: WritingInputValueType = {
     title: "",
-    texts: "",
+    subtitle: "",
     tag: "",
     author: "",
   };
@@ -32,7 +32,8 @@ export default function Writing() {
 
   const postingFuncData = {
     title: inputValue.title,
-    content: inputValue.texts,
+    subtitle: inputValue.subtitle,
+    content: markdown,
     // author: inputValue.author,
     author: "ddu222",
     hashTags: tags.join(""),
@@ -68,9 +69,9 @@ export default function Writing() {
 
   const titleValid =
     inputValue.title.length > 0 && inputValue.title.length <= 20;
-  const textsValid = inputValue.texts.length > 10;
+  // const textsValid = inputValue.texts.length > 10;
   const authorValid = inputValue.author.length > 0;
-  const postValid = titleValid && textsValid && authorValid;
+  // const postValid = titleValid && textsValid && authorValid;
 
   const makeTag = (e) => {
     const completedTag = "#" + inputValue.tag;
@@ -125,10 +126,19 @@ export default function Writing() {
             className={style.inputs}
             onChange={handleInput}
           ></input>
+          <textarea
+            name="texts"
+            minLength={10}
+            required
+            placeholder="글 소개 내용을 입력해주세요."
+            onChange={handleInput}
+            defaultValue={initInputValue.subtitle}
+            className="h-30 mb-4 p-4 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 text-2xl shadow-shadow200 "
+          ></textarea>
 
           <div data-color-mode="light">
             <MDEditor
-              height={553}
+              height={490}
               value={markdown}
               onChange={setMarkDown}
               highlightEnable={false}

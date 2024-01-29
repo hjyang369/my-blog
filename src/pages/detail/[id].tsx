@@ -18,6 +18,7 @@ import dynamic from "next/dynamic";
 const initialPostingData: PostDataType = {
   id: 0,
   title: "",
+  subtitle: "",
   content: "",
   author: "",
   hashTags: [{ id: 0, name: "" }],
