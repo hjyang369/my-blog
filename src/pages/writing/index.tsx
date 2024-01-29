@@ -67,10 +67,11 @@ export default function Writing() {
   //     .catch(() => alert("작성에 실패했습니다. 다시 시도해주세요."));
   // };
 
-  const titleValid =
-    inputValue.title.length > 0 && inputValue.title.length <= 20;
+  // 유효성 검사
+  // const titleValid =
+  //   inputValue.title.length > 0 && inputValue.title.length <= 20;
   // const textsValid = inputValue.texts.length > 10;
-  const authorValid = inputValue.author.length > 0;
+  // const authorValid = inputValue.author.length > 0;
   // const postValid = titleValid && textsValid && authorValid;
 
   const makeTag = (e) => {
