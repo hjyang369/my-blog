@@ -19,8 +19,18 @@ export default function Item({
   moveToUserMain,
   item,
 }: itemProps) {
-  const { id, title, content, author, hashTags, createdAt, like } = item;
-  const data = { id, title, content, author, hashTags, createdAt, like };
+  const { id, title, content, author, hashTags, createdAt, like, subtitle } =
+    item;
+  const data = {
+    id,
+    title,
+    content,
+    author,
+    hashTags,
+    createdAt,
+    like,
+    subtitle,
+  };
 
   const { isSaved, handleSavePost } = useHandleLike(data);
 
@@ -49,6 +59,8 @@ export default function Item({
         >
           <h1 className={style.title}>{title}</h1>
           <p className={style.texts}>{content}</p>
+          {/* TODO 부제목 생기면 추가 예정 
+           <p className={style.texts}>{subtitle}</p> */}
         </div>
 
         <div className={style.authorData}>
@@ -61,7 +73,8 @@ export default function Item({
           <div className={style.heartBox} onClick={() => handleSavePost(id)}>
             <IC_Like width="2rem" height="2rem" isFill={isSaved} />
 
-            {/* <p className={style.heartNum}>{heartNum}</p> */}
+            {/* TODO 좋아요 db로 옮기면 추가 예정
+            <p className={style.heartNum}>{heartNum}</p> */}
           </div>
         </div>
       </div>

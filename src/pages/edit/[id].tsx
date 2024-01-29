@@ -7,18 +7,23 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { EditInputValueType } from "../../types/post";
 import ClickTag from "../../components/common/clickTag";
-//
+import dynamic from "next/dynamic";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
 export default function Edit() {
   const [initInputValue, setInitInputValue] = useState<EditInputValueType>({
     title: "",
-    texts: "",
+    subtitle: "",
     tag: "",
   });
 
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
+  const [markdown, setMarkDown] = useState("");
 
   const router = useRouter();
   const { id } = router.query;
@@ -41,9 +46,10 @@ export default function Edit() {
             setTags(namesArray);
             setInitInputValue({
               title: postData.title,
-              texts: postData.content,
+              subtitle: postData.subtitle,
               tag: "",
             });
+            setMarkDown(postData.content);
           } else if (data.status === 400) {
             alert("다시 확인해주세요.");
           }
@@ -59,8 +65,11 @@ export default function Edit() {
       .put(
         `${baseUrl}/post/${id}`,
         {
-          title: inputValue.title,
-          content: inputValue.texts,
+          title: inputValue.title ? inputValue.title : initInputValue.title,
+          subtitle: inputValue.subtitle
+            ? inputValue.subtitle
+            : initInputValue.subtitle,
+          content: markdown,
           hashTags: tags.join(""),
         }
         // {
@@ -78,11 +87,11 @@ export default function Edit() {
         console.log(error);
       });
   };
-
-  const titleValid =
-    inputValue.title.length > 0 && inputValue.title.length <= 20;
-  const textsValid = inputValue.texts.length > 10;
-  const postValid = titleValid && textsValid;
+  // 유효성 검사
+  // const titleValid =
+  //   inputValue.title.length > 0 && inputValue.title.length <= 20;
+  // const textsValid = inputValue.texts.length > 10;
+  // const postValid = titleValid && textsValid;
 
   const makeTag = (e) => {
     const completedTag = "#" + inputValue.tag;
@@ -142,11 +151,19 @@ export default function Edit() {
             name="texts"
             minLength={10}
             required
-            placeholder="내용을 입력해주세요."
+            placeholder="글 소개 내용을 입력해주세요."
             onChange={handleInput}
-            defaultValue={initInputValue.texts}
-            className="h-height40 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 p-8 text-2xl shadow-shadow200"
+            defaultValue={initInputValue.subtitle}
+            className="h-30 mb-4 p-4 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 text-2xl shadow-shadow200 "
           ></textarea>
+          <div data-color-mode="light">
+            <MDEditor
+              height={490}
+              value={markdown}
+              onChange={setMarkDown}
+              highlightEnable={false}
+            />
+          </div>
           <form
             typeof="submit"
             onSubmit={handleFormSubmit}

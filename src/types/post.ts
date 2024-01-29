@@ -1,6 +1,7 @@
 export interface PostDataType {
   id: number;
   title: string;
+  subtitle: string;
   content: string;
   author: string;
   hashTags: hashTagType[];
@@ -15,14 +16,14 @@ export interface hashTagType {
 
 export interface WritingInputValueType {
   title: string;
-  texts: string;
+  subtitle: string;
   tag: string;
   author: string;
 }
 
 export interface EditInputValueType {
   title: string;
-  texts: string;
+  subtitle: string;
   tag: string;
 }
 

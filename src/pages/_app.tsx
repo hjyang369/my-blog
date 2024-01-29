@@ -1,5 +1,7 @@
-import "../styles/globals.css";
 import "../styles/normalize.css";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import "../styles/globals.css";
 import { RecoilRoot } from "recoil";
 import "../firebase/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
