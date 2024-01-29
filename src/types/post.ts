@@ -22,7 +22,6 @@ export interface WritingInputValueType {
 
 export interface EditInputValueType {
   title: string;
-  texts: string;
   tag: string;
 }
 

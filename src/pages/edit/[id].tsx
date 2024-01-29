@@ -7,18 +7,22 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { EditInputValueType } from "../../types/post";
 import ClickTag from "../../components/common/clickTag";
-//
+import dynamic from "next/dynamic";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
 export default function Edit() {
   const [initInputValue, setInitInputValue] = useState<EditInputValueType>({
     title: "",
-    texts: "",
     tag: "",
   });
 
   const { inputValue, setInputValue, handleInput } =
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
+  const [markdown, setMarkDown] = useState("");
 
   const router = useRouter();
   const { id } = router.query;
@@ -41,9 +45,9 @@ export default function Edit() {
             setTags(namesArray);
             setInitInputValue({
               title: postData.title,
-              texts: postData.content,
               tag: "",
             });
+            setMarkDown(postData.content);
           } else if (data.status === 400) {
             alert("다시 확인해주세요.");
           }
@@ -78,11 +82,11 @@ export default function Edit() {
         console.log(error);
       });
   };
-
-  const titleValid =
-    inputValue.title.length > 0 && inputValue.title.length <= 20;
-  const textsValid = inputValue.texts.length > 10;
-  const postValid = titleValid && textsValid;
+  // 유효성 검사
+  // const titleValid =
+  //   inputValue.title.length > 0 && inputValue.title.length <= 20;
+  // const textsValid = inputValue.texts.length > 10;
+  // const postValid = titleValid && textsValid;
 
   const makeTag = (e) => {
     const completedTag = "#" + inputValue.tag;
@@ -138,7 +142,15 @@ export default function Edit() {
             defaultValue={initInputValue.title}
             className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200"
           ></input>
-          <textarea
+          <div data-color-mode="light">
+            <MDEditor
+              height={553}
+              value={markdown}
+              onChange={setMarkDown}
+              highlightEnable={false}
+            />
+          </div>
+          {/* <textarea
             name="texts"
             minLength={10}
             required
@@ -146,7 +158,7 @@ export default function Edit() {
             onChange={handleInput}
             defaultValue={initInputValue.texts}
             className="h-height40 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 p-8 text-2xl shadow-shadow200"
-          ></textarea>
+          ></textarea> */}
           <form
             typeof="submit"
             onSubmit={handleFormSubmit}

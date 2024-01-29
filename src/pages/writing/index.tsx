@@ -9,7 +9,6 @@ import { WritingInputValueType } from "../../types/post";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickTag from "../../components/common/clickTag";
 import dynamic from "next/dynamic";
-
 // import { addPost } from "../api/post"; //FIREBASE
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
