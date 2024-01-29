@@ -63,8 +63,8 @@ export default function Edit() {
       .put(
         `${baseUrl}/post/${id}`,
         {
-          title: inputValue.title,
-          content: inputValue.texts,
+          title: inputValue.title ? inputValue.title : initInputValue.title,
+          content: markdown,
           hashTags: tags.join(""),
         }
         // {
