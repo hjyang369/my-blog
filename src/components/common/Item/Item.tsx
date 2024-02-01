@@ -19,8 +19,7 @@ export default function Item({
   moveToUserMain,
   item,
 }: itemProps) {
-  const { id, title, content, author, hashTags, createdAt, like, subtitle } =
-    item;
+  const { id, title, content, author, hashTags, createdAt, like } = item;
   const data = {
     id,
     title,
@@ -29,7 +28,6 @@ export default function Item({
     hashTags,
     createdAt,
     like,
-    subtitle,
   };
 
   const { isSaved, handleSavePost } = useHandleLike(data);
@@ -39,6 +37,11 @@ export default function Item({
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
   const isIntersecting = !!entry?.isIntersecting;
+  // const plainText = content.replace(/[_*\[\]#\(\)>-]/g, "");
+  const plainText = content.replace(
+    /(?<!\*)\*{2}(?!\*)|(?<!~)~{2}(?!~)|[_*\[\]#\(\)>-]/g,
+    ""
+  );
 
   useEffect(() => {
     isLastItem && isIntersecting && onFetchMore();
@@ -58,9 +61,7 @@ export default function Item({
           onClick={() => router.push(`/detail/${id}`)}
         >
           <h1 className={style.title}>{title}</h1>
-          <p className={style.texts}>{content}</p>
-          {/* TODO 부제목 생기면 추가 예정 
-           <p className={style.texts}>{subtitle}</p> */}
+          <p className={style.texts}>{plainText}</p>
         </div>
 
         <div className={style.authorData}>

@@ -34,7 +34,7 @@
   text-overflow: ellipsis;
 }
 .texts {
-  text-align: justify;
+  /* text-align: justify; */
   font-size: 1.2rem;
   overflow: hidden;
   text-overflow: ellipsis;

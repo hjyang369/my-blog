@@ -18,7 +18,6 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 export default function Writing() {
   const initInputValue: WritingInputValueType = {
     title: "",
-    subtitle: "",
     tag: "",
     author: "",
   };
@@ -32,7 +31,6 @@ export default function Writing() {
 
   const postingFuncData = {
     title: inputValue.title,
-    subtitle: inputValue.subtitle,
     content: markdown,
     // author: inputValue.author,
     author: "ddu222",
@@ -127,7 +125,7 @@ export default function Writing() {
             className={style.inputs}
             onChange={handleInput}
           ></input>
-          <textarea
+          {/* <textarea
             name="texts"
             minLength={10}
             required
@@ -135,7 +133,7 @@ export default function Writing() {
             onChange={handleInput}
             defaultValue={initInputValue.subtitle}
             className="h-30 mb-4 p-4 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 text-2xl shadow-shadow200 "
-          ></textarea>
+          ></textarea> */}
 
           <div data-color-mode="light">
             <MDEditor

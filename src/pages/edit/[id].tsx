@@ -16,7 +16,6 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 export default function Edit() {
   const [initInputValue, setInitInputValue] = useState<EditInputValueType>({
     title: "",
-    subtitle: "",
     tag: "",
   });
 
@@ -46,7 +45,6 @@ export default function Edit() {
             setTags(namesArray);
             setInitInputValue({
               title: postData.title,
-              subtitle: postData.subtitle,
               tag: "",
             });
             setMarkDown(postData.content);
@@ -66,9 +64,6 @@ export default function Edit() {
         `${baseUrl}/post/${id}`,
         {
           title: inputValue.title ? inputValue.title : initInputValue.title,
-          subtitle: inputValue.subtitle
-            ? inputValue.subtitle
-            : initInputValue.subtitle,
           content: markdown,
           hashTags: tags.join(""),
         }
@@ -147,7 +142,7 @@ export default function Edit() {
             defaultValue={initInputValue.title}
             className="p-8 my-4 mx-0 h-8 border border-solid border-white rounded-lg text-2xl shadow-shadow200"
           ></input>
-          <textarea
+          {/* <textarea
             name="texts"
             minLength={10}
             required
@@ -155,7 +150,7 @@ export default function Edit() {
             onChange={handleInput}
             defaultValue={initInputValue.subtitle}
             className="h-30 mb-4 p-4 resize-none overflow-x-hidden overflow-y-scroll border border-solid border-white rounded-xl8 text-2xl shadow-shadow200 "
-          ></textarea>
+          ></textarea> */}
           <div data-color-mode="light">
             <MDEditor
               height={490}
