@@ -7,7 +7,7 @@ type SearchBarProps = {
   name: string;
 };
 
-export default function SearchBar({ handleInput, name }) {
+export default function SearchBar({ handleInput, name }: SearchBarProps) {
   return (
     <div className="relative flex flex-col gap-4">
       <Input handleInput={handleInput} name={name} />

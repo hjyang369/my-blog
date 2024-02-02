@@ -37,9 +37,8 @@ export default function Item({
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
   const isIntersecting = !!entry?.isIntersecting;
-  // const plainText = content.replace(/[_*\[\]#\(\)>-]/g, "");
   const plainText = content.replace(
-    /(?<!\*)\*{2}(?!\*)|(?<!~)~{2}(?!~)|[_*\[\]#\(\)>-]/g,
+    /(?<!\*)\*{2}(?!\*)|(?<!~)~{2}(?!~)|[_*\[\]#\(\)>-`]/g,
     ""
   );
 
