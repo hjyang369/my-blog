@@ -6,6 +6,7 @@ import useMoveToPage from "../../hooks/useMovetoPage";
 import IC_AddPost from "../../../public/icon/AddPost";
 import IC_Like from "../../../public/icon/Like";
 import ClickButton from "../common/clickButton";
+import Logo from "../common/logo";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -30,14 +31,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
   return (
     <nav className="flex justify-between items-center h-16 w-width60">
       {/* TODO user 생기면 user name 으로 로고 변경 */}
-      <button
-        onClick={() => {
-          moveToPage("/");
-        }}
-        className={style.logo}
-      >
-        MY BLOG
-      </button>
+      <Logo text={"MY BLOG"} />
 
       <div className="flex items-center gap-2">
         {isWriting ? (
