@@ -3,7 +3,7 @@ import useInputValue from "../../../hooks/useInputValue";
 import Input from "../../common/input";
 
 type SearchBarProps = {
-  handleInput: () => void;
+  handleInput: (e: any) => void;
   name: string;
 };
 

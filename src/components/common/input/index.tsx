@@ -1,5 +1,5 @@
 type inputProps = {
-  handleInput: any;
+  handleInput: (e: any) => void;
   name: string;
   type: string;
   width?: string;
