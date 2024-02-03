@@ -34,7 +34,7 @@ export default function Login() {
   return (
     <div className="mt-52 flex flex-col justify-center items-center gap-16">
       <div className="mb-10">
-        <Logo text={"MY BLOG LOGIN"} />
+        <Logo text="MY BLOG" subText="- login -" />
       </div>
       <div className="flex flex-col gap-4">
         {LOGIN_INPUT_DATA.map(({ id, name, type, icon }) => {
