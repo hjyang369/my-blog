@@ -5,6 +5,7 @@ import ClickButton from "../../components/common/clickButton";
 import Input from "../../components/common/input";
 import Logo from "../../components/common/logo";
 import useInputValue from "../../hooks/useInputValue";
+import useMoveToPage from "../../hooks/useMovetoPage";
 import { getReady } from "../../modules/function";
 
 const initInputValue = {
@@ -19,11 +20,12 @@ const LOGIN_INPUT_DATA = [
 
 export default function Login() {
   const { inputValue, handleInput } = useInputValue(initInputValue);
+  const { moveToPage } = useMoveToPage();
 
   const LOGIN_BUTTON_DATA = [
     { id: 1, text: "아이디 찾기", func: getReady },
     { id: 2, text: "비밀번호 찾기", func: getReady },
-    { id: 3, text: "회원가입", func: getReady },
+    { id: 3, text: "회원가입", func: () => moveToPage("/signup") },
   ];
 
   const LOGIN_TYPE_DATA = [
