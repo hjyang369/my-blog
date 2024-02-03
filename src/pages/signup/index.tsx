@@ -5,7 +5,8 @@ import ClickButton from "../../components/common/clickButton";
 import Input from "../../components/common/input";
 import Logo from "../../components/common/logo";
 import useInputValue from "../../hooks/useInputValue";
-import { getReady } from "../../modules/function";
+import useMoveToPage from "../../hooks/useMovetoPage";
+import { createUser, createUserDoc, emailVerification } from "../api/auth";
 
 const initInputValue = {
   nickname: "",
@@ -16,6 +17,32 @@ const initInputValue = {
 
 export default function Login() {
   const { inputValue, handleInput } = useInputValue(initInputValue);
+
+  const { moveToPage } = useMoveToPage();
+
+  const postUserData = () => {
+    createUser(inputValue.email, inputValue.password)
+      .then((res) => {
+        console.log("create res", res);
+        const { user }: any = res;
+        emailVerification();
+        createUserDoc({
+          uid: user.uid,
+          email: user.email,
+          nickname: inputValue.nickname,
+        })
+          .then((res) => {
+            moveToPage("/login");
+            console.log("user Create", res);
+          })
+          .catch((err) => {
+            console.log("user create error", err);
+          });
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
 
   const nicknameExp = /^[a-z]+[a-z0-9]{5,19}$/g;
   const passwordExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}$/;
@@ -90,7 +117,7 @@ export default function Login() {
       <ClickButton
         text={"회원가입"}
         fontSize={"1.7rem"}
-        onclick={getReady}
+        onclick={postUserData}
         width={"33rem"}
         height={"4.5rem"}
       ></ClickButton>
