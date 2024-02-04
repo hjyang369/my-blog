@@ -2,8 +2,11 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
 } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firestore } from "../../firebase";
 
 class FirebaseError extends Error {
@@ -16,6 +19,9 @@ class FirebaseError extends Error {
 }
 
 const auth = getAuth();
+let user = auth.currentUser;
+// console.log(user.displayName);
+// console.log(user.uid);
 
 const createUser = async (email, password) => {
   try {
@@ -43,7 +49,7 @@ const emailVerification = async () => {
 
 const createUserDoc = async ({ uid, email, nickname }) => {
   try {
-    const setQuery = await addDoc(collection(firestore, "user"), {
+    await setDoc(doc(firestore, "user", uid), {
       user_uid: uid,
       user_email: email,
       user_nickname: nickname,
@@ -51,13 +57,62 @@ const createUserDoc = async ({ uid, email, nickname }) => {
       create_date: new Date(),
       update_date: new Date(),
     });
-
-    if (setQuery) {
-      return setQuery;
-    }
+    updateProfile(auth.currentUser, {
+      displayName: nickname,
+      // photoURL: null,
+    });
   } catch (error: any) {
     throw new FirebaseError(error);
   }
 };
 
-export { createUser, emailVerification, createUserDoc };
+const getUser = async (uid: string) => {
+  const userRef = doc(firestore, "user", uid);
+  try {
+    const userSnapShot = await getDoc(userRef);
+
+    if (userSnapShot.exists()) {
+      return userSnapShot.data();
+    }
+    throw new Error("fail");
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const loginUserEmail = async (email: string, password: string) => {
+  try {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    if (auth.currentUser.emailVerified === true) {
+      if (user) {
+        return getUser(user.uid);
+        // console.log(user.stsTokenManager); //토큰 관련 데이터 있는 곳
+      }
+    } else {
+      alert("이메일 인증을 완료해주세요.");
+    }
+  } catch (error: any) {
+    console.log("error", error.code);
+    throw new FirebaseError(error);
+  }
+};
+
+const logoutUser = async () => {
+  // const isLogOut = window.confirm("로그아웃 하실건가요?");
+  // if (!isLogOut) return;
+
+  try {
+    await signOut(auth);
+  } catch (error: any) {
+    console.log("error", error.code);
+    throw new FirebaseError(error);
+  }
+};
+
+export {
+  createUser,
+  emailVerification,
+  createUserDoc,
+  loginUserEmail,
+  logoutUser,
+};

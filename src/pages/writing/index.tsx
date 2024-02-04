@@ -3,12 +3,13 @@ import style from "./writing.module.css";
 import useInputValue from "../../hooks/useInputValue";
 import axios from "axios";
 import Nav from "../../components/Nav/Nav";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { WritingInputValueType } from "../../types/post";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickTag from "../../components/common/clickTag";
 import dynamic from "next/dynamic";
+import useCheckUser from "../../hooks/useCheckUser";
 // import { addPost } from "../api/post"; //FIREBASE
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
@@ -28,6 +29,7 @@ export default function Writing() {
   const [markdown, setMarkDown] = useState("");
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const { moveToPage } = useMoveToPage();
+  const { isLoggedIn } = useCheckUser();
 
   const postingFuncData = {
     title: inputValue.title,
@@ -103,6 +105,9 @@ export default function Writing() {
       setTags(updatedTags);
     }
   };
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
 
   return (
     <>

@@ -10,7 +10,6 @@ import { idState } from "../store/savePostStore";
 import { useRecoilState } from "recoil";
 import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
-import useMoveToPage from "../hooks/useMovetoPage";
 import { getReady } from "../modules/function";
 
 export default function Main() {
@@ -23,7 +22,6 @@ export default function Main() {
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const { startDate, lastDate } = dateTitle;
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
-  const { moveToPage } = useMoveToPage();
 
   const changeSort = (value: string) => {
     setItemListData([]);

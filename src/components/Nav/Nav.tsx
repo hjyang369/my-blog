@@ -7,6 +7,7 @@ import IC_AddPost from "../../../public/icon/AddPost";
 import IC_Like from "../../../public/icon/Like";
 import ClickButton from "../common/clickButton";
 import Logo from "../common/logo";
+import { logoutUser } from "../../pages/api/auth";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -68,6 +69,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
         >
           <IC_User />
         </button>
+        <button onClick={logoutUser}>로그아웃</button>
       </div>
     </nav>
   );
