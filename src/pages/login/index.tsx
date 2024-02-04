@@ -10,7 +10,6 @@ import useMoveToPage from "../../hooks/useMovetoPage";
 import { getReady } from "../../modules/function";
 import { loginUserEmail } from "../api/auth";
 import { userState } from "../../store/userStore";
-import { userType } from "../../types/user";
 
 const initInputValue = {
   email: "",
@@ -29,8 +28,14 @@ export default function Login() {
 
   const loginUser = async (email, password) => {
     const user = await loginUserEmail(email, password);
-    setUser(user as userType);
-    moveToPage("/");
+    if (user) {
+      setUser({
+        user_email: user?.user_email,
+        user_nickname: user?.user_nickname,
+        user_uid: user?.user_uid,
+      });
+      moveToPage("/");
+    }
   };
 
   const LOGIN_BUTTON_DATA = [

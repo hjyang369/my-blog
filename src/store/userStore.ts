@@ -17,7 +17,7 @@ export const userState = atom<userType>({
   default: {
     user_email: "",
     user_nickname: "",
-    user_resume: "",
+    // user_resume: "",
     user_uid: "",
   },
   effects_UNSTABLE: [persistAtom],

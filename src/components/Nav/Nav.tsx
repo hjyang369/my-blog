@@ -1,5 +1,3 @@
-import style from "./nav.module.css";
-//
 import { useRouter } from "next/router";
 import IC_User from "../../../public/icon/User";
 import useMoveToPage from "../../hooks/useMovetoPage";
@@ -8,6 +6,8 @@ import IC_Like from "../../../public/icon/Like";
 import ClickButton from "../common/clickButton";
 import Logo from "../common/logo";
 import { logoutUser } from "../../pages/api/auth";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../../store/userStore";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -20,12 +20,27 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
   const isResume = router.pathname === "/resume";
   const currentTab = isResume ? "블로그" : "이력서";
   const { moveToPage } = useMoveToPage();
+  const setUser = useSetRecoilState(userState);
 
   const handleCurrentTab = () => {
     if (isResume) {
       moveToPage("/");
     } else {
       moveToPage("/resume");
+    }
+  };
+
+  const logout = () => {
+    const confirmation = window.confirm("로그아웃 하시겠습니까?");
+    if (confirmation) {
+      logoutUser().then(() => {
+        setUser({
+          user_email: "",
+          user_nickname: "",
+          user_uid: "",
+        });
+        moveToPage("/");
+      });
     }
   };
 
@@ -69,7 +84,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
         >
           <IC_User />
         </button>
-        <button onClick={logoutUser}>로그아웃</button>
+        <button onClick={logout}>로그아웃</button>
       </div>
     </nav>
   );

@@ -30,6 +30,8 @@ export default function Writing() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const { moveToPage } = useMoveToPage();
   const { isLoggedIn } = useCheckUser();
+  // const user = useRecoilValue(userState);
+  // console.log(user);
 
   const postingFuncData = {
     title: inputValue.title,
