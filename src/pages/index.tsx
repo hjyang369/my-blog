@@ -24,7 +24,7 @@ export default function Main() {
   const { startDate, lastDate } = dateTitle;
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
   const user = useRecoilValue(userState); // 새로고침하더라고 지속적으로 user 정보가 저장되어있어야함
-  console.log(user);
+  // console.log(user);
 
   const changeSort = (value: string) => {
     setItemListData([]);

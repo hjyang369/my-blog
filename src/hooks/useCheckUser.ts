@@ -16,7 +16,7 @@ const useCheckUser = () => {
       if (user) {
         // 사용자 로그인 되어있을 시 동작
         console.log(user.uid);
-        return;
+        return user.uid;
       }
       // 사용자 로그아웃 시 동작
       console.log("logout");

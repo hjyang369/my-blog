@@ -6,8 +6,10 @@ import IC_Like from "../../../public/icon/Like";
 import ClickButton from "../common/clickButton";
 import Logo from "../common/logo";
 import { logoutUser } from "../../pages/api/auth";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "../../store/userStore";
+import { useState } from "react";
+import useCheckUser from "../../hooks/useCheckUser";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -16,17 +18,29 @@ type NaveProps = {
 
 export default function Nav({ postWriting, isWriting }: NaveProps) {
   const router = useRouter();
-
   const isResume = router.pathname === "/resume";
   const currentTab = isResume ? "블로그" : "이력서";
   const { moveToPage } = useMoveToPage();
-  const setUser = useSetRecoilState(userState);
+  const [user, setUser] = useRecoilState(userState);
+  const [isLogin, setIsLogin] = useState(Boolean(user.user_uid));
 
   const handleCurrentTab = () => {
     if (isResume) {
       moveToPage("/");
     } else {
       moveToPage("/resume");
+    }
+  };
+
+  const handleLogin = () => {
+    if (isLogin) {
+      //로그인 상태
+      setIsLogin(false);
+      logout();
+    } else {
+      //로그아웃 상태
+      setIsLogin(true);
+      moveToPage("/login");
     }
   };
 
@@ -84,7 +98,9 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
         >
           <IC_User />
         </button>
-        <button onClick={logout}>로그아웃</button>
+        <button onClick={handleLogin} suppressHydrationWarning={true}>
+          {isLogin ? "로그아웃" : "로그인"}
+        </button>
       </div>
     </nav>
   );
