@@ -9,7 +9,6 @@ import { logoutUser } from "../../pages/api/auth";
 import { useRecoilState } from "recoil";
 import { userState } from "../../store/userStore";
 import { useState } from "react";
-import useCheckUser from "../../hooks/useCheckUser";
 
 type NaveProps = {
   postWriting?: () => void;
@@ -98,8 +97,12 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
         >
           <IC_User />
         </button>
-        <button onClick={handleLogin} suppressHydrationWarning={true}>
-          {isLogin ? "로그아웃" : "로그인"}
+        <button
+          onClick={handleLogin}
+          suppressHydrationWarning={true}
+          className="bg-yellow200 text-xl text-main font-bold"
+        >
+          {isLogin ? "logout" : "login"}
         </button>
       </div>
     </nav>

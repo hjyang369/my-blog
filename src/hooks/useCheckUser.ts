@@ -29,7 +29,7 @@ const useCheckUser = () => {
       });
 
       const confirmation = window.confirm(
-        "로그인 기간이 만료되었습니다. 다시 로그인 하시겠습니까?"
+        "로그인이 필요한 페이지입니다. 로그인을 해주세요."
       );
 
       if (confirmation) {

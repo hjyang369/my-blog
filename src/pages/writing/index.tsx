@@ -17,6 +17,10 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 });
 
 export default function Writing() {
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
+
   const initInputValue: WritingInputValueType = {
     title: "",
     tag: "",
@@ -107,9 +111,6 @@ export default function Writing() {
       setTags(updatedTags);
     }
   };
-  useEffect(() => {
-    isLoggedIn();
-  }, []);
 
   return (
     <>
