@@ -7,11 +7,11 @@ import Nav from "../components/Nav/Nav";
 import React from "react";
 import { PostDataType } from "../types/post";
 import { idState } from "../store/savePostStore";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
-import useMoveToPage from "../hooks/useMovetoPage";
 import { getReady } from "../modules/function";
+import { userState } from "../store/userStore";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -23,7 +23,8 @@ export default function Main() {
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const { startDate, lastDate } = dateTitle;
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
-  const { moveToPage } = useMoveToPage();
+  const user = useRecoilValue(userState); // 새로고침하더라고 지속적으로 user 정보가 저장되어있어야함
+  // console.log(user);
 
   const changeSort = (value: string) => {
     setItemListData([]);

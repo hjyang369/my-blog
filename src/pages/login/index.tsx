@@ -1,3 +1,4 @@
+import { useSetRecoilState } from "recoil";
 import IC_Lock from "../../../public/icon/Lock";
 import IC_User from "../../../public/icon/User";
 import BlackButton from "../../components/common/blackButton";
@@ -7,20 +8,35 @@ import Logo from "../../components/common/logo";
 import useInputValue from "../../hooks/useInputValue";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import { getReady } from "../../modules/function";
+import { loginUserEmail } from "../api/auth";
+import { userState } from "../../store/userStore";
 
 const initInputValue = {
-  name: "",
+  email: "",
   password: "",
 };
 
 const LOGIN_INPUT_DATA = [
-  { id: 1, name: "name", type: "text", icon: <IC_User /> },
+  { id: 1, name: "email", type: "text", icon: <IC_User /> },
   { id: 2, name: "password", type: "password", icon: <IC_Lock /> },
 ];
 
 export default function Login() {
   const { inputValue, handleInput } = useInputValue(initInputValue);
   const { moveToPage } = useMoveToPage();
+  const setUser = useSetRecoilState(userState);
+
+  const loginUser = async (email, password) => {
+    const user = await loginUserEmail(email, password);
+    if (user) {
+      setUser({
+        user_email: user?.user_email,
+        user_nickname: user?.user_nickname,
+        user_uid: user?.user_uid,
+      });
+      moveToPage("/");
+    }
+  };
 
   const LOGIN_BUTTON_DATA = [
     { id: 1, text: "아이디 찾기", func: getReady },
@@ -29,7 +45,11 @@ export default function Login() {
   ];
 
   const LOGIN_TYPE_DATA = [
-    { id: 1, text: "로그인", func: getReady },
+    {
+      id: 1,
+      text: "로그인",
+      func: () => loginUser(inputValue.email, inputValue.password),
+    },
     { id: 2, text: "카카오 로그인", func: getReady },
   ];
 
