@@ -14,6 +14,7 @@ import useHandleLike from "../../hooks/useHandleLike";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickButton from "../../components/common/clickButton";
 import dynamic from "next/dynamic";
+import { getPost } from "../api/post"; // FIREBASE
 
 const initialPostingData: PostDataType = {
   id: 0,
@@ -156,6 +157,7 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async (context) => {
   try {
     const id = context.params.id;
+    // const res = await getPost(id); // FIREBASE
     const res = await axios.get(`https://apiblog.shop/post/${id}`);
     const data = res.data;
     return {

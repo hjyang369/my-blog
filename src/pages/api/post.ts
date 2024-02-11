@@ -1,6 +1,8 @@
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -17,6 +19,40 @@ class FirebaseError extends Error {
     this.name = "FirebaseError";
   }
 }
+
+const getPostListFirebase = async () => {
+  try {
+    const q = query(collection(fireStore, "post"));
+    // , where("capital", "==", true)
+
+    const querySnapshot = await getDocs(q);
+    const newData = querySnapshot.docs.map((doc) => ({
+      post_id: doc.id,
+      ...doc.data(),
+    }));
+
+    if (querySnapshot) {
+      return newData;
+    }
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const getPost = async (postId) => {
+  const userRef = doc(fireStore, "post", postId);
+  try {
+    const userSnapShot = await getDoc(userRef);
+
+    if (userSnapShot.exists()) {
+      console.log(userSnapShot.id);
+      return { post_id: userSnapShot.id, ...userSnapShot.data() };
+    }
+    throw new Error("fail");
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
 
 const addTags = async (tags) => {
   try {
@@ -51,6 +87,7 @@ const addTags = async (tags) => {
 const addPost = async ({
   title,
   content,
+  // name,
   author,
   hashTags,
 }: PostingDataType) => {
@@ -59,8 +96,8 @@ const addPost = async ({
     const writingRef = await addDoc(collection(fireStore, "post"), {
       post_title: title,
       post_content: content,
-      post_author: author,
       hashTags: tagsId,
+      // post_author: name,
       user_id: author,
       createdAt: serverTimestamp(),
     });
@@ -72,4 +109,4 @@ const addPost = async ({
     throw new FirebaseError(error);
   }
 };
-export { addPost };
+export { getPostListFirebase, getPost, addPost };

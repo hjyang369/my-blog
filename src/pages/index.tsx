@@ -12,6 +12,7 @@ import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import { getReady } from "../modules/function";
 import { userState } from "../store/userStore";
+// import { getPostListFirebase } from "./api/post"; // FIREBASE
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -69,6 +70,13 @@ export default function Main() {
         console.log(error);
       });
   };
+
+  // FIREBASE
+  // const getPostLists = async () => {
+  //   const data = await getPostListFirebase();
+  //   console.log(data);
+  //   setItemListData(data);
+  // };
 
   useEffect(() => {
     !isLastItem && getPostList();
