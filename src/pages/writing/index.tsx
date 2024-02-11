@@ -1,7 +1,6 @@
 import Head from "next/head";
 import style from "./writing.module.css";
 import useInputValue from "../../hooks/useInputValue";
-import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -10,7 +9,9 @@ import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickTag from "../../components/common/clickTag";
 import dynamic from "next/dynamic";
 import useCheckUser from "../../hooks/useCheckUser";
-// import { addPost } from "../api/post"; //FIREBASE
+import { addPost } from "../api/post"; //FIREBASE
+import { useRecoilValue } from "recoil";
+import { userState } from "../../store/userStore";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -31,47 +32,26 @@ export default function Writing() {
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
   const [markdown, setMarkDown] = useState("");
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const { moveToPage } = useMoveToPage();
   const { isLoggedIn } = useCheckUser();
-  // const user = useRecoilValue(userState);
-  // console.log(user);
+  const user = useRecoilValue(userState);
+  console.log(user);
 
   const postingFuncData = {
     title: inputValue.title,
     content: markdown,
-    // author: inputValue.author,
-    author: "ddu222",
-    hashTags: tags.join(""),
+    author: user.user_uid,
+    hashTags: tags,
   };
 
-  const postWriting = (data) => {
-    axios
-      .post(
-        `${baseUrl}/post`,
-        data
-        // {
-        //   Authorization: `Bearer ${"토큰"}`,
-        // }
-      )
-      .then((data) => {
-        if (data.status === 200) {
-          moveToPage("/");
-        } else if (data.status === 400) {
-          alert("다시 확인해주세요.");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const postWriting = async (data) => {
+    try {
+      await addPost(data);
+      moveToPage("/");
+    } catch (error) {
+      alert("작성에 실패했습니다. 다시 시도해주세요.");
+    }
   };
-
-  // firebase 글 생성 api //FIREBASE
-  // const postWriting = (data) => {
-  //   addPost(data)
-  //     .then(() => moveToPage("/"))
-  //     .catch(() => alert("작성에 실패했습니다. 다시 시도해주세요."));
-  // };
 
   // 유효성 검사
   // const titleValid =

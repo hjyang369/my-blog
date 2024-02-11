@@ -5,7 +5,7 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { firestore, storage } from "../../firebase/index";
+import { fireStore, storage } from "../../firebase/index";
 
 class FirebaseError extends Error {
   code: string;
@@ -19,7 +19,7 @@ class FirebaseError extends Error {
 //예시
 // const getRoom = async (id: string) => {
 //   try {
-//     const room = doc(firestore, "timer_room", id);
+//     const room = doc(fireStore, "timer_room", id);
 //     const roomSnapShot = await getDoc(room);
 
 //     if (roomSnapShot.exists()) {
@@ -32,7 +32,7 @@ class FirebaseError extends Error {
 // };
 
 const getResume = async (userId: string) => {
-  const userRef = doc(firestore, "user", userId);
+  const userRef = doc(fireStore, "user", userId);
   try {
     const userSnapShot = await getDoc(userRef);
 
@@ -47,7 +47,7 @@ const getResume = async (userId: string) => {
 
 const updateResume = async (url: string, userId: string) => {
   try {
-    const userRef = doc(firestore, "user", userId);
+    const userRef = doc(fireStore, "user", userId);
     await updateDoc(userRef, {
       user_resume: url,
     });
@@ -90,7 +90,7 @@ const deleteResumeFile = async (url: string) => {
 
 const deleteResume = async (userId: string) => {
   try {
-    const userRef = doc(firestore, "user", userId);
+    const userRef = doc(fireStore, "user", userId);
     await updateDoc(userRef, {
       user_resume: null,
     });
