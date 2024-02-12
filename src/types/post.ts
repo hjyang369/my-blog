@@ -29,4 +29,5 @@ export interface PostingDataType {
   content: string;
   author: string;
   hashTags: string;
+  userId: string;
 }

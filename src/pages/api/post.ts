@@ -87,7 +87,7 @@ const addTags = async (tags) => {
 const addPost = async ({
   title,
   content,
-  // name,
+  userId,
   author,
   hashTags,
 }: PostingDataType) => {
@@ -97,8 +97,8 @@ const addPost = async ({
       post_title: title,
       post_content: content,
       hashTags: tagsId,
-      // post_author: name,
-      user_id: author,
+      post_author: author,
+      user_id: userId,
       createdAt: serverTimestamp(),
     });
     console.log("Document written with ID: ", writingRef.id);

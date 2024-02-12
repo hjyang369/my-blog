@@ -34,14 +34,14 @@ export default function Writing() {
   const [markdown, setMarkDown] = useState("");
   const { moveToPage } = useMoveToPage();
   const { isLoggedIn } = useCheckUser();
-  const user = useRecoilValue(userState);
-  console.log(user);
+  const { user_uid, user_nickname } = useRecoilValue(userState);
 
   const postingFuncData = {
     title: inputValue.title,
     content: markdown,
-    author: user.user_uid,
+    author: user_nickname,
     hashTags: tags,
+    userId: user_uid,
   };
 
   const postWriting = async (data) => {

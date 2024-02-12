@@ -21,7 +21,7 @@ export default function Nav({ postWriting, isWriting }: NaveProps) {
   const currentTab = isResume ? "블로그" : "이력서";
   const { moveToPage } = useMoveToPage();
   const [user, setUser] = useRecoilState(userState);
-  const [isLogin, setIsLogin] = useState(Boolean(user.user_uid));
+  const [isLogin, setIsLogin] = useState(user.user_uid !== "");
 
   const handleCurrentTab = () => {
     if (isResume) {
