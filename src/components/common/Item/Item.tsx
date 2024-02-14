@@ -58,8 +58,10 @@ export default function Item({
         <div
           className={style.textBox}
           onClick={() => router.push(`/detail/${id}`)}
+          // onClick={() => router.push(`/detail/${item.post_id}`)}
         >
           <h1 className={style.title}>{title}</h1>
+          {/* <h1 className={style.title}>{item.post_title}</h1> */}
           <p className={style.texts}>{plainText}</p>
         </div>
 

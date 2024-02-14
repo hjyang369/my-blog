@@ -14,7 +14,7 @@ import useHandleLike from "../../hooks/useHandleLike";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickButton from "../../components/common/clickButton";
 import dynamic from "next/dynamic";
-import { getPost } from "../api/post"; // FIREBASE
+// import { deletePost, getPost, getPostListFirebase } from "../api/post"; // FIREBASE
 
 const initialPostingData: PostDataType = {
   id: 0,
@@ -86,6 +86,12 @@ export default function Detail({ item }) {
       });
   };
 
+  // const deletePosting = (postId) => {
+  //   deletePost(postId)
+  //     .then(() => moveToPage("/"))
+  //     .catch(() => alert("다시 시도해주세요."));
+  // };
+
   return (
     <>
       <Head>
@@ -145,11 +151,15 @@ export default function Detail({ item }) {
 
 export const getStaticPaths = async () => {
   const res = await axios.get(`https://apiblog.shop/posts`);
+  // const res = await getPostListFirebase();
   const posts = res.data.postResponses;
 
   const paths = posts.map((post) => ({
     params: { id: post.id.toString() },
   }));
+  // const paths = res.map((post) => ({
+  //   params: { id: post.post_id },
+  // }));
 
   return { paths, fallback: true };
 };
@@ -157,11 +167,16 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async (context) => {
   try {
     const id = context.params.id;
-    // const res = await getPost(id); // FIREBASE
+    // const data = await getPost(id); // FIREBASE
     const res = await axios.get(`https://apiblog.shop/post/${id}`);
     const data = res.data;
+    // const itemsWithSerializedDate = {
+    //   ...data,
+    //   createdAt: data["createdAt"].toString(), // 또는 필요한 형식으로 변환
+    // };
     return {
       props: { item: data },
+      // props: { item: itemsWithSerializedDate },
       revalidate: 60,
     };
   } catch (err) {

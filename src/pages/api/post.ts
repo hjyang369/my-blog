@@ -1,11 +1,13 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { fireStore } from "../../firebase/index";
@@ -109,4 +111,35 @@ const addPost = async ({
     throw new FirebaseError(error);
   }
 };
-export { getPostListFirebase, getPost, addPost };
+
+const updatePost = async ({ title, content, postId, hashTags }) => {
+  try {
+    const checkUpdate = window.confirm("글을 수정하시겠습니까?");
+    if (checkUpdate) {
+      const postRef = doc(fireStore, "post", postId);
+      await updateDoc(postRef, {
+        post_title: title,
+        post_content: content,
+        hashTags: hashTags,
+        updatedAt: serverTimestamp(),
+      });
+    }
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const deletePost = async (postId: string) => {
+  try {
+    const checkDelete = window.confirm("글을 삭제하시겠습니까?");
+    if (checkDelete) {
+      const postRef = doc(fireStore, "post", postId);
+      await deleteDoc(postRef);
+      alert("글이 삭제되었습니다!");
+    }
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+export { getPostListFirebase, getPost, addPost, updatePost, deletePost };

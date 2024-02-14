@@ -8,6 +8,7 @@ import React from "react";
 import { EditInputValueType } from "../../types/post";
 import ClickTag from "../../components/common/clickTag";
 import dynamic from "next/dynamic";
+import { getPost, updatePost } from "../api/post"; // FIREBASE
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -58,6 +59,19 @@ export default function Edit() {
     }
   }, [id]);
 
+  // FIREBASE
+  // useEffect(() => {
+  //   getPost(id);
+  // }, []);
+
+  // const sendData = {
+  //   title: inputValue.title ? inputValue.title : initInputValue.title,
+  //   content: markdown,
+  //   hashTags: tags,
+  //   postId: id,
+  // };
+
+  //TODO hook 분리 예정
   const editPost = () => {
     axios
       .put(
@@ -88,6 +102,7 @@ export default function Edit() {
   // const textsValid = inputValue.texts.length > 10;
   // const postValid = titleValid && textsValid;
 
+  //TODO hook 분리 예정
   const makeTag = (e) => {
     const completedTag = "#" + inputValue.tag;
 
@@ -107,10 +122,12 @@ export default function Edit() {
     }
   };
 
+  //TODO hook 분리 예정
   const handleFormSubmit = (e) => {
     e.preventDefault();
   };
 
+  //TODO hook 분리 예정
   const removeTag = (idx) => {
     const confirmation = window.confirm("태그를 삭제하시겠습니까?");
 
