@@ -11,6 +11,7 @@
 
 ## 1-2. 아키텍처
 (기존 백엔드 API에서 Firebase로 변경 중)
+
 <img width="700" alt="스크린샷 2024-01-11 오후 4 42 53" src="https://github.com/hjyang369/my-blog/assets/125977702/570bbe4a-96c7-44ca-89d9-3f100e90f9ec">
 
 
