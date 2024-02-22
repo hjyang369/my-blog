@@ -5,19 +5,17 @@
 - 개발기간: 2023.10.21 ~ 진행 중
 - [My Blog의 배포 링크](https://my-blog-alpha-three.vercel.app/)
 - [FrontEnd](https://github.com/hjyang369/my-blog) : 양회진
-- [BackEnd](https://github.com/falsystack/myblog_backend) : 백엔드님
 - FrontEnd의 기술 스택 : TypeScript, Next.js, html, tailwind CSS, Recoil
 - 협업 툴 : git & github, trello, notion, VScode
 
 
 ## 1-2. 아키텍처
-- 백엔드는 수정 중 입니다.
+(기존 백엔드 API에서 Firebase로 변경 중)
 <img width="700" alt="스크린샷 2024-01-11 오후 4 42 53" src="https://github.com/hjyang369/my-blog/assets/125977702/570bbe4a-96c7-44ca-89d9-3f100e90f9ec">
 
 
 # 2. 프로젝트의 핵심 기능
 ## PDF를 Firebase의 storage로 업로드 기능 구현 
-(기존 백엔드 API에서 Firebase로 변경 중)
 
 <img width="583" alt="스크린샷 2024-02-17 오후 3 43 21" src="https://github.com/hjyang369/my-blog/assets/125977702/fb95859c-8510-4aa6-a5aa-fcbb1dbb9466">
 
@@ -109,10 +107,10 @@
 
 
 # 4. 추가 구현 예정인 기능
-- [ ] 로그인/회원가입을 통한 유저관리
-- [ ] 다국어 지원 (한국어, 일본어)
+- [x] 로그인/회원가입을 통한 유저관리
 - [ ] 내가 쓴 글만 보는 페이지
 - [ ] 회원/비회원 댓글 기능
+- [ ] 유저가 여러 이력서를 업로드 하고 이력서를 직접 고를 수 있는 기능
 
 # 5. 참고자료
 - [My Blog의 API 명세서](https://falsystack.jp/docs/post.html)
