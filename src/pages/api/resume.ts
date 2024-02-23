@@ -62,7 +62,6 @@ const uploadResumeFile = (file, setState) => {
   const resumeRef = ref(storage, "pdf/" + fileName);
   uploadBytes(resumeRef, file)
     .then((snapshot) => {
-      console.log("Uploaded a blob or file!");
       getDownloadURL(snapshot.ref).then((url) => {
         setState(url);
       });
@@ -80,9 +79,7 @@ const deleteResumeFile = async (url: string) => {
 
     const resumeRef = ref(storage, `pdf/${path}`);
 
-    deleteObject(resumeRef).then(() => {
-      console.log("File deleted successfully");
-    });
+    deleteObject(resumeRef).then(() => {});
   } catch (error: any) {
     throw new FirebaseError(error);
   }

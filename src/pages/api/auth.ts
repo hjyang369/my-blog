@@ -27,7 +27,6 @@ const createUser = async (email, password) => {
   try {
     const signUp = await createUserWithEmailAndPassword(auth, email, password);
     if (signUp) {
-      console.log(signUp);
       return signUp;
     }
   } catch (error: any) {

@@ -89,7 +89,6 @@ export default function Main() {
   // FIREBASE
   const getPostList = async () => {
     const data = await getPostListFirebase();
-    console.log(data);
     setItemListData(data);
   };
 

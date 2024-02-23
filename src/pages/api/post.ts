@@ -8,10 +8,10 @@ import {
   query,
   serverTimestamp,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { fireStore } from "../../firebase/index";
 import { PostingDataType } from "../../types/post";
+import { addTags, getTag } from "./hashTag";
 
 class FirebaseError extends Error {
   code: string;
@@ -41,70 +41,25 @@ const getPostListFirebase = async () => {
   }
 };
 
-const getHashtag = async (hashTagId: string) => {
-  try {
-    const hashTagRef = doc(fireStore, "hashTag", hashTagId);
-    const hashTagSnapShot = await getDoc(hashTagRef);
-
-    if (hashTagSnapShot) {
-      return hashTagSnapShot.data().hashTag_name;
-    }
-  } catch (error: any) {
-    throw new FirebaseError(error);
-  }
-};
-
 const getPost = async (postId: string) => {
-  const userRef = doc(fireStore, "post", postId);
+  const postRef = doc(fireStore, "post", postId);
   try {
-    const userSnapShot = await getDoc(userRef);
+    const postSnapShot = await getDoc(postRef);
 
-    if (userSnapShot.exists()) {
-      console.log(userSnapShot.id);
+    if (postSnapShot.exists()) {
       const hashTags = await Promise.all(
-        userSnapShot.data().hashTags.map(async (hashTag) => {
-          return getHashtag(hashTag);
+        postSnapShot.data().hashTags.map(async (hashTag) => {
+          return getTag(hashTag);
         })
       );
       return {
-        post_id: userSnapShot.id,
-        ...userSnapShot.data(),
-        createdAt: userSnapShot.data().createdAt.toDate(),
+        post_id: postSnapShot.id,
+        ...postSnapShot.data(),
+        createdAt: postSnapShot.data().createdAt.toDate(),
         hashTags: hashTags,
       };
     }
     throw new Error("fail");
-  } catch (error: any) {
-    throw new FirebaseError(error);
-  }
-};
-
-const addTags = async (tags) => {
-  try {
-    const tagRef = collection(fireStore, "hashTag");
-    const result = [];
-
-    await Promise.all(
-      tags.map(async (tag) => {
-        const querySnapshot = await getDocs(
-          query(tagRef, where("hashTag_name", "==", tag))
-        );
-        if (querySnapshot.empty) {
-          // 태그가 존재하지 않는 경우
-          const newTagRef = await addDoc(collection(fireStore, "hashTag"), {
-            hashTag_id: querySnapshot.docs[0].id,
-            hashTag_name: tag,
-          });
-          if (newTagRef) {
-            result.push(newTagRef.id);
-          }
-        } else {
-          // 태그가 이미 존재하는 경우
-          result.push(querySnapshot.docs[0].id);
-        }
-      })
-    );
-    return result;
   } catch (error: any) {
     throw new FirebaseError(error);
   }
@@ -138,12 +93,13 @@ const addPost = async ({
 const updatePost = async ({ title, content, postId, hashTags }) => {
   try {
     const checkUpdate = window.confirm("글을 수정하시겠습니까?");
+    const tagsId = await addTags(hashTags);
     if (checkUpdate) {
       const postRef = doc(fireStore, "post", postId);
       await updateDoc(postRef, {
         post_title: title,
         post_content: content,
-        hashTags: hashTags,
+        hashTags: tagsId,
         updatedAt: serverTimestamp(),
       });
     }

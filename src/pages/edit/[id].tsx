@@ -5,10 +5,11 @@ import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import { useEffect, useState } from "react";
 import React from "react";
-import { EditInputValueType } from "../../types/post";
+import { EditInputValueType, PostDataType } from "../../types/post";
 import ClickTag from "../../components/common/clickTag";
 import dynamic from "next/dynamic";
 import { getPost, updatePost } from "../api/post"; // FIREBASE
+import useMoveToPage from "../../hooks/useMovetoPage";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -24,45 +25,29 @@ export default function Edit() {
     useInputValue(initInputValue);
   const [tags, setTags] = useState<string[]>([]);
   const [markdown, setMarkDown] = useState("");
+  const { moveToPage } = useMoveToPage();
 
   const router = useRouter();
   const { id } = router.query;
+  const postId = Array.isArray(id) ? id[0] : id;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  // useEffect(() => {
-  //   if (id) {
-  //     axios
-  //       .get(
-  //         `${baseUrl}/post/${id}`
-
-  //         // {
-  //         //   Authorization: `Bearer ${"토큰"}`,
-  //         // }
-  //       )
-  //       .then((data) => {
-  //         if (data.status === 200) {
-  //           const postData = data.data;
-  //           const namesArray = postData.hashTags.map((item) => item.name);
-  //           setTags(namesArray);
-  //           setInitInputValue({
-  //             title: postData.title,
-  //             tag: "",
-  //           });
-  //           setMarkDown(postData.content);
-  //         } else if (data.status === 400) {
-  //           alert("다시 확인해주세요.");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // }, [id]);
-
   // FIREBASE;
+  const getData = async () => {
+    const data: PostDataType = (await getPost(postId)) as PostDataType;
+    setTags(data.hashTags);
+    setInitInputValue({
+      title: data.post_title,
+      tag: "",
+    });
+    setMarkDown(data.post_content);
+  };
+
   useEffect(() => {
-    getPost(id);
-  }, []);
+    getData().catch((error) => {
+      console.log(error);
+    });
+  }, [postId]);
 
   const sendData = {
     title: inputValue.title ? inputValue.title : initInputValue.title,
@@ -71,31 +56,6 @@ export default function Edit() {
     postId: id,
   };
 
-  //TODO hook 분리 예정
-  const editPost = () => {
-    axios
-      .put(
-        `${baseUrl}/post/${id}`,
-        {
-          title: inputValue.title ? inputValue.title : initInputValue.title,
-          content: markdown,
-          hashTags: tags.join(""),
-        }
-        // {
-        //   Authorization: `Bearer ${"토큰"}`,
-        // }
-      )
-      .then((data) => {
-        if (data.status === 200) {
-          router.push("/");
-        } else if (data.status === 400) {
-          alert("다시 확인해주세요.");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   // 유효성 검사
   // const titleValid =
   //   inputValue.title.length > 0 && inputValue.title.length <= 20;
@@ -137,6 +97,14 @@ export default function Edit() {
     }
   };
 
+  const editPost = (data) => {
+    updatePost(data)
+      .then(() => moveToPage("/"))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Head>
@@ -147,8 +115,7 @@ export default function Edit() {
       </Head>
 
       <main className="grid place-items-center gap-4 p-4">
-        {/* <Nav postWriting={editPost} isWriting /> */}
-        <Nav postWriting={() => updatePost(sendData)} isWriting />
+        <Nav postWriting={() => editPost(sendData)} isWriting />
         <div className="grid w-width60">
           <input
             name="title"

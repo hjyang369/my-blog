@@ -56,8 +56,6 @@ export default function Detail({ item }) {
     .toString()
     .padStart(2, "0")}-${changeDate.getDate().toString().padStart(2, "0")}`;
 
-  console.log(hashTags);
-
   useEffect(() => {
     const isScraped = idList.includes(item.id);
     const addLike = { ...item, like: isScraped };
@@ -86,9 +84,6 @@ export default function Detail({ item }) {
   // useEffect(() => {
   //   getddd(id);
   // }, []);
-
-  // console.log(new Date(createdAt.Timestamp.seconds * 1000));
-  // console.log(createdAt?.toDate()?.toDateString());
 
   return (
     <>
