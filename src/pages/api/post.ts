@@ -41,14 +41,37 @@ const getPostListFirebase = async () => {
   }
 };
 
-const getPost = async (postId) => {
+const getHashtag = async (hashTagId: string) => {
+  try {
+    const hashTagRef = doc(fireStore, "hashTag", hashTagId);
+    const hashTagSnapShot = await getDoc(hashTagRef);
+
+    if (hashTagSnapShot) {
+      return hashTagSnapShot.data().hashTag_name;
+    }
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const getPost = async (postId: string) => {
   const userRef = doc(fireStore, "post", postId);
   try {
     const userSnapShot = await getDoc(userRef);
 
     if (userSnapShot.exists()) {
       console.log(userSnapShot.id);
-      return { post_id: userSnapShot.id, ...userSnapShot.data() };
+      const hashTags = await Promise.all(
+        userSnapShot.data().hashTags.map(async (hashTag) => {
+          return getHashtag(hashTag);
+        })
+      );
+      return {
+        post_id: userSnapShot.id,
+        ...userSnapShot.data(),
+        createdAt: userSnapShot.data().createdAt.toDate(),
+        hashTags: hashTags,
+      };
     }
     throw new Error("fail");
   } catch (error: any) {
@@ -69,6 +92,7 @@ const addTags = async (tags) => {
         if (querySnapshot.empty) {
           // 태그가 존재하지 않는 경우
           const newTagRef = await addDoc(collection(fireStore, "hashTag"), {
+            hashTag_id: querySnapshot.docs[0].id,
             hashTag_name: tag,
           });
           if (newTagRef) {
@@ -103,7 +127,6 @@ const addPost = async ({
       user_id: userId,
       createdAt: serverTimestamp(),
     });
-    console.log("Document written with ID: ", writingRef.id);
     if (writingRef) {
       return writingRef;
     }
@@ -129,7 +152,7 @@ const updatePost = async ({ title, content, postId, hashTags }) => {
   }
 };
 
-const deletePost = async (postId: string) => {
+const removePost = async (postId: string) => {
   try {
     const checkDelete = window.confirm("글을 삭제하시겠습니까?");
     if (checkDelete) {
@@ -142,4 +165,4 @@ const deletePost = async (postId: string) => {
   }
 };
 
-export { getPostListFirebase, getPost, addPost, updatePost, deletePost };
+export { getPostListFirebase, getPost, addPost, updatePost, removePost };

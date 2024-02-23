@@ -11,19 +11,19 @@ const useHandleLike = (newSavedPost: PostDataType) => {
   const savePost = (newSavedPost: PostDataType) => {
     setIsSaved(true);
     setPosts([...posts, { ...newSavedPost, like: true }]);
-    setIdList([...idList, newSavedPost.id]);
+    setIdList([...idList, newSavedPost.post_id]);
   };
 
-  const removePost = (id: number) => {
+  const removePost = (id: string) => {
     const updatedPost = posts.filter((e: any) => e.id !== id);
-    const updatedId = idList.filter((ele: number) => ele !== id);
+    const updatedId = idList.filter((ele: string) => ele !== id);
 
     setPosts(updatedPost);
     setIdList(updatedId);
     setIsSaved(false);
   };
 
-  const handleSavePost = (id: number) => {
+  const handleSavePost = (id: string) => {
     isSaved === true ? removePost(id) : savePost(newSavedPost);
   };
 

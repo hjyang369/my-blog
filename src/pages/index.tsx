@@ -12,7 +12,8 @@ import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import { getReady } from "../modules/function";
 import { userState } from "../store/userStore";
-// import { getPostListFirebase } from "./api/post"; // FIREBASE
+import { getPostListFirebase } from "./api/post"; // FIREBASE
+import { useQuery } from "@tanstack/react-query";
 
 export default function Main() {
   const [itemListData, setItemListData] = useState([]);
@@ -34,49 +35,80 @@ export default function Main() {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const getPostList = async () => {
-    setLoading(true);
-    const apiUrl = `${baseUrl}/posts?size=10`;
-    const haveTagTitle = tagTitle.length > 0;
-    const onlyStartDate = startDate && !lastDate;
-    const allDateFUll = startDate && lastDate;
+  // const getPostList = async () => {
+  //   setLoading(true);
+  //   const apiUrl = `${baseUrl}/posts?size=10`;
+  //   const haveTagTitle = tagTitle.length > 0;
+  //   const onlyStartDate = startDate && !lastDate;
+  //   const allDateFUll = startDate && lastDate;
 
-    await axios
-      .get(
-        `${apiUrl}&page=${page}&sort=${currentSort}${
-          contentTitle ? `&title=${contentTitle}` : ""
-        }${onlyStartDate ? `&startDate=${startDate}` : ""}${
-          allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""
-        }${haveTagTitle ? `&hashTags=${tagTitle}` : ""}
-      `
-      )
-      .then((data) => {
-        const newData: PostDataType[] = data.data.postResponses || [];
-        if (newData.length === 0) {
-          setLoading(false);
-        } else {
-          const UpdateData = newData.map((item) => {
-            const isScraped = idList[0].includes(item?.id);
-            return { ...item, like: isScraped };
-          });
+  //   await axios
+  //     .get(
+  //       `${apiUrl}&page=${page}&sort=${currentSort}${
+  //         contentTitle ? `&title=${contentTitle}` : ""
+  //       }${onlyStartDate ? `&startDate=${startDate}` : ""}${
+  //         allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""
+  //       }${haveTagTitle ? `&hashTags=${tagTitle}` : ""}
+  //     `
+  //     )
+  //     .then((data) => {
+  //       const newData: PostDataType[] = data.data.postResponses || [];
+  //       if (newData.length === 0) {
+  //         setLoading(false);
+  //       } else {
+  //         const UpdateData = newData.map((item) => {
+  //           const isScraped = idList[0].includes(item?.id);
+  //           return { ...item, like: isScraped };
+  //         });
+  //         return UpdateData;
+  //         setItemListData((prevData) => [...prevData, ...UpdateData]);
+  //         setLoading(false);
+  //         data.data.isLast === true && setIsLastItem(true);
+  //       }
+  //     })
 
-          setItemListData((prevData) => [...prevData, ...UpdateData]);
-          setLoading(false);
-          data.data.isLast === true && setIsLastItem(true);
-        }
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
+  //         console.log(">", error.response.data);
+  //         console.log(">>", error.response.status);
+  //         console.log(">>>", error.response.headers);
+  //       } else if (error.request) {
+  //         // 요청이 전송되었지만, 응답이 수신되지 않았습니다.
+  //         // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
+  //         // node.js에서는 http.ClientRequest 인스턴스입니다.
+  //         console.log(error.request);
+  //       } else {
+  //         // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+  //         console.log("Error", error.message);
+  //       }
+  //       console.log(error.config);
+  //     });
+  // };
 
   // FIREBASE
-  // const getPostLists = async () => {
-  //   const data = await getPostListFirebase();
-  //   console.log(data);
-  //   setItemListData(data);
-  // };
+  const getPostList = async () => {
+    const data = await getPostListFirebase();
+    console.log(data);
+    setItemListData(data);
+  };
+
+  // const { data, isLoading, isError, isFetching } = useQuery({
+  //   queryKey: [
+  //     "posts",
+  //     page,
+  //     startDate,
+  //     lastDate,
+  //     tagTitle,
+  //     contentTitle,
+  //     currentSort,
+  //   ],
+  //   queryFn: () => getPostListFirebase(),
+  //   staleTime: 6000,
+  //   gcTime: 30000,
+  // });
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError) return <div>Error fetching data</div>;
 
   useEffect(() => {
     !isLastItem && getPostList();
@@ -109,7 +141,7 @@ export default function Main() {
             {itemListData.map((item, idx) => {
               return (
                 <Item
-                  key={item.id}
+                  key={item.post_id}
                   onFetchMore={() => setPage((prev) => prev + 1)}
                   isLastItem={itemListData.length - 1 === idx}
                   // moveToUserMain={() => moveToPage(`/${"username"}`)}

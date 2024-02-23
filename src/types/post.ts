@@ -1,17 +1,17 @@
 export interface PostDataType {
-  id: number;
-  title: string;
-  content: string;
-  author: string;
-  hashTags: hashTagType[];
-  createdAt: string;
+  post_id: string;
+  post_title: string;
+  post_content: string;
+  post_author: string;
+  createdAt: Date | null;
   like: boolean;
+  hashTags: string[];
 }
 
-export interface hashTagType {
-  id: number;
-  name: string;
-}
+// export interface hashTagType {
+//   hashTag_id: string;
+//   hashTag_name: string;
+// }
 
 export interface WritingInputValueType {
   title: string;

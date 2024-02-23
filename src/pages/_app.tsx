@@ -12,7 +12,7 @@ import { logoutUser } from "./api/auth";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
+      staleTime: 300000,
     },
     mutations: {
       // retry: 1,

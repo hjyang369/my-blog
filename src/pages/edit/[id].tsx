@@ -29,47 +29,47 @@ export default function Edit() {
   const { id } = router.query;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  useEffect(() => {
-    if (id) {
-      axios
-        .get(
-          `${baseUrl}/post/${id}`
-
-          // {
-          //   Authorization: `Bearer ${"토큰"}`,
-          // }
-        )
-        .then((data) => {
-          if (data.status === 200) {
-            const postData = data.data;
-            const namesArray = postData.hashTags.map((item) => item.name);
-            setTags(namesArray);
-            setInitInputValue({
-              title: postData.title,
-              tag: "",
-            });
-            setMarkDown(postData.content);
-          } else if (data.status === 400) {
-            alert("다시 확인해주세요.");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [id]);
-
-  // FIREBASE
   // useEffect(() => {
-  //   getPost(id);
-  // }, []);
+  //   if (id) {
+  //     axios
+  //       .get(
+  //         `${baseUrl}/post/${id}`
 
-  // const sendData = {
-  //   title: inputValue.title ? inputValue.title : initInputValue.title,
-  //   content: markdown,
-  //   hashTags: tags,
-  //   postId: id,
-  // };
+  //         // {
+  //         //   Authorization: `Bearer ${"토큰"}`,
+  //         // }
+  //       )
+  //       .then((data) => {
+  //         if (data.status === 200) {
+  //           const postData = data.data;
+  //           const namesArray = postData.hashTags.map((item) => item.name);
+  //           setTags(namesArray);
+  //           setInitInputValue({
+  //             title: postData.title,
+  //             tag: "",
+  //           });
+  //           setMarkDown(postData.content);
+  //         } else if (data.status === 400) {
+  //           alert("다시 확인해주세요.");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // }, [id]);
+
+  // FIREBASE;
+  useEffect(() => {
+    getPost(id);
+  }, []);
+
+  const sendData = {
+    title: inputValue.title ? inputValue.title : initInputValue.title,
+    content: markdown,
+    hashTags: tags,
+    postId: id,
+  };
 
   //TODO hook 분리 예정
   const editPost = () => {
@@ -147,7 +147,8 @@ export default function Edit() {
       </Head>
 
       <main className="grid place-items-center gap-4 p-4">
-        <Nav postWriting={editPost} isWriting />
+        {/* <Nav postWriting={editPost} isWriting /> */}
+        <Nav postWriting={() => updatePost(sendData)} isWriting />
         <div className="grid w-width60">
           <input
             name="title"

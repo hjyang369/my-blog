@@ -1,6 +1,5 @@
 import Head from "next/head";
 import style from "./detail.module.css";
-import axios from "axios";
 import Nav from "../../components/Nav/Nav";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -14,15 +13,16 @@ import useHandleLike from "../../hooks/useHandleLike";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickButton from "../../components/common/clickButton";
 import dynamic from "next/dynamic";
-// import { deletePost, getPost, getPostListFirebase } from "../api/post"; // FIREBASE
+import { removePost, getPost, getPostListFirebase } from "../api/post"; // FIREBASE
+// import { getCommentList } from "../api/comment";
 
 const initialPostingData: PostDataType = {
-  id: 0,
-  title: "",
-  content: "",
-  author: "",
-  hashTags: [{ id: 0, name: "" }],
-  createdAt: "",
+  post_id: "",
+  post_title: "",
+  post_content: "",
+  post_author: "",
+  hashTags: [],
+  createdAt: null,
   like: false,
 };
 
@@ -34,14 +34,29 @@ const Markdown = dynamic(
 export default function Detail({ item }) {
   const router = useRouter();
   const { id } = router.query;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const idList = useRecoilValue(idState);
   const { moveToPage } = useMoveToPage();
 
   const [postingData, setPostingData] =
     useState<PostDataType>(initialPostingData);
-  const { title, content, author, hashTags, createdAt, like } = postingData;
+  const {
+    post_id,
+    post_title,
+    post_content,
+    post_author,
+    hashTags,
+    createdAt,
+    like,
+  } = postingData;
   const { isSaved, setIsSaved, handleSavePost } = useHandleLike(postingData);
+  const changeDate = new Date(createdAt);
+  const formattedDate = `${changeDate.getFullYear()}-${(
+    changeDate.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}-${changeDate.getDate().toString().padStart(2, "0")}`;
+
+  console.log(hashTags);
 
   useEffect(() => {
     const isScraped = idList.includes(item.id);
@@ -50,47 +65,30 @@ export default function Detail({ item }) {
     setIsSaved(isScraped);
   }, []);
 
-  const deletePost = () => {
-    axios
-      .delete(
-        `${baseUrl}/post/${id}`
-
-        // {
-        //   Authorization: `Bearer ${"토큰"}`,
-        // }
-      )
-      .then((data) => {
-        if (data.status === 200) {
-          alert("삭제되었습니다.");
-          router.push("/");
-        } else if (data.status === 400) {
-          alert("다시 확인해주세요.");
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          // 요청이 전송되었고, 서버는 2xx 외의 상태 코드로 응답했습니다.
-          console.log(">", error.response.data);
-          console.log(">>", error.response.status);
-          console.log(">>>", error.response.headers);
-        } else if (error.request) {
-          // 요청이 전송되었지만, 응답이 수신되지 않았습니다.
-          // 'error.request'는 브라우저에서 XMLHtpRequest 인스턴스이고,
-          // node.js에서는 http.ClientRequest 인스턴스입니다.
-          console.log(error.request);
-        } else {
-          // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      });
+  const deletePost = (postId) => {
+    removePost(postId)
+      .then(() => moveToPage("/"))
+      .catch(() => alert("다시 시도해주세요."));
   };
 
-  // const deletePosting = (postId) => {
-  //   deletePost(postId)
-  //     .then(() => moveToPage("/"))
-  //     .catch(() => alert("다시 시도해주세요."));
+  // 댓글 csr
+  const [commentList, setCommentList] = useState([]);
+
+  // const getddd = async (id) => {
+  //   const commentList = await getCommentList(id);
+  //   const comments = commentList.map((comment) => ({
+  //     ...comment,
+  //     createdAt: comment["createdAt"].toString(),
+  //     updatedAt: comment["createdAt"].toString(),
+  //   }));
+  //   setCommentList(comments);
   // };
+  // useEffect(() => {
+  //   getddd(id);
+  // }, []);
+
+  // console.log(new Date(createdAt.Timestamp.seconds * 1000));
+  // console.log(createdAt?.toDate()?.toDateString());
 
   return (
     <>
@@ -105,18 +103,18 @@ export default function Detail({ item }) {
         <Nav />
         <div className={style.all}>
           <header className={style.titleContainer}>
-            <h1 className={style.header}>{title}</h1>
+            <h1 className={style.header}>{post_title}</h1>
             <div className={style.postData}>
-              <p className={style.text}>@ {author}</p>
-              <p className={style.text}>{createdAt.slice(0, 10)}</p>
+              <p className={style.text}>@ {post_author}</p>
+              <p className={style.text}>{formattedDate}</p>
             </div>
           </header>
           <main className={style.main}>
             <div className={style.buttons}>
               <div className={style.tagContainer}>
                 {hashTags.length > 0 &&
-                  hashTags.map((tag) => {
-                    return <Tag key={tag.id} tag={tag.name} />;
+                  hashTags.map((tag, idx) => {
+                    return <Tag key={idx} tag={tag} />;
                   })}
               </div>
               <div className={style.tagContainer}>
@@ -130,36 +128,29 @@ export default function Detail({ item }) {
                   width="5rem"
                   text={"삭제"}
                   fontSize={"1.4rem"}
-                  onclick={deletePost}
+                  onclick={() => deletePost(post_id)}
                 />
-                <button onClick={() => handleSavePost(Number(id))}>
+                <button onClick={() => handleSavePost(post_id)}>
                   <IC_Like width="2rem" height="2rem" isFill={isSaved} />
                 </button>
               </div>
             </div>
             <div data-color-mode="dark">
-              <Markdown source={content} />
+              <Markdown source={post_content} />
             </div>
-            {/* <article className={style.article}>{content}</article> */}
           </main>
         </div>
-        <CommentsList />
+        <CommentsList commentList={commentList} />
       </div>
     </>
   );
 }
 
 export const getStaticPaths = async () => {
-  const res = await axios.get(`https://apiblog.shop/posts`);
-  // const res = await getPostListFirebase();
-  const posts = res.data.postResponses;
-
-  const paths = posts.map((post) => ({
-    params: { id: post.id.toString() },
+  const res = await getPostListFirebase();
+  const paths = res.map((post) => ({
+    params: { id: post.post_id },
   }));
-  // const paths = res.map((post) => ({
-  //   params: { id: post.post_id },
-  // }));
 
   return { paths, fallback: true };
 };
@@ -167,17 +158,22 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async (context) => {
   try {
     const id = context.params.id;
-    // const data = await getPost(id); // FIREBASE
-    const res = await axios.get(`https://apiblog.shop/post/${id}`);
-    const data = res.data;
-    // const itemsWithSerializedDate = {
-    //   ...data,
-    //   createdAt: data["createdAt"].toString(), // 또는 필요한 형식으로 변환
-    // };
+    const data = await getPost(id); // FIREBASE
+    const itemsWithSerializedDate = {
+      ...data,
+      createdAt: data["createdAt"].toString(),
+      updatedAt: data["createdAt"].toString(),
+    };
+    // const commentList = await getCommentList(id);
+    // const comments = commentList.map((comment) => ({
+    //   ...comment,
+    //   createdAt: comment["createdAt"].toString(),
+    //   updatedAt: comment["createdAt"].toString(),
+    // }));
+
     return {
-      props: { item: data },
-      // props: { item: itemsWithSerializedDate },
-      revalidate: 60,
+      props: { item: itemsWithSerializedDate },
+      revalidate: 3600,
     };
   } catch (err) {
     return {
@@ -185,3 +181,23 @@ export const getStaticProps = async (context) => {
     };
   }
 };
+//ssr 비교
+// export const getServerSideProps = async (context) => {
+//   try {
+//     const id = context.params.id;
+//     const data = await getPost(id); // FIREBASE
+//     const itemsWithSerializedDate = {
+//       ...data,
+//       createdAt: data["createdAt"].toString(),
+//       updatedAt: data["createdAt"].toString(),
+//     };
+
+//     return {
+//       props: { item: itemsWithSerializedDate },
+//     };
+//   } catch (err) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+// };
