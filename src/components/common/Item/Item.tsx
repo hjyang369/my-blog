@@ -1,5 +1,5 @@
 import style from "./item.module.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import useIntersectionObserver from "../../../hooks/useIntersectionObserver";
 import IC_Like from "../../../../public/icon/Like";
@@ -11,7 +11,6 @@ type itemProps = {
   onFetchMore: () => void;
   moveToUserMain?: () => void;
   item: PostDataType;
-  // item: PostDataType;
 };
 
 export default function Item({
