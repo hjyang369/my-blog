@@ -28,3 +28,24 @@ export const extractKeywordsFromTitle = (title) => {
   });
   return keywords;
 };
+
+export const calculateTime = (date: string, isStart: boolean) => {
+  const typeofDate = date ? new Date(date) : new Date();
+
+  if (isStart) {
+    return new Date(
+      typeofDate.getFullYear(),
+      typeofDate.getMonth(),
+      typeofDate.getDate()
+    );
+  } else {
+    return new Date(
+      typeofDate.getFullYear(),
+      typeofDate.getMonth(),
+      typeofDate.getDate(),
+      23,
+      59,
+      59
+    );
+  }
+};

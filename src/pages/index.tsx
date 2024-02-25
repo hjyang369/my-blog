@@ -12,7 +12,7 @@ import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import { getReady } from "../modules/function";
 import { userState } from "../store/userStore";
-import { getPostListFirebase } from "./api/post"; // FIREBASE
+import { filterPost, getPostListFirebase } from "./api/post"; // FIREBASE
 import { useQuery } from "@tanstack/react-query";
 
 export default function Main() {
