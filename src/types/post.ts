@@ -6,6 +6,7 @@ export interface PostDataType {
   createdAt: Date | null;
   like: boolean;
   hashTags: string[];
+  // hashTagsName: string[];
 }
 
 // export interface hashTagType {

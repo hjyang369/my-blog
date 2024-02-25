@@ -88,7 +88,12 @@ export default function Main() {
 
   // FIREBASE
   const getPostList = async () => {
-    const data = await getPostListFirebase();
+    const data = await getPostListFirebase(
+      contentTitle,
+      startDate,
+      lastDate,
+      tagTitle[0] // 변경해야함
+    );
     setItemListData(data);
   };
 

@@ -22,6 +22,7 @@ const initialPostingData: PostDataType = {
   post_content: "",
   post_author: "",
   hashTags: [],
+  // hashTagsName: [],
   createdAt: null,
   like: false,
 };
@@ -45,6 +46,7 @@ export default function Detail({ item }) {
     post_content,
     post_author,
     hashTags,
+    // hashTagsName,
     createdAt,
     like,
   } = postingData;
@@ -84,6 +86,8 @@ export default function Detail({ item }) {
   // useEffect(() => {
   //   getddd(id);
   // }, []);
+
+  // console.log(hashTagsName);
 
   return (
     <>
@@ -142,7 +146,7 @@ export default function Detail({ item }) {
 }
 
 export const getStaticPaths = async () => {
-  const res = await getPostListFirebase();
+  const res = await getPostListFirebase("", "", "", "");
   const paths = res.map((post) => ({
     params: { id: post.post_id },
   }));
