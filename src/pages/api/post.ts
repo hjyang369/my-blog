@@ -54,8 +54,8 @@ const getPostListFirebase = async (
       59
     );
 
+    // 제목이 존재할 때 제목에 대한 필터링 추가
     if (title) {
-      // 제목이 존재할 때 제목에 대한 필터링 추가
       postQuery = query(
         postRef,
         limit(10),
@@ -65,8 +65,8 @@ const getPostListFirebase = async (
       );
     }
 
+    // 시작 날짜만 존재할 때 시작 날짜 이후의 글 필터링 추가 //TODO 마지막 날짜만 선택시 안된다고 경고창 추가
     if (startDate && !lastDate) {
-      // 시작 날짜가 존재할 때 시작 날짜에 대한 필터링 추가
       postQuery = query(
         postRef,
         limit(10),
@@ -75,8 +75,9 @@ const getPostListFirebase = async (
       );
     }
 
+    // 마지막 날짜도 존재하는 경우
     if (startDate && lastDate) {
-      // 마지막 날짜가 존재할 때 마지막 날짜에 대한 필터링 추가
+      //만약 시작 날짜와 마지막 날짜가 동일하다면 당일에 대한 글 필터링 추가
       if (startDate === lastDate) {
         postQuery = query(
           postRef,
@@ -85,6 +86,7 @@ const getPostListFirebase = async (
           where("createdAt", "<=", endOfDate),
           orderBy("createdAt", "desc")
         );
+        // 동일하지 않다면 기간에 대한 글 필터링 추가
       } else {
         postQuery = query(
           postRef,
@@ -95,15 +97,16 @@ const getPostListFirebase = async (
         );
       }
     }
-    // if (hashTag) {
-    //   // 해시태그가 존재할 때 해시태그에 대한 필터링 추가
-    //   console.log(`#${hashTag}`);
-    //   postQuery = query(
-    //     postRef,
-    //     limit(10),
-    //     where("keyword", "array-contains", `#${hashTag}`.toLowerCase())
-    //   );
-    // }
+    if (hashTag) {
+      // 해시태그가 존재할 때 해시태그에 대한 필터링 추가
+      // console.log(`#${hashTag}`.toLowerCase());
+      // TODO Java, JAVA, java, 자바 대응 예정
+      postQuery = query(
+        postRef,
+        limit(10),
+        where("hashTagsName", "array-contains", `#${hashTag}`)
+      );
+    }
 
     // 필요한 모든 조건을 반영한 최종 쿼리를 실행하여 데이터를 가져옵니다.
     const documentSnapshots = await getDocs(postQuery);
@@ -269,7 +272,7 @@ const addPost = async ({
       post_title: title,
       post_content: content,
       hashTags: tagsId,
-      // hashTagsName: hashTags,
+      hashTagsName: hashTags,
       post_author: author,
       user_id: userId,
       createdAt: new Date(),
@@ -292,7 +295,7 @@ const updatePost = async ({ title, content, postId, hashTags }) => {
         post_title: title,
         post_content: content,
         hashTags: tagsId,
-        // hashTagsName: hashTags,
+        hashTagsName: hashTags,
         updatedAt: new Date(),
       });
     }

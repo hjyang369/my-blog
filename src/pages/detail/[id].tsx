@@ -22,7 +22,7 @@ const initialPostingData: PostDataType = {
   post_content: "",
   post_author: "",
   hashTags: [],
-  // hashTagsName: [],
+  hashTagsName: [],
   createdAt: null,
   like: false,
 };
@@ -46,7 +46,7 @@ export default function Detail({ item }) {
     post_content,
     post_author,
     hashTags,
-    // hashTagsName,
+    hashTagsName,
     createdAt,
     like,
   } = postingData;
@@ -111,8 +111,8 @@ export default function Detail({ item }) {
           <main className={style.main}>
             <div className={style.buttons}>
               <div className={style.tagContainer}>
-                {hashTags.length > 0 &&
-                  hashTags.map((tag, idx) => {
+                {hashTagsName?.length > 0 &&
+                  hashTagsName.map((tag, idx) => {
                     return <Tag key={idx} tag={tag} />;
                   })}
               </div>

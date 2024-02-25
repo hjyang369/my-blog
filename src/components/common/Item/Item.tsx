@@ -25,6 +25,7 @@ export default function Item({
     post_content,
     post_author,
     hashTags,
+    hashTagsName,
     createdAt,
     like,
   } = item;
