@@ -22,6 +22,7 @@ export const extractKeywordsFromTitle = (title) => {
           keywords.push(subWord);
         }
       }
+      // 한글자인 경우 바로 넣어줌 // TODO 나중에 이게 정말 필요한지 고민해볼것
     } else if (word.length === 1) {
       keywords.push(word);
     }
@@ -29,15 +30,19 @@ export const extractKeywordsFromTitle = (title) => {
   return keywords;
 };
 
+// 2024-01-10 형식의 날짜를 date 형식으로 바꿔주는 함수
 export const calculateTime = (date: string, isStart: boolean) => {
+  // 현재 날짜, 시간인 경우 date가 null이기때문에 따로 적용
   const typeofDate = date ? new Date(date) : new Date();
 
+  // 00:00인 경우
   if (isStart) {
     return new Date(
       typeofDate.getFullYear(),
       typeofDate.getMonth(),
       typeofDate.getDate()
     );
+    // 23:59인 경우
   } else {
     return new Date(
       typeofDate.getFullYear(),

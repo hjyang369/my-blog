@@ -131,20 +131,19 @@ const filterPost = async (
 
     // 시작 날짜만 존재할 때 시작 날짜 이후의 글 필터링 추가 //TODO 마지막 날짜만 선택시 안된다고 경고창 추가
     if (startDate && !lastDate) {
-      queryArray.push(where("createdAt", ">=", startOfDay)); //TODO 기존 필터 삭제 후
+      queryArray.push(where("createdAt", ">=", startOfDay)); //TODO 기존 필터 삭제 후 추가하기
     }
 
     // 마지막 날짜도 존재하는 경우
     if (startDate && lastDate) {
-      //만약 시작 날짜와 마지막 날짜가 동일하다면 당일에 대한 글 필터링 추가
-      // 동일하지 않다면 기간에 대한 글 필터링 추가
+      // 만약 시작 날짜와 마지막 날짜가 동일하다면 당일에 대한 글, 동일하지 않다면 기간에 대한 글 필터링 추가
       queryArray.push(where("createdAt", ">=", startOfDay));
       queryArray.push(where("createdAt", "<=", endOfDay));
     }
     if (hashTag) {
       // 해시태그가 존재할 때 해시태그에 대한 필터링 추가
-      // console.log(`#${hashTag}`.toLowerCase());
       // TODO Java, JAVA, java, 자바 대응 예정
+      // console.log(`#${hashTag}`.toLowerCase());
       queryArray.push(where("hashTagsName", "array-contains", `#${hashTag}`));
     }
     // 필요한 모든 조건을 반영한 최종 쿼리를 실행하여 데이터를 가져옵니다.
