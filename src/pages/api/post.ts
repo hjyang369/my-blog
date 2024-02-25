@@ -1,5 +1,4 @@
 import {
-  QueryOrderByConstraint,
   addDoc,
   collection,
   deleteDoc,
@@ -32,12 +31,7 @@ class FirebaseError extends Error {
   }
 }
 
-const getPostListFirebase = async (
-  title: string,
-  startDate: string,
-  lastDate: string,
-  hashTag: string
-) => {
+const getPostListFirebase = async () => {
   try {
     const postRef = collection(fireStore, "post");
     let postQuery = query(postRef, orderBy("createdAt", "desc"), limit(10)); // 기본 쿼리
@@ -101,62 +95,114 @@ const getPostListFirebase = async (
 //   }
 // };
 
-// 필터링 적용 함수
-const filterPost = async (
+// 날짜 필터링
+const dateFilterPost = async (startDate: string, lastDate: string) => {
+  try {
+    const postRef = collection(fireStore, "post");
+    const queryArray = addDateArr(startDate, lastDate);
+    const dateQuery = query(postRef, ...queryArray);
+
+    const documentSnapshots = await getDocs(dateQuery);
+    const data = documentSnapshots.docs.map((doc) => ({
+      post_id: doc.id,
+      ...doc.data(),
+    }));
+
+    return data;
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+// 제목 필터링
+const titleFilterPost = async (
   title: string,
   startDate: string,
-  lastDate: string,
-  hashTag: string
+  lastDate: string
 ) => {
   try {
     const postRef = collection(fireStore, "post");
-    const startOfDay = calculateTime(startDate, true);
-    const endOfDay = calculateTime(lastDate, false);
-    const FirstOfDay = calculateTime("2024-01-01", true);
-    const currentOfDay = calculateTime(null, false);
+    const queryArray = addDateArr(startDate, lastDate);
 
+    // 제목의 키워드에 대한 필터링 추가
+    const titleQuery = query(
+      postRef,
+      ...queryArray,
+      where("post_title_keywords", "array-contains", title.toLowerCase())
+    );
+
+    const documentSnapshots = await getDocs(titleQuery);
+    const data = documentSnapshots.docs.map((doc) => ({
+      post_id: doc.id,
+      ...doc.data(),
+    }));
+
+    return data;
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+//해시태그 필터링
+const hashTagFilterPost = async (
+  hashTag: string,
+  startDate: string,
+  lastDate: string
+) => {
+  try {
+    const postRef = collection(fireStore, "post");
+    const queryArray = addDateArr(startDate, lastDate);
+
+    // 해시태그에 대한 필터링 추가
+    // TODO Java, JAVA, java, 자바 대응 예정
+    // console.log(`#${hashTag}`.toLowerCase());
+    const hashTagQuery = query(
+      postRef,
+      ...queryArray,
+      where("hashTagsName", "array-contains", `#${hashTag}`)
+    );
+
+    const documentSnapshots = await getDocs(hashTagQuery);
+    const data = documentSnapshots.docs.map((doc) => ({
+      post_id: doc.id,
+      ...doc.data(),
+    }));
+
+    return data;
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const addDateArr = (startDate: string, lastDate: string) => {
+  const startOfDay = calculateTime(startDate, true);
+  const endOfDay = calculateTime(lastDate, false);
+  const FirstOfDay = calculateTime("2024-01-01", true);
+  const currentOfDay = calculateTime(null, false);
+
+  if (startDate) {
+    // 시작 날짜만 존재할 때 시작 날짜 이후의 글 필터링 추가 //TODO 마지막 날짜만 선택시 안된다고 경고창 추가
+    const queryArray = [
+      where("createdAt", ">=", startOfDay),
+      orderBy("createdAt", "desc"),
+      limit(10),
+    ];
+
+    // 마지막 날짜도 존재하는 경우
+    // 만약 시작 날짜와 마지막 날짜가 동일하다면 당일에 대한 글, 동일하지 않다면 기간에 대한 글 필터링 추가
+    lastDate && queryArray.push(where("createdAt", "<=", endOfDay));
+
+    return queryArray;
+  }
+  // 날짜 설정 안한경우
+  if (!startDate && !lastDate) {
     const queryArray = [
       where("createdAt", ">=", FirstOfDay),
       where("createdAt", "<=", currentOfDay),
       orderBy("createdAt", "desc"),
       limit(10),
     ];
-
-    // 제목이 존재할 때 제목의 키워드에 대한 필터링 추가
-    if (title) {
-      queryArray.push(
-        where("post_title_keywords", "array-contains", title.toLowerCase())
-      );
-    }
-
-    // 시작 날짜만 존재할 때 시작 날짜 이후의 글 필터링 추가 //TODO 마지막 날짜만 선택시 안된다고 경고창 추가
-    if (startDate && !lastDate) {
-      queryArray.push(where("createdAt", ">=", startOfDay)); //TODO 기존 필터 삭제 후 추가하기
-    }
-
-    // 마지막 날짜도 존재하는 경우
-    if (startDate && lastDate) {
-      // 만약 시작 날짜와 마지막 날짜가 동일하다면 당일에 대한 글, 동일하지 않다면 기간에 대한 글 필터링 추가
-      queryArray.push(where("createdAt", ">=", startOfDay));
-      queryArray.push(where("createdAt", "<=", endOfDay));
-    }
-    if (hashTag) {
-      // 해시태그가 존재할 때 해시태그에 대한 필터링 추가
-      // TODO Java, JAVA, java, 자바 대응 예정
-      // console.log(`#${hashTag}`.toLowerCase());
-      queryArray.push(where("hashTagsName", "array-contains", `#${hashTag}`));
-    }
-    // 필요한 모든 조건을 반영한 최종 쿼리를 실행하여 데이터를 가져옵니다.
-    const postQuery = query(postRef, ...queryArray);
-    const documentSnapshots = await getDocs(postQuery);
-    const data = documentSnapshots.docs.map((doc) => ({
-      post_id: doc.id,
-      ...doc.data(),
-    }));
-    console.log();
-    return data;
-  } catch (error: any) {
-    throw new FirebaseError(error);
+    return queryArray;
   }
 };
 
@@ -252,5 +298,7 @@ export {
   addPost,
   updatePost,
   removePost,
-  filterPost,
+  dateFilterPost,
+  titleFilterPost,
+  hashTagFilterPost,
 };

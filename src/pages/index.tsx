@@ -12,7 +12,12 @@ import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import { getReady } from "../modules/function";
 import { userState } from "../store/userStore";
-import { filterPost, getPostListFirebase } from "./api/post"; // FIREBASE
+import {
+  dateFilterPost,
+  getPostListFirebase,
+  hashTagFilterPost,
+  titleFilterPost,
+} from "./api/post"; // FIREBASE
 import { useQuery } from "@tanstack/react-query";
 
 export default function Main() {
@@ -26,7 +31,6 @@ export default function Main() {
   const { startDate, lastDate } = dateTitle;
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
   const user = useRecoilValue(userState); // 새로고침하더라고 지속적으로 user 정보가 저장되어있어야함
-  // console.log(user);
 
   const changeSort = (value: string) => {
     setItemListData([]);
@@ -88,12 +92,7 @@ export default function Main() {
 
   // FIREBASE
   const getPostList = async () => {
-    const data = await getPostListFirebase(
-      contentTitle,
-      startDate,
-      lastDate,
-      tagTitle[0] // 변경해야함
-    );
+    const data = await getPostListFirebase();
     setItemListData(data);
   };
 
@@ -115,8 +114,44 @@ export default function Main() {
   // if (isError) return <div>Error fetching data</div>;
 
   useEffect(() => {
-    !isLastItem && getPostList();
-  }, [page, startDate, lastDate, tagTitle, contentTitle, currentSort]);
+    if (!startDate && !lastDate && tagTitle.length === 0 && !contentTitle) {
+      !isLastItem && getPostList();
+    }
+  }, [page, currentSort]);
+
+  const getFilteredPostList = async () => {
+    let result;
+    const start = startDate ? startDate : null;
+    const end = lastDate ? lastDate : null;
+
+    if (tagTitle[0]) {
+      const hashTagFiltered: PostDataType[] = (await hashTagFilterPost(
+        tagTitle[0],
+        start,
+        end
+      )) as PostDataType[];
+      result = hashTagFiltered;
+
+      if (contentTitle) {
+        result = hashTagFiltered.filter((post) =>
+          post.post_title.toLowerCase().includes(contentTitle.toLowerCase())
+        );
+      }
+    }
+    if (!tagTitle[0] && contentTitle) {
+      result = await titleFilterPost(contentTitle, start, end);
+    }
+    if (!tagTitle[0] && !contentTitle) {
+      result = await dateFilterPost(start, end);
+    }
+    setItemListData(result);
+  };
+
+  useEffect(() => {
+    if (startDate || lastDate || tagTitle.length > 0 || contentTitle) {
+      getFilteredPostList();
+    }
+  }, [startDate, lastDate, tagTitle, contentTitle]);
 
   return (
     <>
