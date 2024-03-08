@@ -7,7 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { firestore } from "../../firebase";
+import { fireStore } from "../../firebase";
 
 class FirebaseError extends Error {
   code: string;
@@ -27,7 +27,6 @@ const createUser = async (email, password) => {
   try {
     const signUp = await createUserWithEmailAndPassword(auth, email, password);
     if (signUp) {
-      console.log(signUp);
       return signUp;
     }
   } catch (error: any) {
@@ -49,7 +48,7 @@ const emailVerification = async () => {
 
 const createUserDoc = async ({ uid, email, nickname }) => {
   try {
-    await setDoc(doc(firestore, "user", uid), {
+    await setDoc(doc(fireStore, "user", uid), {
       user_uid: uid,
       user_email: email,
       user_nickname: nickname,
@@ -67,7 +66,7 @@ const createUserDoc = async ({ uid, email, nickname }) => {
 };
 
 const getUser = async (uid: string) => {
-  const userRef = doc(firestore, "user", uid);
+  const userRef = doc(fireStore, "user", uid);
   try {
     const userSnapShot = await getDoc(userRef);
 

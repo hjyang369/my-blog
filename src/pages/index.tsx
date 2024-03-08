@@ -2,7 +2,6 @@ import Head from "next/head";
 import style from "../styles/main.module.css";
 import Item from "../components/common/Item/Item";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
 import { PostDataType } from "../types/post";
@@ -12,67 +11,108 @@ import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import { getReady } from "../modules/function";
 import { userState } from "../store/userStore";
+import {
+  dateFilterPost,
+  loadPostList,
+  hashTagFilterPost,
+  titleFilterPost,
+} from "./api/post"; // FIREBASE
+import { useQuery } from "@tanstack/react-query";
 
 export default function Main() {
-  const [itemListData, setItemListData] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isLastItem, setIsLastItem] = useState(false);
+  const [itemListData, setItemListData] = useState<PostDataType[]>([]);
+  const [posts, setPosts] = useState<PostDataType[]>([]);
+  const [page, setPage] = useState(10);
   const [loading, setLoading] = useState(false);
-  const idList = useRecoilState(idState);
   const [filterTitle, setFilterTitle] = useRecoilState(mainFilterTitleState);
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const { startDate, lastDate } = dateTitle;
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
+  const idList = useRecoilState(idState);
   const user = useRecoilValue(userState); // 새로고침하더라고 지속적으로 user 정보가 저장되어있어야함
-  // console.log(user);
 
   const changeSort = (value: string) => {
     setItemListData([]);
     setCurrentSort(value);
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  //         const UpdateData = newData.map((item) => {
+  //           const isScraped = idList[0].includes(item?.id);
+  //           return { ...item, like: isScraped };
+  //         });
+  //         return UpdateData;
+  //         setItemListData((prevData) => [...prevData, ...UpdateData]);
+  //         data.data.isLast === true && setIsLastItem(true);
 
   const getPostList = async () => {
-    setLoading(true);
-    const apiUrl = `${baseUrl}/posts?size=10`;
-    const haveTagTitle = tagTitle.length > 0;
-    const onlyStartDate = startDate && !lastDate;
-    const allDateFUll = startDate && lastDate;
-
-    await axios
-      .get(
-        `${apiUrl}&page=${page}&sort=${currentSort}${
-          contentTitle ? `&title=${contentTitle}` : ""
-        }${onlyStartDate ? `&startDate=${startDate}` : ""}${
-          allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""
-        }${haveTagTitle ? `&hashTags=${tagTitle}` : ""}
-      `
-      )
-      .then((data) => {
-        const newData: PostDataType[] = data.data.postResponses || [];
-        if (newData.length === 0) {
-          setLoading(false);
-        } else {
-          const UpdateData = newData.map((item) => {
-            const isScraped = idList[0].includes(item?.id);
-            return { ...item, like: isScraped };
-          });
-
-          setItemListData((prevData) => [...prevData, ...UpdateData]);
-          setLoading(false);
-          data.data.isLast === true && setIsLastItem(true);
-        }
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      setLoading(true);
+      const data = await loadPostList();
+      setItemListData(data);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    !isLastItem && getPostList();
-  }, [page, startDate, lastDate, tagTitle, contentTitle, currentSort]);
+    getPostList();
+  }, []);
+
+  useEffect(() => {
+    setPosts(itemListData.slice(0, page));
+  }, [itemListData, page]);
+
+  // const { data, isLoading, isError, isFetching } = useQuery({
+  //   queryKey: [
+  //     "posts",
+  //     page,
+  //     startDate,
+  //     lastDate,
+  //     tagTitle,
+  //     contentTitle,
+  //     currentSort,
+  //   ],
+  //   queryFn: () => getPostListFirebase(),
+  //   staleTime: 6000,
+  //   gcTime: 30000,
+  // });
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError) return <div>Error fetching data</div>;
+
+  const getFilteredPostList = async () => {
+    let result;
+    const start = startDate ? startDate : null;
+    const end = lastDate ? lastDate : null;
+
+    if (tagTitle[0]) {
+      const hashTagFiltered: PostDataType[] = (await hashTagFilterPost(
+        tagTitle[0],
+        start,
+        end
+      )) as PostDataType[];
+      result = hashTagFiltered;
+
+      if (contentTitle) {
+        result = hashTagFiltered.filter((post) =>
+          post.post_title.toLowerCase().includes(contentTitle.toLowerCase())
+        );
+      }
+    }
+    if (!tagTitle[0] && contentTitle) {
+      result = await titleFilterPost(contentTitle, start, end);
+    }
+    if (!tagTitle[0] && !contentTitle) {
+      result = await dateFilterPost(start, end);
+    }
+    setItemListData(result);
+  };
+
+  useEffect(() => {
+    if (startDate || lastDate || tagTitle.length > 0 || contentTitle) {
+      getFilteredPostList();
+    }
+  }, [startDate, lastDate, tagTitle, contentTitle]);
 
   return (
     <>
@@ -98,12 +138,12 @@ export default function Main() {
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {itemListData.map((item, idx) => {
+            {posts.map((item, idx) => {
               return (
                 <Item
-                  key={item.id}
-                  onFetchMore={() => setPage((prev) => prev + 1)}
-                  isLastItem={itemListData.length - 1 === idx}
+                  key={item.post_id}
+                  onFetchMore={() => setPage((prev) => prev + 10)}
+                  isLastItem={posts.length - 1 === idx}
                   // moveToUserMain={() => moveToPage(`/${"username"}`)}
                   moveToUserMain={getReady}
                   item={item}
@@ -113,7 +153,7 @@ export default function Main() {
           </div>
         )}
 
-        {!isLastItem && itemListData.length !== 0 && <div>loading</div>}
+        {loading && <div>loading</div>}
       </div>
     </>
   );

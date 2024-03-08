@@ -23,7 +23,6 @@ export default function Login() {
   const postUserData = () => {
     createUser(inputValue.email, inputValue.password)
       .then((res) => {
-        console.log("create res", res);
         const { user }: any = res;
         emailVerification();
         createUserDoc({
@@ -33,7 +32,6 @@ export default function Login() {
         })
           .then((res) => {
             moveToPage("/login");
-            console.log("user Create", res);
           })
           .catch((err) => {
             console.log("user create error", err);
