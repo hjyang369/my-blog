@@ -43,7 +43,15 @@ const loadPostList = async () => {
     const documentSnapshots = await getDocs(postQuery);
     const data = documentSnapshots.docs.map((doc) => ({
       post_id: doc.id,
-      ...doc.data(),
+      post_title: doc.data().post_title,
+      post_content: doc.data().post_content,
+      post_author: doc.data().post_author,
+      createdAt: doc.data().createdAt,
+      hashTags: doc.data().hashTags,
+      hashTagsName: doc.data().hashTagsName,
+      post_title_keywords: doc.data().post_title_keywords,
+      user_id: doc.data().user_id,
+      like: false, //TODO 좋아요 만들면 수정
     }));
 
     if (documentSnapshots) {
