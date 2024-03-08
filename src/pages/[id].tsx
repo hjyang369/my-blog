@@ -34,7 +34,7 @@ export default function Main() {
       setLoading(true);
       const result = await getFirstPage();
       const { firstData, lastVisible } = result;
-      if (firstData !== null) {
+      if (firstData) {
         setItemListData(firstData);
         // 커서로 사용할 마지막 문서 스냅샷 저장
         setKey(lastVisible);
@@ -57,7 +57,10 @@ export default function Main() {
       if (nextData?.length === 0) {
         setIsLastItem(true);
       } else {
-        setItemListData((prevData) => [...prevData, ...nextData]);
+        const updateItemListData = (prevData) => {
+          return [...prevData, ...nextData];
+        };
+        setItemListData(updateItemListData);
         setKey(lastVisible);
       }
     } catch (err) {

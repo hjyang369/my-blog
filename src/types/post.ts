@@ -4,7 +4,7 @@ export interface PostDataType {
   post_content: string;
   post_author: string;
   createdAt: Date | null;
-  like: boolean;
+  like?: boolean;
   hashTags: string[];
   hashTagsName: string[];
 }

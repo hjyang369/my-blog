@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import { fireStore } from "../../firebase/index";
-import { PostingDataType } from "../../types/post";
+import { PostDataType, PostingDataType } from "../../types/post";
 import { addTags, getTag } from "./hashTag";
 import {
   calculateTime,
@@ -63,11 +63,18 @@ const getFirstPage = async () => {
       orderBy("createdAt", "desc"),
       limit(10)
     );
-
     const documentSnapshots = await getDocs(firstPostQuery);
-    const firstData = documentSnapshots.docs.map((doc) => ({
+    const firstData: PostDataType[] = documentSnapshots.docs.map((doc) => ({
       post_id: doc.id,
-      ...doc.data(),
+      post_title: doc.data().post_title,
+      post_content: doc.data().post_content,
+      post_author: doc.data().post_author,
+      createdAt: doc.data().createdAt,
+      hashTags: doc.data().hashTags,
+      hashTagsName: doc.data().hashTagsName,
+      post_title_keywords: doc.data().post_title_keywords,
+      user_id: doc.data().user_id,
+      like: false, //TODO 좋아요 만들면 수정
     }));
 
     // 마지막 문서 스냅샷
@@ -84,7 +91,6 @@ const getFirstPage = async () => {
 // 무한스크롤 첫번째 이후 글 목록 가져오는 함수
 const getNextPage = async (loadCount) => {
   try {
-    console.log(loadCount);
     const postRef = collection(fireStore, "post");
     const nextPostQuery = query(
       postRef,
