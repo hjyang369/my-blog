@@ -7,17 +7,9 @@ import React from "react";
 import { PostDataType } from "../types/post";
 import { idState } from "../store/savePostStore";
 import { useRecoilState, useRecoilValue } from "recoil";
-import Filter from "../components/Filter";
-import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
 import { getReady } from "../modules/function";
 import { userState } from "../store/userStore";
-import {
-  dateFilterPost,
-  getFirstPage,
-  getNextPage,
-  hashTagFilterPost,
-  titleFilterPost,
-} from "./api/post"; // FIREBASE
+import { getFirstPage, getNextPage } from "./api/post"; // FIREBASE
 import { useQuery } from "@tanstack/react-query";
 
 export default function Main() {
@@ -27,16 +19,7 @@ export default function Main() {
   const [isLastItem, setIsLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
   const idList = useRecoilState(idState);
-  const [filterTitle, setFilterTitle] = useRecoilState(mainFilterTitleState);
-  const { dateTitle, tagTitle, contentTitle } = filterTitle;
-  const { startDate, lastDate } = dateTitle;
-  const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
   const user = useRecoilValue(userState); // 새로고침하더라고 지속적으로 user 정보가 저장되어있어야함
-
-  const changeSort = (value: string) => {
-    setItemListData([]);
-    setCurrentSort(value);
-  };
 
   //         const UpdateData = newData.map((item) => {
   //           const isScraped = idList[0].includes(item?.id);
@@ -82,12 +65,6 @@ export default function Main() {
     }
   };
 
-  // useEffect(() => {
-  //   if (!startDate && !lastDate && tagTitle.length === 0 && !contentTitle) {
-  //     !isLastItem && getPostList();
-  //   }
-  // }, [page, currentSort]);
-
   useEffect(() => {
     if (key) {
       !isLastItem && getMorePostList(key);
@@ -123,12 +100,7 @@ export default function Main() {
       <div className={style.main}>
         {/* TODO user 생기면 user name 으로 로고 변경 */}
         <Nav />
-        <Filter
-          filterTitle={filterTitle}
-          changeText={setFilterTitle}
-          changeSort={changeSort}
-          resetData={setItemListData}
-        />
+
         {!loading && itemListData.length === 0 ? (
           <div className="my-60 flex flex-col items-center gap-4 text-gray300">
             <div className="text-3xl">검색된 데이터가 없습니다.</div>

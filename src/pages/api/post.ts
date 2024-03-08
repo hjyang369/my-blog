@@ -5,14 +5,12 @@ import {
   collection,
   deleteDoc,
   doc,
-  endAt,
   getDoc,
   getDocs,
   limit,
   orderBy,
   query,
   startAfter,
-  startAt,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -33,6 +31,7 @@ class FirebaseError extends Error {
   }
 }
 
+// 전체 글 목록 불러오는 함수
 const loadPostList = async () => {
   try {
     const postRef = collection(fireStore, "post");
@@ -55,6 +54,7 @@ const loadPostList = async () => {
   }
 };
 
+// 무한스크롤 시 첫번째 글 목록 불러오는 함수
 const getFirstPage = async () => {
   try {
     const postRef = collection(fireStore, "post");
@@ -73,7 +73,6 @@ const getFirstPage = async () => {
     // 마지막 문서 스냅샷
     const lastVisible =
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
     if (documentSnapshots) {
       return { firstData, lastVisible };
     }
@@ -82,6 +81,7 @@ const getFirstPage = async () => {
   }
 };
 
+// 무한스크롤 첫번째 이후 글 목록 가져오는 함수
 const getNextPage = async (loadCount) => {
   try {
     console.log(loadCount);
