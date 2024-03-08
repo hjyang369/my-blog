@@ -1,4 +1,6 @@
 import {
+  DocumentData,
+  QueryDocumentSnapshot,
   addDoc,
   collection,
   deleteDoc,
@@ -31,10 +33,13 @@ class FirebaseError extends Error {
   }
 }
 
-const getPostListFirebase = async () => {
+const loadPostList = async () => {
   try {
     const postRef = collection(fireStore, "post");
-    let postQuery = query(postRef, orderBy("createdAt", "desc"), limit(10)); // 기본 쿼리
+    let postQuery = query(
+      postRef,
+      orderBy("createdAt", "desc") //최신순 desc, 작성순 asc
+    );
 
     const documentSnapshots = await getDocs(postQuery);
     const data = documentSnapshots.docs.map((doc) => ({
@@ -42,58 +47,70 @@ const getPostListFirebase = async () => {
       ...doc.data(),
     }));
 
-    return data;
+    if (documentSnapshots) {
+      return data;
+    }
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const getFirstPage = async () => {
+  try {
+    const postRef = collection(fireStore, "post");
+    let firstPostQuery = query(
+      postRef,
+      orderBy("createdAt", "desc"),
+      limit(10)
+    );
+
+    const documentSnapshots = await getDocs(firstPostQuery);
+    const firstData = documentSnapshots.docs.map((doc) => ({
+      post_id: doc.id,
+      ...doc.data(),
+    }));
+
+    // 마지막 문서 스냅샷
+    const lastVisible =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+    if (documentSnapshots) {
+      return { firstData, lastVisible };
+    }
+  } catch (error: any) {
+    throw new FirebaseError(error);
+  }
+};
+
+const getNextPage = async (loadCount) => {
+  try {
+    console.log(loadCount);
+    const postRef = collection(fireStore, "post");
+    const nextPostQuery = query(
+      postRef,
+      orderBy("createdAt", "desc"),
+      startAfter(loadCount),
+      limit(10)
+    );
+
+    const documentSnapshots = await getDocs(nextPostQuery);
+    const nextData = documentSnapshots.docs.map((doc) => ({
+      post_id: doc.id,
+      ...doc.data(),
+    }));
+
+    const lastVisible: QueryDocumentSnapshot<DocumentData, DocumentData> =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+    if (documentSnapshots) {
+      return { nextData, lastVisible };
+    }
   } catch (error: any) {
     throw new FirebaseError(error);
   }
 };
 
 // console.log("%c========", "color: red", queryArray);
-
-// 무한스크롤 코드
-
-//     const first = query(postRef, ...queryArray);
-//     console.log(postRef, ...queryArray, title);
-//     // const first =
-//     //   title || startDate || lastDate
-//     //     ? filterPost(title, startDate, lastDate, hashTags)
-//     //     : query(postRef, orderBy("createdAt", "desc"), limit(10)); //최신순 desc, 작성순 asc
-//     const documentSnapshots = await getDocs(first);
-
-//     const firstData = documentSnapshots.docs.map((doc) => ({
-//       post_id: doc.id,
-//       ...doc.data(),
-//     }));
-
-//     const lastVisible =
-//       documentSnapshots.docs[documentSnapshots.docs.length - 1];
-//     console.log(documentSnapshots.docs);
-//     // console.log(lastVisible);
-
-//     if (documentSnapshots) {
-//       return firstData;
-//     }
-
-//     // const next = query(
-//     //   postRef,
-//     //   orderBy("createdAt", "desc"),
-//     //   limit(10),
-//     //   startAfter(lastVisible)
-//     // );
-
-//     // const querySnapshot = await getDocs(next);
-//     // const nextData = querySnapshot.docs.map((doc) => ({
-//     //   post_id: doc.id,
-//     //   ...doc.data(),
-//     // }));
-
-//     // if (querySnapshot) {
-//     //   return nextData;
-//     // }
-//   } catch (error: any) {
-//     throw new FirebaseError(error);
-//   }
-// };
 
 // 날짜 필터링
 const dateFilterPost = async (startDate: string, lastDate: string) => {
@@ -293,12 +310,14 @@ const removePost = async (postId: string) => {
 };
 
 export {
-  getPostListFirebase,
+  loadPostList,
+  getFirstPage,
+  getNextPage,
+  dateFilterPost,
+  titleFilterPost,
+  hashTagFilterPost,
   getPost,
   addPost,
   updatePost,
   removePost,
-  dateFilterPost,
-  titleFilterPost,
-  hashTagFilterPost,
 };

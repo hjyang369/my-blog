@@ -2,20 +2,28 @@ import Head from "next/head";
 import style from "../styles/main.module.css";
 import Item from "../components/common/Item/Item";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Nav from "../components/Nav/Nav";
 import React from "react";
 import { PostDataType } from "../types/post";
 import { idState } from "../store/savePostStore";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Filter from "../components/Filter";
 import { mainFilterTitleState, mainSortState } from "../store/mainFilterStore";
-import useMoveToPage from "../hooks/useMovetoPage";
 import { getReady } from "../modules/function";
+import { userState } from "../store/userStore";
+import {
+  dateFilterPost,
+  getFirstPage,
+  getNextPage,
+  hashTagFilterPost,
+  titleFilterPost,
+} from "./api/post"; // FIREBASE
+import { useQuery } from "@tanstack/react-query";
 
-export default function UserMain() {
-  const [itemListData, setItemListData] = useState([]);
-  const [page, setPage] = useState(1);
+export default function Main() {
+  const [itemListData, setItemListData] = useState<PostDataType[]>([]);
+  const [page, setPage] = useState(0);
+  const [key, setKey] = useState(null);
   const [isLastItem, setIsLastItem] = useState(false);
   const [loading, setLoading] = useState(false);
   const idList = useRecoilState(idState);
@@ -23,53 +31,85 @@ export default function UserMain() {
   const { dateTitle, tagTitle, contentTitle } = filterTitle;
   const { startDate, lastDate } = dateTitle;
   const [currentSort, setCurrentSort] = useRecoilState(mainSortState);
-  const { moveToPage } = useMoveToPage();
+  const user = useRecoilValue(userState); // 새로고침하더라고 지속적으로 user 정보가 저장되어있어야함
 
   const changeSort = (value: string) => {
     setItemListData([]);
     setCurrentSort(value);
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  //         const UpdateData = newData.map((item) => {
+  //           const isScraped = idList[0].includes(item?.id);
+  //           return { ...item, like: isScraped };
+  //         });
+  //         return UpdateData;
+  //         setItemListData((prevData) => [...prevData, ...UpdateData]);
+  //         data.data.isLast === true && setIsLastItem(true);
 
   const getPostList = async () => {
-    setLoading(true);
-    const apiUrl = `${baseUrl}/posts/${"userName"}?size=10`;
-    const haveTagTitle = tagTitle.length > 0;
-    const onlyStartDate = startDate && !lastDate;
-    const allDateFUll = startDate && lastDate;
-
-    await axios
-      .get(
-        `${apiUrl}&page=${page}&sort=${currentSort}${
-          contentTitle ? `&title=${contentTitle}` : ""
-        }${
-          onlyStartDate ? `&startDate=${startDate}&endDate=${startDate}` : ""
-        }${allDateFUll ? `&startDate=${startDate}&endDate=${lastDate}` : ""}${
-          haveTagTitle ? `&hashTags=${tagTitle}` : ""
-        }
-      `
-      )
-      .then((data) => {
-        const newData: PostDataType[] = data.data.postResponses || [];
-        const UpdateData = newData.map((item) => {
-          const isScraped = idList[0].includes(item?.id);
-          return { ...item, like: isScraped };
-        });
-
-        setItemListData((prevData) => [...prevData, ...UpdateData]);
-        setLoading(false);
-        data.data.isLast === true && setIsLastItem(true);
-      })
-
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      setLoading(true);
+      const result = await getFirstPage();
+      const { firstData, lastVisible } = result;
+      if (firstData !== null) {
+        setItemListData(firstData);
+        // 커서로 사용할 마지막 문서 스냅샷 저장
+        setKey(lastVisible);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    !isLastItem && getPostList();
-  }, [page, filterTitle, currentSort]);
+    getPostList();
+  }, []);
+
+  const getMorePostList = async (loadCount) => {
+    try {
+      const result = await getNextPage(loadCount);
+      const { nextData, lastVisible } = result;
+
+      if (nextData?.length === 0) {
+        setIsLastItem(true);
+      } else {
+        setItemListData((prevData) => [...prevData, ...nextData]);
+        setKey(lastVisible);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (!startDate && !lastDate && tagTitle.length === 0 && !contentTitle) {
+  //     !isLastItem && getPostList();
+  //   }
+  // }, [page, currentSort]);
+
+  useEffect(() => {
+    if (key) {
+      !isLastItem && getMorePostList(key);
+    }
+  }, [page]);
+
+  // const { data, isLoading, isError, isFetching } = useQuery({
+  //   queryKey: [
+  //     "posts",
+  //     page,
+  //     startDate,
+  //     lastDate,
+  //     tagTitle,
+  //     contentTitle,
+  //     currentSort,
+  //   ],
+  //   queryFn: () => getPostListFirebase(),
+  //   staleTime: 6000,
+  //   gcTime: 30000,
+  // });
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError) return <div>Error fetching data</div>;
 
   return (
     <>
@@ -89,23 +129,29 @@ export default function UserMain() {
           changeSort={changeSort}
           resetData={setItemListData}
         />
+        {!loading && itemListData.length === 0 ? (
+          <div className="my-60 flex flex-col items-center gap-4 text-gray300">
+            <div className="text-3xl">검색된 데이터가 없습니다.</div>
+            <div className="text-3xl">다시 검색해주세요.</div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {itemListData.map((item, idx) => {
+              return (
+                <Item
+                  key={item.post_id}
+                  onFetchMore={() => setPage((prev) => prev + 1)}
+                  isLastItem={itemListData.length - 1 === idx}
+                  // moveToUserMain={() => moveToPage(`/${"username"}`)}
+                  moveToUserMain={getReady}
+                  item={item}
+                />
+              );
+            })}
+          </div>
+        )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {itemListData.map((item, idx) => {
-            return (
-              <Item
-                key={item.id}
-                onFetchMore={() => setPage((prev) => prev + 1)}
-                isLastItem={itemListData.length - 1 === idx}
-                // moveToUserMain={() => moveToPage(`/${"username"}`)}
-                moveToUserMain={getReady}
-                item={item}
-              />
-            );
-          })}
-        </div>
-
-        {!isLastItem && <div>loading</div>}
+        {/* {!isLastItem && loadingMore && <div>loading</div>} */}
       </div>
     </>
   );

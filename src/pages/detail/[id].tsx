@@ -13,7 +13,7 @@ import useHandleLike from "../../hooks/useHandleLike";
 import useMoveToPage from "../../hooks/useMovetoPage";
 import ClickButton from "../../components/common/clickButton";
 import dynamic from "next/dynamic";
-import { removePost, getPost, getPostListFirebase } from "../api/post"; // FIREBASE
+import { removePost, getPost, loadPostList } from "../api/post"; // FIREBASE
 // import { getCommentList } from "../api/comment";
 
 const initialPostingData: PostDataType = {
@@ -146,7 +146,7 @@ export default function Detail({ item }) {
 }
 
 export const getStaticPaths = async () => {
-  const res = await getPostListFirebase("", "", "", "");
+  const res = await loadPostList();
   const paths = res.map((post) => ({
     params: { id: post.post_id },
   }));

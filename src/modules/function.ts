@@ -22,10 +22,11 @@ export const extractKeywordsFromTitle = (title) => {
           keywords.push(subWord);
         }
       }
-      // 한글자인 경우 바로 넣어줌 // TODO 나중에 이게 정말 필요한지 고민해볼것
-    } else if (word.length === 1) {
-      keywords.push(word);
     }
+    // 한글자인 경우 바로 넣어줌 // TODO 나중에 이게 정말 필요한지 고민해볼것
+    // else if (word.length === 1) {
+    //   keywords.push(word);
+    // }
   });
   return keywords;
 };
